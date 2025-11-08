@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student News System</title>
+  <link rel="icon" href="/static/images/logo.png" type="image/png" />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+  />
+
+  <style>
+    /* ✅ Navbar fixed on top */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 2000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    body {
+      margin: 0;
+      padding-top: 50px; /* prevent overlap */
+      background-color: #f8f9fa;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 120px 20px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+
+    /* Cards */
+    .card {
+      border: none;
+      border-radius: 10px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    i.bi {
+      transition: color 0.2s;
+    }
+
+    i.bi:hover {
+      color: #5a67d8;
+    }
+
+    footer {
+      background: #212529;
+      color: #ccc;
+      padding: 40px 0;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- ✅ Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">
+        <i class="bi bi-newspaper"></i> Student News
+      </a>
+    </div>
+  </nav>
+
+  <!-- ✅ Hero Section -->
+  <div class="hero">
+    <h1>Welcome to Student News System</h1>
+    <p>Stay updated with campus news, events, and announcements</p>
+    <a href="/login" class="btn btn-light btn-lg me-2">
+      <i class="bi bi-box-arrow-in-right"></i> Login
+    </a>
+    <a href="/register" class="btn btn-outline-light btn-lg">
+      <i class="bi bi-person-plus"></i> Register
+    </a>
+  </div>
+
+  <!-- ✅ Recent Posts Section -->
+  <div class="container my-5">
+    <div class="row">
+      <div class="col-12 text-center mb-5">
+        <h2 class="display-5 fw-bold">Latest News</h2>
+        <p class="lead text-muted">
+          Stay updated with the most recent campus announcements
+        </p>
+      </div>
+    </div>
+
+    <div id="recentPosts" class="row">
+      <!-- Posts will load here -->
+    </div>
+
+    <div id="loadingSpinner" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="/login" class="btn btn-primary btn-lg">
+        <i class="bi bi-newspaper"></i> View All Posts
+      </a>
+    </div>
+  </div>
+
+  <!-- ✅ Features Section -->
+  <div class="container my-5">
+    <div class="row">
+      <div class="col-md-4 text-center mb-4">
+        <i
+          class="bi bi-newspaper"
+          style="font-size: 3rem; color: #667eea"
+        ></i>
+        <h4 class="mt-3">Read News</h4>
+        <p class="text-muted">
+          Browse all campus news and announcements in one place
+        </p>
+      </div>
+      <div class="col-md-4 text-center mb-4">
+        <i
+          class="bi bi-chat-left-heart"
+          style="font-size: 3rem; color: #667eea"
+        ></i>
+        <h4 class="mt-3">Engage</h4>
+        <p class="text-muted">
+          Like, comment, and share posts with other students
+        </p>
+      </div>
+      <div class="col-md-4 text-center mb-4">
+        <i class="bi bi-bell" style="font-size: 3rem; color: #667eea"></i>
+        <h4 class="mt-3">Stay Updated</h4>
+        <p class="text-muted">
+          Get real-time notifications for new posts and announcements
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Footer -->
+  <footer>
+    <div class="container">
+      <p class="mb-0">
+        &copy; 2025 Student News System | All Rights Reserved
+      </p>
+      <p class="small text-secondary">
+        Built with ❤️ using Flask, Bootstrap & SQLite
+      </p>
+    </div>
+  </footer>
+
+  <!-- ✅ JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      loadRecentPosts();
+    });
+
+    // Load public posts
+    async function loadRecentPosts() {
+      const postsContainer = document.getElementById("recentPosts");
+      const loadingSpinner = document.getElementById("loadingSpinner");
+
+      try {
+        const response = await fetch("/api/posts/public?per_page=6");
+        const data = await response.json();
+
+        loadingSpinner.style.display = "none";
+
+        if (data.posts && data.posts.length > 0) {
+          postsContainer.innerHTML = data.posts
+            .map(
+              (post) => `
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100 shadow-sm" onclick="redirectToLogin()">
+                ${
+                  post.image_url
+                    ? `<img src="${post.image_url}" class="card-img-top" alt="Post image" style="height: 200px; object-fit: cover;">`
+                    : ""
+                }
+                <div class="card-body d-flex flex-column">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="badge bg-primary">${post.category}</span>
+                    ${
+                      post.is_pinned
+                        ? '<i class="bi bi-pin-angle-fill text-warning" title="Pinned"></i>'
+                        : ""
+                    }
+                  </div>
+                  <h5 class="card-title">${post.title}</h5>
+                  <p class="card-text flex-grow-1">${post.content}</p>
+                  <div class="mt-auto">
+                    <div class="d-flex justify-content-between align-items-center text-muted small mb-2">
+                      <span><i class="bi bi-person"></i> ${post.author}</span>
+                      <span><i class="bi bi-calendar"></i> ${new Date(
+                        post.created_at
+                      ).toLocaleDateString()}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center text-muted small">
+                      <span onclick="redirectToLogin(event)"><i class="bi bi-heart"></i> ${post.likes_count}</span>
+                      <span onclick="redirectToLogin(event)"><i class="bi bi-chat"></i> ${post.comments_count}</span>
+                      <span onclick="redirectToLogin(event)"><i class="bi bi-share"></i> Share</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>`
+            )
+            .join("");
+        } else {
+          postsContainer.innerHTML = `
+            <div class="col-12 text-center py-5">
+              <i class="bi bi-newspaper" style="font-size: 3rem; color: #6c757d;"></i>
+              <h4 class="mt-3 text-muted">No posts available yet</h4>
+              <p class="text-muted">Check back later for the latest news and announcements.</p>
+            </div>`;
+        }
+      } catch (error) {
+        console.error("Error loading posts:", error);
+        loadingSpinner.style.display = "none";
+        postsContainer.innerHTML = `
+          <div class="col-12 text-center py-5">
+            <i class="bi bi-exclamation-triangle" style="font-size: 3rem; color: #dc3545;"></i>
+            <h4 class="mt-3 text-danger">Unable to load posts</h4>
+            <p class="text-muted">Please try refreshing the page.</p>
+          </div>`;
+      }
+    }
+
+    // Redirect function for all interactions
+    function redirectToLogin(event) {
+      if (event) event.stopPropagation();
+      window.location.href = "/login";
+    }
+  </script>
+</body>
+</html>

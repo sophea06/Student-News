@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - News Feed</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/student-style.css') }}">
+</head>
+<body>
+    <!-- Header/Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">Campus News</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="ms-auto d-flex gap-3 align-items-center">
+                    <div class="position-relative">
+                        <button class="btn btn-link position-relative" onclick="loadNotifications()">
+                            <i class="bi bi-bell fs-5"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notificationBadge" style="display:none;">
+                                <span id="unreadCount">0</span>
+                            </span>
+                        </button>
+                        <div class="notification-dropdown" id="notificationDropdown" style="display:none;">
+                            <div id="notificationsList"></div>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle fs-5"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" onclick="showProfile()">Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <aside class="col-md-3 p-4 sidebar">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title">Categories</h6>
+                        <div class="d-flex flex-column gap-2">
+                            <button class="btn btn-light text-start" onclick="filterByCategory('general')">General</button>
+                            <button class="btn btn-light text-start" onclick="filterByCategory('campus')">Campus</button>
+                            <button class="btn btn-light text-start" onclick="filterByCategory('events')">Events</button>
+                            <button class="btn btn-light text-start" onclick="filterByCategory('announcements')">Announcements</button>
+                            <button class="btn btn-light text-start" onclick="filterByCategory('academic')">Academic</button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Feed -->
+            <main class="col-md-9 p-4">
+                <!-- Search Bar -->
+                <div class="mb-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search news..." id="searchInput">
+                        <button class="btn btn-outline-secondary" type="button" onclick="searchNews()">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- News Feed -->
+                <div id="newsFeed">
+                    <div class="text-center py-5">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center" id="pagination">
+                    </ul>
+                </nav>
+            </main>
+        </div>
+    </div>
+
+    <!-- Post Detail Modal -->
+    <div class="modal fade" id="postDetailModal" aria-labelledby="postTitle">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="postTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="postImage" class="w-100 mb-3" style="max-height: 400px; object-fit: cover; display: none;">
+                    <p id="postContent"></p>
+                    <div class="mb-3">
+                        <small class="text-muted">By <span id="postAuthor"></span> | <span id="postDate"></span></small>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <button class="btn btn-outline-primary btn-sm" onclick="toggleLike()" id="likeBtn">
+                            <i class="bi bi-heart"></i> Like (<span id="likeCount">0</span>)
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="sharePost()">
+                            <i class="bi bi-share"></i> Share
+                        </button>
+                    </div>
+                    <hr>
+                    <h6>Comments</h6>
+                    <div id="commentsList" class="mb-3" style="max-height: 300px; overflow-y: auto;"></div>
+                    <div class="input-group mt-3">
+                        <input type="text" class="form-control" placeholder="Add a comment..." id="commentInput">
+                        <button class="btn btn-primary" type="button" onclick="addComment()">Post</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal fade" id="profileModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">My Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="profileContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/student.js') }}"></script>
+</body>
+</html>

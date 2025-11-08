@@ -1,0 +1,24 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="none" stroke="#2563eb" stroke-width="2"/>
+  
+  <!-- Newspaper/pages icon -->
+  <g transform="translate(60, 60)">
+    <!-- Main newspaper page -->
+    <rect x="0" y="0" width="70" height="50" fill="none" stroke="#2563eb" stroke-width="2" rx="2"/>
+    
+    <!-- Newspaper lines (content) -->
+    <line x1="4" y1="8" x2="26" y2="8" stroke="#2563eb" stroke-width="1.5"/>
+    <line x1="4" y1="14" x2="66" y2="14" stroke="#2563eb" stroke-width="1"/>
+    <line x1="4" y1="19" x2="66" y2="19" stroke="#2563eb" stroke-width="1"/>
+    <line x1="4" y1="24" x2="66" y2="24" stroke="#2563eb" stroke-width="1"/>
+    <line x1="4" y1="29" x2="50" y2="29" stroke="#2563eb" stroke-width="1"/>
+    
+    <!-- Breaking news banner -->
+    <rect x="30" y="36" width="40" height="10" fill="#2563eb" rx="1"/>
+    <text x="50" y="42" text-anchor="middle" fill="white" font-size="6" font-weight="bold">NEWS</text>
+  </g>
+  
+  <!-- Accent dot -->
+  <circle cx="155" cy="55" r="4" fill="#2563eb"/>
+</svg>

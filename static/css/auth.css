@@ -1,0 +1,54 @@
+.auth-bg {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.auth-card {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  /* increased min-width and adjusted max-width to prevent text wrapping */
+  min-width: 350px;
+  max-width: 450px;
+  width: 100%;
+}
+
+.auth-card .form-control {
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 10px 15px;
+}
+
+.auth-card .form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.auth-card .btn {
+  border-radius: 8px;
+  padding: 10px;
+  font-weight: 600;
+  /* prevent button text from wrapping */
+  white-space: nowrap;
+}
+
+/* Added proper heading styles to prevent text wrapping */
+.auth-card h2 {
+  white-space: nowrap;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  /* added overflow handling to prevent wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+    <link rel="icon" href="/static/images/logo.png" type="image/png">
+  <title>Logout Confirmation - Student News</title>
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .logout-container {
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      padding: 3rem 2rem;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .logout-icon {
+      font-size: 4rem;
+      color: #28a745;
+      margin-bottom: 1.5rem;
+      font-weight: bold;
+      background-color: #d4edda;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      animation: bounce 1s infinite alternate;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
+    }
+
+    .countdown {
+      font-size: 1.2rem;
+      color: #6c757d;
+      margin: 1.5rem 0;
+      font-weight: 500;
+    }
+
+    .btn {
+      padding: 0.6rem 2rem;
+      font-weight: 500;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      border: none;
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: #0d6efd;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+      background-color: #0b5ed7;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal h3 {
+      margin-bottom: 1rem;
+    }
+
+    .modal p {
+      color: #6c757d;
+      margin-bottom: 2rem;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Confirmation Modal -->
+  <div class="modal" id="logoutModal">
+    <div class="modal-content">
+      <h3>Confirm Logout</h3>
+      <p>Are you sure you want to log out?</p>
+      <div class="modal-buttons">
+        <button class="btn btn-danger" id="confirmLogout">Yes, Logout</button>
+        <button class="btn btn-primary" id="cancelLogout">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logout Message Container -->
+  <div class="logout-container hidden" id="logoutContainer">
+    <div class="logout-icon">✓</div>
+    <h2 class="mb-3">You’ve been logged out</h2>
+    <p class="text-muted mb-4">
+      Thank you for using our service.<br>
+      You’ll be redirected to the home page shortly.
+    </p>
+
+    <div class="countdown">
+      Redirecting in <span id="countdown">5</span> seconds...
+    </div>
+
+    <!-- ✅ Updated Button to go to Home page -->
+    <a href="{{ url_for('index') }}" class="btn btn-primary" id="homeBtn">
+      Go to Home Page
+    </a>
+  </div>
+
+  <script>
+    const modal = document.getElementById('logoutModal');
+    const logoutContainer = document.getElementById('logoutContainer');
+    const confirmBtn = document.getElementById('confirmLogout');
+    const cancelBtn = document.getElementById('cancelLogout');
+    const countdownElement = document.getElementById('countdown');
+    const homeBtn = document.getElementById('homeBtn');
+
+    window.onload = () => {
+      modal.style.display = 'flex';
+    };
+
+    cancelBtn.addEventListener('click', () => {
+      window.history.back();
+    });
+
+    confirmBtn.addEventListener('click', async () => {
+      modal.style.display = 'none';
+      logoutContainer.classList.remove('hidden');
+
+      // Clear storage
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Clear cookies
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        const eqPos = cookie.indexOf('=');
+        const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;';
+      }
+
+      try {
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' }
+        });
+      } catch (err) {
+        console.error('Logout API failed:', err);
+      }
+
+      // Countdown redirect to home page
+      let seconds = 5;
+      const interval = setInterval(() => {
+        seconds--;
+        countdownElement.textContent = seconds;
+        if (seconds <= 0) {
+          clearInterval(interval);
+          window.location.href = "{{ url_for('index') }}";
+        }
+      }, 1000);
+
+      homeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        clearInterval(interval);
+        window.location.href = homeBtn.href;
+      });
+    });
+  </script>
+</body>
+</html>

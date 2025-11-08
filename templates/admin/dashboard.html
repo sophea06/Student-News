@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Student News System</title>
+    <!-- cspell:ignore stylesheet onclick onsubmit tabindex -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-style.css') }}">
+    <link rel="icon" href="/static/images/logo.png" type="image/png">
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <nav class="sidebar bg-dark text-white p-4">
+            <h4 class="mb-4">Admin Panel</h4>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-section="overview">
+                        <i class="bi bi-speedometer2"></i> Overview
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="posts">
+                        <i class="bi bi-file-text"></i> Manage Posts
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="users">
+                        <i class="bi bi-people"></i> Manage Users
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="announcement">
+                        <i class="bi bi-megaphone"></i> Send Announcement
+                    </a>
+                </li>
+                <li class="nav-item mt-4">
+                    <a href="#" class="nav-link" id="logout-link">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="grow p-4">
+            <!-- Overview Section -->
+            <section id="overview" class="content-section">
+                <h2 class="mb-4">Dashboard Overview</h2>
+                <div class="row mb-4">
+                    <div class="col-md-3 w-40">
+                        <div class="card stats-card">
+                            <div class="card-body">
+                                <h6 class="card-title">Total Students</h6>
+                                <h3 id="totalStudents">-</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 w-40">
+                        <div class="card stats-card">
+                            <div class="card-body">
+                                <h6 class="card-title">Total Posts</h6>
+                                <h3 id="totalPosts">-</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 w-40">
+                        <div class="card stats-card">
+                            <div class="card-body">
+                                <h6 class="card-title">Total Comments</h6>
+                                <h3 id="totalComments">-</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card w-80">
+                    <div class="card-header">
+                        <h5>Recent Posts</h5>
+                    </div>
+                    <div class="card-body mr-6">
+                        <table class="table table-sm mr-5">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Likes</th>
+                                    <th>Comments</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentPostsTable">
+                                <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Posts Management Section -->
+            <section id="posts" class="content-section d-none">
+                <h2 class="mb-4">Manage Posts</h2>
+                <button class="btn btn-primary mb-3 create-post-btn">
+                    <i class="bi bi-plus"></i> Create New Post
+                </button>
+
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Visibility</th>
+                                    <th>Likes</th>
+                                    <th>Comments</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="postsTable">
+                                <tr><td colspan="6" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Users Management Section -->
+            <section id="users" class="content-section d-none w-80">
+                <h2 class="mb-4">Manage Users</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Posts</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTable">
+                                <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Announcement Section -->
+            <section id="announcement" class="content-section d-none">
+                <h2 class="mb-4">Send Announcement</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <form onsubmit="sendAnnouncement(event)">
+                            <div class="mb-3">
+                                <label class="form-label">Announcement Message</label>
+                                <textarea class="form-control" id="announcementMessage" rows="6" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success">Send to All Students</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Create Post Modal -->
+    <div class="modal fade" id="createPostModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create New Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createPostForm" onsubmit="createPost(event)">
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" id="postTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Content</label>
+                            <textarea class="form-control" id="postContent" rows="5" required></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Category</label>
+                                <select class="form-select" id="postCategory">
+                                    <option>general</option>
+                                    <option>campus</option>
+                                    <option>events</option>
+                                    <option>announcements</option>
+                                    <option>academic</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Visibility</label>
+                                <select class="form-select" id="postVisibility">
+                                    <option>public</option>
+                                    <option>private</option>
+                                    <option>important</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Upload Image (Optional)</label>
+                            <input type="file" class="form-control" id="postImage" accept="image/*">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Or Image URL (Optional)</label>
+                            <input type="text" class="form-control" id="postImageUrl" placeholder="https://example.com/image.jpg">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Post</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set token from session if not in localStorage
+        const sessionToken = '{{ session.get("token", "") }}';
+        if (sessionToken && !localStorage.getItem('token')) {
+            localStorage.setItem('token', sessionToken);
+        }
+        // If no token in localStorage and no session token, redirect to login
+        if (!localStorage.getItem('token') && !sessionToken) {
+            window.location.href = '/login';
+        }
+        // If no token in localStorage and no session token, redirect to logout
+        if (!localStorage.getItem('token') && !sessionToken) {
+            window.location.href = '/logout';
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>
