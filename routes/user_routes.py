@@ -62,6 +62,61 @@ def get_unread_count():
     
     return jsonify({'unread_count': unread_count}), 200
 
+@user_bp.route('/feed', methods=['GET'])
+@jwt_required()
+def get_student_feed():
+    """Get news feed for student with filters and search"""
+    user_id = get_jwt_identity()
+    
+    # Query parameters
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+    category = request.args.get('category', None)
+    search = request.args.get('search', None)
+    
+    posts_query = db.session.query(Post).filter_by(
+        visibility='public',
+        status='published',
+        is_deleted=False
+    )
+
+    if category:
+        posts_query = posts_query.filter_by(category=category)
+
+    if search:
+        posts_query = posts_query.filter(
+            or_(
+                func.lower(Post.title).like(func.lower(f'%{search}%')),
+                func.lower(Post.content).like(func.lower(f'%{search}%'))
+            )
+        )
+
+    posts = posts_query.order_by(desc(Post.is_pinned), desc(Post.created_at)).paginate(page=page, per_page=per_page)
+    
+    posts_data = [
+        {
+            'id': post.id,
+            'title': post.title,
+            'content': f"{post.content[:200]}..." if len(post.content) > 200 else post.content,
+            'category': post.category,
+            'image_url': post.image_url,
+            'author': post.author.name,
+            'author_id': post.author_id,
+            'likes_count': len(post.likes),
+            'comments_count': len(post.comments),
+            'view_count': post.view_count,
+            'is_liked': any(like.user_id == user_id for like in post.likes),
+            'created_at': post.created_at.isoformat()
+        }
+        for post in posts.items
+    ]
+    
+    return jsonify({
+        'total': posts.total,
+        'pages': posts.pages,
+        'current_page': page,
+        'posts': posts_data
+    }), 200
 
 @user_bp.route('/saved-posts', methods=['GET'])
 @jwt_required()
@@ -167,10 +222,6 @@ def update_user_profile():
         if not data['name'].strip():
             return jsonify({'error': 'Name cannot be empty'}), 400
         user.name = data['name'].strip()
-
-    # Update bio if provided
-    if 'bio' in data:
-        user.bio = data['bio'].strip() if data['bio'] else None
 
     # Update password if provided
     if 'password' in data and data['password']:

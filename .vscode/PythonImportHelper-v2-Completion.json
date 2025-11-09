@@ -1529,7 +1529,16 @@
         "kind": 2,
         "importPath": "routes.user_routes",
         "description": "routes.user_routes",
-        "peekOfCode": "def get_unread_count():\n    \"\"\"Get count of unread notifications\"\"\"\n    user_id = get_jwt_identity()\n    unread_count = db.session.query(Notification).filter_by(\n        user_id=user_id,\n        status='unread'\n    ).count()\n    return jsonify({'unread_count': unread_count}), 200\n@user_bp.route('/saved-posts', methods=['GET'])\n@jwt_required()",
+        "peekOfCode": "def get_unread_count():\n    \"\"\"Get count of unread notifications\"\"\"\n    user_id = get_jwt_identity()\n    unread_count = db.session.query(Notification).filter_by(\n        user_id=user_id,\n        status='unread'\n    ).count()\n    return jsonify({'unread_count': unread_count}), 200\n@user_bp.route('/feed', methods=['GET'])\n@jwt_required()",
+        "detail": "routes.user_routes",
+        "documentation": {}
+    },
+    {
+        "label": "get_student_feed",
+        "kind": 2,
+        "importPath": "routes.user_routes",
+        "description": "routes.user_routes",
+        "peekOfCode": "def get_student_feed():\n    \"\"\"Get news feed for student with filters and search\"\"\"\n    user_id = get_jwt_identity()\n    # Query parameters\n    page = request.args.get('page', 1, type=int)\n    per_page = request.args.get('per_page', 10, type=int)\n    category = request.args.get('category', None)\n    search = request.args.get('search', None)\n    posts_query = db.session.query(Post).filter_by(\n        visibility='public',",
         "detail": "routes.user_routes",
         "documentation": {}
     },

@@ -33,19 +33,6 @@ def create_app():
     sess.init_app(app)
     CORS(app, supports_credentials=True)
 
-    # JWT error handlers
-    @jwt.invalid_token_loader
-    def invalid_token_callback(error):
-        return jsonify({'error': 'Invalid token'}), 422
-
-    @jwt.expired_token_loader
-    def expired_token_callback(error):
-        return jsonify({'error': 'Token expired'}), 422
-
-    @jwt.unauthorized_loader
-    def unauthorized_callback(error):
-        return jsonify({'error': 'Missing token'}), 422
-
     # ---------------------------
     # Register Blueprints
     # ---------------------------
@@ -128,36 +115,9 @@ def create_app():
         if 'token' not in session or 'role' not in session:
             return redirect(url_for('login_page'))
 
-        search = request.args.get('search', '')
-        base_url = url_for('admin_page' if session.get('role') == 'admin' else 'student_page')
-        if search:
-            base_url += '?search=' + search
-        return redirect(base_url)
-
-    @app.route('/about')
-    def about_page():
-        """About Page"""
-        return render_template('about.html')
-
-    @app.route('/contact')
-    def contact_page():
-        """Contact Page"""
-        return render_template('contact.html')
-
-    @app.route('/library')
-    def library_page():
-        """Library Page"""
-        return render_template('library.html')
-
-    @app.route('/study')
-    def study_page():
-        """Study Materials Page"""
-        return render_template('study.html')
-
-    @app.route('/international-study')
-    def international_study_page():
-        """International Study Page"""
-        return render_template('international_study.html')
+        return redirect(
+            url_for('admin_page' if session.get('role') == 'admin' else 'student_page')
+        )
 
     # ---------------------------
     # Logout Routes
