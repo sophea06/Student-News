@@ -5,118 +5,198 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Student News System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <!-- Favicon -->
     <link rel="icon" href="/static/images/logo.png" type="image/png">
 
+    <!-- Bootstrap 5 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <!-- Custom Auth Styles (optional, if you have one) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+
     <style>
-        /* Fade-in card animation */
-        .auth-card {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.5s ease-in-out;
-        }
-
-        .auth-card.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .auth-bg {
+        body.auth-bg {
             background: linear-gradient(to right, #4e73df, #1cc88a);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .auth-card {
+            max-width: 500px;
+            margin: auto;
+            border-radius: 15px;
+            padding: 2rem;
+            background: #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 1s ease;
+        }
+
+        .auth-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+            animation: bounce 1s infinite alternate;
+        }
+
+        .form-control-lg {
+            padding: 0.75rem 0.75rem;
+            font-size: 1.05rem;
+            border-radius: 10px;
         }
 
         .input-group-text {
             background-color: #f8f9fa;
+            border-right: none;
+            border-radius: 10px 0 0 10px;
+        }
+
+        .form-control-lg:focus {
+            border-color: #4e73df;
+            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+        }
+
+        .btn-lg {
+            font-size: 1.1rem;
+            padding: 0.75rem;
+            border-radius: 10px;
+            font-weight: 600;
         }
 
         .toggle-password {
             cursor: pointer;
+            background-color: #f8f9fa;
+            border-left: none;
+            border-radius: 0 10px 10px 0;
         }
 
-        .btn-primary:hover {
-            background-color: #3660c1;
-            border-color: #3660c1;
+        .toggle-password:hover {
+            background-color: #e9ecef;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-10px);
+            }
+        }
+
+        .text-primary {
+            color: #4e73df !important;
+        }
+
+        .text-muted {
+            color: #6c757d !important;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 576px) {
+            .auth-card {
+                padding: 1.5rem;
+            }
+
+            .auth-logo {
+                width: 70px;
+                height: 70px;
+            }
         }
     </style>
 </head>
 
-<body class="auth-bg w-100">
+<body class="auth-bg">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card shadow-lg auth-card text-center">
+                    <!-- Logo -->
+                    <img src="/static/images/logoPage.png" alt="Student News Logo" class="auth-logo mx-auto d-block">
 
-    <div class="container auth-container">
-        <div class="row justify-content-center align-items-center min-vh-100">
-            <div class="col-10 col-md-8 col-lg-6">
-                <div class="card shadow-lg auth-card p-4">
                     <div class="card-body">
-                        <div class="text-center mb-4">
-                            <h2 class="text-primary mb-2">
-                                <i class="bi bi-newspaper"></i> Student News
-                            </h2>
-                            <p class="text-muted">Login to your account</p>
-                        </div>
+                        <h2 class="text-primary mb-2">Student News</h2>
+                        <p class="text-muted mb-4">Login to your account</p>
 
-                        <form id="login-form">
+                        <form id="login-form" class="text-start">
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                                    <input type="email" class="form-control" id="email" placeholder="you@example.com"
-                                        required>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                                    <input type="email" class="form-control form-control-lg" id="email"
+                                        placeholder="Enter your email" required>
                                 </div>
                             </div>
 
-                            <div class="mb-3">
+                            <div class="mb-3 position-relative">
                                 <label for="password" class="form-label">Password</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                    <input type="password" class="form-control" id="password" placeholder="********"
-                                        required>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                    <input type="password" class="form-control form-control-lg" id="password"
+                                        placeholder="Enter your password" required>
                                     <span class="input-group-text toggle-password" id="togglePassword">
                                         <i class="bi bi-eye-fill"></i>
                                     </span>
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 mb-3">
-                                <i class="bi bi-box-arrow-in-right me-2"></i> Login
+                            <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                                Login
                             </button>
                         </form>
 
-                        <div class="text-center">
-                            <p class="text-muted mb-0">Don't have an account?
-                                <a href="/register" class="text-primary fw-semibold">Register here</a>
-                            </p>
-                        </div>
+                        <p class="text-muted">
+                            Don't have an account?
+                            <a href="/register" class="text-primary text-decoration-none fw-medium">Register here</a>
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- JS -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Fade-in effect
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelector('.auth-card').classList.add('show');
-        });
-
-        // Toggle password visibility
+        // Password Toggle
         const togglePassword = document.getElementById('togglePassword');
         const passwordInput = document.getElementById('password');
+
         togglePassword.addEventListener('click', () => {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
-            togglePassword.innerHTML = type === 'password' ? '<i class="bi bi-eye-fill"></i>' : '<i class="bi bi-eye-slash-fill"></i>';
+            togglePassword.innerHTML = type === 'password'
+                ? '<i class="bi bi-eye-fill"></i>'
+                : '<i class="bi bi-eye-slash-fill"></i>';
         });
 
-        // Login form
+        // Form Submission
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                Swal.fire('Error', 'Please fill in all fields', 'error');
+                return;
+            }
 
             try {
                 const response = await fetch('/api/auth/login', {
@@ -129,17 +209,19 @@
                 const data = await response.json();
 
                 if (response.ok) {
+                    // Store token
                     localStorage.setItem('token', data.access_token);
                     localStorage.setItem('user', JSON.stringify(data.user));
                     sessionStorage.setItem('token', data.access_token);
 
+                    // Redirect
                     const role = data.user.role;
                     window.location.href = role === 'admin' ? '/admin' : '/student';
                 } else {
-                    Swal.fire('Error', data.error || 'Login failed', 'error');
+                    Swal.fire('Login Failed', data.error || 'Invalid credentials', 'error');
                 }
             } catch (error) {
-                Swal.fire('Error', 'An unexpected error occurred', 'error');
+                Swal.fire('Error', 'Network error. Please try again.', 'error');
             }
         });
     </script>

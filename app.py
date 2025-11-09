@@ -9,6 +9,7 @@ import click
 import os
 import pickle
 import shutil
+from contextlib import suppress
 
 # Local imports
 from config import Config
@@ -105,7 +106,7 @@ def create_app():
     @app.route('/profile')
     @login_required_template
     def profile_page():
-        """Student Profile"""
+        """User Profile (Admin and Student)"""
         return render_template('student/profile.html')
 
     @app.route('/dashboard')
@@ -189,20 +190,16 @@ def create_app():
         for filename in os.listdir(session_dir):
             if filename.startswith('sess_'):
                 filepath = os.path.join(session_dir, filename)
-                try:
+                with suppress(Exception):
                     with open(filepath, 'rb') as f:
                         data = pickle.load(f)
                     if 'token' in data:
-                        try:
+                        with suppress(Exception):
                             decoded = decode_token(data['token'])
                             if decoded.get('sub') == user_id:
                                 os.remove(filepath)
                                 cleared += 1
                                 click.echo(f"🗑️  Cleared session {filename}")
-                        except Exception:
-                            pass
-                except Exception:
-                    pass
 
         click.echo(f"✅ Logged out user '{user.name}' (ID: {user.id})")
         click.echo(f"🧹 Sessions cleared: {cleared}")

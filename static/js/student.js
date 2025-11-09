@@ -13,108 +13,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return
   }
 
-  loadFeed()
   checkUnreadNotifications()
   setInterval(checkUnreadNotifications, 30000) // Check every 30s
 })
 
-async function loadFeed(page = 1) {
-  try {
-    let url = `${API_URL}/users/feed?page=${page}&per_page=5`
 
-    if (currentCategory) {
-      url += `&category=${currentCategory}`
-    }
 
-    if (currentSearch) {
-      url += `&search=${currentSearch}`
-    }
 
-    const response = await fetch(url, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
 
-    const { posts, pages } = await response.json()
-    currentPage = page
-
-    displayFeed(posts)
-    displayPagination(pages, page)
-  } catch (error) {
-    console.error("Error loading feed:", error)
-  }
-}
-
-function displayFeed(posts) {
-  const feed = document.getElementById("newsFeed")
-
-  if (posts.length === 0) {
-    feed.innerHTML = '<div class="alert alert-info">No posts available</div>'
-    return
-  }
-
-  feed.innerHTML = posts
-    .map(
-      ({ id, image_url, title, content, author, created_at, category, view_count, is_liked, likes_count, comments_count }) => `
-        <div class="card mb-4 post-card">
-            ${image_url ? `<img src="${image_url}" class="card-img-top" alt="Post image">` : ""}
-            <div class="card-body">
-                <h5 class="card-title">${title}</h5>
-                <p class="card-text">${content}</p>
-                <small class="text-muted">By ${author} | ${new Date(created_at).toLocaleDateString()}</small>
-                <div class="mt-3 d-flex gap-3">
-                    <span class="badge bg-info">${category}</span>
-                    <span class="badge bg-secondary">${view_count} views</span>
-                </div>
-                <div class="mt-3 d-flex gap-2">
-                    <button class="btn btn-sm btn-outline-primary" onclick="likePost(${id}, this)">
-                        <i class="bi ${is_liked ? "bi-heart-fill" : "bi-heart"}"></i> ${likes_count}
-                    </button>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="openPostDetail(${id})">
-                        <i class="bi bi-chat"></i> ${comments_count}
-                    </button>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="copyPostLink(${id})">
-                        <i class="bi bi-share"></i> Share
-                    </button>
-                </div>
-            </div>
-        </div>
-    `,
-    )
-    .join("")
-}
-
-function displayPagination(totalPages, currentPage) {
-  const pagination = document.getElementById("pagination")
-  pagination.innerHTML = ""
-
-  if (currentPage > 1) {
-    pagination.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="loadFeed(${currentPage - 1})">Previous</a></li>`
-  }
-
-  for (let i = 1; i <= totalPages; i++) {
-    pagination.innerHTML += `
-            <li class="page-item ${i === currentPage ? "active" : ""}">
-                <a class="page-link" href="#" onclick="loadFeed(${i})">${i}</a>
-            </li>
-        `
-  }
-
-  if (currentPage < totalPages) {
-    pagination.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="loadFeed(${currentPage + 1})">Next</a></li>`
-  }
-}
-
-function filterByCategory(category) {
-  currentCategory = category
-  currentPage = 1
-  loadFeed()
-}
-
-function searchNews() {
-  currentSearch = document.getElementById("searchInput").value
-  currentPage = 1
-  loadFeed()
-}
 
 async function likePost(postId, button) {
   try {

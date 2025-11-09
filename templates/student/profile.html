@@ -1,154 +1,684 @@
 {% extends "base.html" %}
-
 {% block title %}My Profile - Student News System{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow-lg">
-            <div class="card-body p-5">
-                <h2 class="mb-4">My Profile</h2>
+<div class="profile-wrapper">
+    <div class="profile-card">
+        <!-- Header -->
+        <header class="profile-header">
+            <h1><i class="bi bi-person-circle"></i> My Profile</h1>
+            {% if session.role == 'admin' %}
+            <span class="badge admin-badge"><i class="bi bi-shield-lock"></i> Admin</span>
+            {% endif %}
+            <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+                <i class="bi bi-sun-fill"></i>
+            </button>
+        </header>
 
-                <!-- Profile Picture Section -->
-                <div class="text-center mb-4">
-                    <div class="mb-3">
-                        <img id="profile-picture" src="/static/placeholder-user.jpg" alt="Profile Picture" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #ddd;">
+        <main class="profile-body">
+
+            <!-- Avatar -->
+            <div class="avatar-section">
+                <div class="avatar-wrapper" id="avatar-dropzone">
+                    <img id="profile-picture" src="/static/placeholder-user.jpg" alt="Profile picture"
+                        class="avatar-img">
+                    <div class="avatar-overlay">
+                        <i class="bi bi-camera-fill"></i>
                     </div>
-                    <div class="mb-3">
-                        <label for="profile-picture-input" class="form-label">Change Profile Picture</label>
-                        <input type="file" class="form-control" id="profile-picture-input" accept="image/*">
-                        <small class="form-text text-muted">Supported formats: JPG, PNG, GIF. Max size: 5MB</small>
-                    </div>
+                    <div class="avatar-ring"></div>
+                </div>
+                <label for="profile-picture-input" class="btn btn-outline-primary btn-change">
+                    <i class="bi bi-upload"></i> Change Photo
+                </label>
+                <input type="file" id="profile-picture-input" style="position: absolute; left: -10000px; top: -10000px;" accept="image/*">
+                <!-- <p class="text-muted small mt-2">JPG, PNG, GIF • Max 5 MB</p> -->
+            </div>
+
+            <!-- Form -->
+            <form id="profile-form" class="profile-form">
+
+                <!-- Full Name -->
+                <div class="form-group floating-label">
+                    <input type="text" id="name" class="form-control" required autocomplete="name">
+                    <label for="name">Full Name</label>
+                    <i class="bi bi-person input-icon"></i>
                 </div>
 
-                <form id="profile-form">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" disabled>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">New Password (leave blank to keep current)</label>
-                        <input type="password" class="form-control" id="password">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Update Profile</button>
-                    <a href="/student" class="btn btn-secondary">Back to Dashboard</a>
-                </form>
-            </div>
-        </div>
+                <!-- Email (disabled) -->
+                <div class="form-group floating-label">
+                    <input type="email" id="email" class="form-control" disabled>
+                    <label for="email">Email Address</label>
+                    <i class="bi bi-envelope input-icon"></i>
+                </div>
+
+                <!-- Profile Bio -->
+                <div class="form-group floating-label">
+                    <textarea id="bio" class="form-control" rows="3" maxlength="280" placeholder=" "></textarea>
+                    <label for="bio">Profile Bio <span class="optional">(optional)</span></label>
+                    <i class="bi bi-chat-square-text input-icon"></i>
+                    <div class="char-count text-muted small text-end mt-1">0 / 280</div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group floating-label">
+                    <input type="password" id="password" class="form-control" placeholder=" "
+                        autocomplete="new-password">
+                    <label for="password">New Password <span class="optional">(optional)</span></label>
+                    <i class="bi bi-lock input-icon"></i>
+                    <button type="button" class="toggle-pwd" tabindex="-1">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                    <div id="pwd-strength" class="pwd-meter mt-2"></div>
+                </div>
+
+                <!-- Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-submit">
+                        <span class="btn-text">Update Profile</span>
+                        <i class="bi bi-check2 check-icon"></i>
+                    </button>
+
+                    {% if session.role == 'admin' %}
+                    <a href="/admin" class="btn btn-outline-secondary btn-dashboard">
+                        <i class="bi bi-speedometer2"></i> Admin Dashboard
+                    </a>
+                    {% else %}
+                    <a href="/student" class="btn btn-outline-secondary btn-dashboard">
+                        <i class="bi bi-house"></i> Dashboard
+                    </a>
+                    {% endif %}
+                </div>
+            </form>
+        </main>
     </div>
 </div>
 
-<script>
-// Ensure token is available in localStorage from session if needed
-if (!localStorage.getItem('token') && '{{ session.token or "" }}') {
-    localStorage.setItem('token', '{{ session.token }}');
-}
+<!-- Inter Font -->
+<link href="https://rsms.me/inter/inter.css" rel="stylesheet">
 
-function getAuthToken() {
-    return localStorage.getItem("token");
-}
+<style>
+    /* ──────────────────────────────────────
+   1. CSS Variables & Dark Mode
+   ────────────────────────────────────── */
+    :root {
+        --primary: #4e73df;
+        --primary-dark: #224abe;
+        --success: #2ecc71;
+        --danger: #e74c3c;
+        --gray-100: #f8f9fa;
+        --gray-200: #e9ecef;
+        --gray-300: #dee2e6;
+        --gray-600: #6c757d;
+        --gray-800: #343a40;
+        --gray-900: #212529;
+        --shadow-sm: 0 4px 12px rgba(0, 0, 0, .08);
+        --shadow-md: 0 12px 32px rgba(0, 0, 0, .14);
+        --radius: .75rem;
+        --radius-lg: 1.25rem;
+        --transition: all .3s cubic-bezier(.4, 0, .2, 1);
+    }
 
-    async function loadProfile() {
-        try {
-            const token = getAuthToken();
-            const response = await fetch('/api/users/profile', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            const user = await response.json();
+    /* Dark mode */
+    [data-theme="dark"] {
+        --primary: #5a81f7;
+        --primary-dark: #6c8eff;
+        --gray-100: #212529;
+        --gray-200: #2c3034;
+        --gray-300: #343a40;
+        --gray-600: #adb5bd;
+        --gray-800: #f8f9fa;
+        --gray-900: #f8f9fa;
+    }
 
-            document.getElementById('name').value = user.name;
-            document.getElementById('email').value = user.email;
+    /* ──────────────────────────────────────
+   2. Global
+   ────────────────────────────────────── */
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
 
-            // Set profile picture
-            if (user.profile_picture) {
-                document.getElementById('profile-picture').src = user.profile_picture;
-            }
-        } catch (error) {
-            console.error('Error loading profile:', error);
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: 'Inter', system-ui, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        margin: 0;
+        color: var(--gray-900);
+        transition: var(--transition);
+    }
+    .btn-change{
+        margin-left: -80px;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    [data-theme="dark"] body {
+        background: #0a0e17;
+    }
+
+    /* ──────────────────────────────────────
+   3. Layout
+   ────────────────────────────────────── */
+    .profile-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 1.5rem;
+    }
+
+    .profile-card {
+        width: 100%;
+        max-width: 480px;
+        background: rgba(255, 255, 255, .92);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+        backdrop-filter: blur(16px);
+        transition: var(--transition);
+    }
+
+    [data-theme="dark"] .profile-card {
+        background: rgba(33, 37, 41, .94);
+        border: 1px solid rgba(255, 255, 255, .07);
+    }
+
+    .profile-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, .18);
+    }
+
+    /* Header */
+    .profile-header {
+        position: relative;
+        padding: 2rem 1.5rem 1.5rem;
+        text-align: center;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: #fff;
+    }
+
+    .profile-header h1 {
+        margin: 0;
+        font-size: 1.85rem;
+        font-weight: 700;
+        letter-spacing: -.02em;
+    }
+
+    .admin-badge {
+        background: #ffc107;
+        color: #212529;
+        font-size: .75rem;
+        padding: .35em .65em;
+        border-radius: 2rem;
+        margin-top: .5rem;
+    }
+
+    .theme-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.3rem;
+        cursor: pointer;
+        opacity: .8;
+        transition: var(--transition);
+    }
+
+    .theme-btn:hover {
+        opacity: 1;
+        transform: rotate(15deg);
+    }
+
+    /* Body */
+    .profile-body {
+        padding: 2rem 1.5rem 1.5rem;
+    }
+
+    /* ──────────────────────────────────────
+   4. Avatar
+   ────────────────────────────────────── */
+    .avatar-section {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .avatar-wrapper {
+        position: relative;
+        width: 140px;
+        height: 140px;
+        margin: 0 auto 1rem;
+        cursor: pointer;
+    }
+
+    .avatar-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 5px solid #fff;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
+    }
+
+    .avatar-wrapper:hover .avatar-img {
+        transform: scale(1.07);
+    }
+
+    .avatar-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, .55);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 2.2rem;
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    .avatar-wrapper:hover .avatar-overlay {
+        opacity: 1;
+    }
+
+    .avatar-ring {
+        position: absolute;
+        inset: -8px;
+        border: 3px solid var(--primary);
+        border-radius: 50%;
+        opacity: 0;
+        animation: pulseRing 2s infinite;
+    }
+
+    .avatar-wrapper:hover .avatar-ring {
+        opacity: .4;
+    }
+
+    @keyframes pulseRing {
+        0% {
+            transform: scale(0.9);
+            opacity: .6;
+        }
+
+        100% {
+            transform: scale(1.3);
+            opacity: 0;
         }
     }
 
-    // Handle profile picture upload
-    document.getElementById('profile-picture-input').addEventListener('change', async (e) => {
-        const file = e.target.files[0];
+    .dropzone.dragover .avatar-img {
+        border: 4px dashed var(--primary);
+    }
+
+    /* ──────────────────────────────────────
+   5. Form – Floating Labels
+   ────────────────────────────────────── */
+    .profile-form {
+        display: grid;
+        gap: 1.25rem;
+    }
+
+    .form-group {
+        position: relative;
+    }
+
+    .form-control,
+    textarea.form-control {
+        width: 100%;
+        padding: 1rem 1rem 0.5rem 2.8rem;
+        font-size: 1.05rem;
+        border: 1px solid var(--gray-300);
+        border-radius: var(--radius);
+        background: var(--gray-100);
+        transition: var(--transition);
+        resize: none;
+    }
+
+    .form-control:focus,
+    textarea.form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        background: #fff;
+        box-shadow: 0 0 0 4px rgba(78, 115, 223, .15);
+    }
+
+    .form-control:focus+label,
+    textarea.form-control:focus+label,
+    .form-control:not(:placeholder-shown)+label,
+    textarea.form-control:not(:placeholder-shown)+label {
+        top: .45rem;
+        font-size: .75rem;
+        color: var(--primary);
+    }
+
+    label {
+        position: absolute;
+        left: 2.8rem;
+        top: 1.1rem;
+        font-size: .95rem;
+        color: var(--gray-600);
+        pointer-events: none;
+        transition: var(--transition);
+    }
+
+    .input-icon {
+        position: absolute;
+        left: .9rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-600);
+        font-size: 1.1rem;
+    }
+
+    .optional {
+        font-weight: normal;
+        color: var(--gray-600);
+    }
+
+    /* Bio character counter */
+    .char-count {
+        font-size: .75rem;
+    }
+
+    /* Password toggle */
+    .toggle-pwd {
+        position: absolute;
+        right: .9rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--gray-600);
+        cursor: pointer;
+        font-size: 1.1rem;
+    }
+
+    /* Password strength */
+    .pwd-meter {
+        height: 4px;
+        background: var(--gray-300);
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .pwd-meter>div {
+        height: 100%;
+        width: 0;
+        transition: width .4s ease;
+    }
+
+    .strength-weak {
+        background: var(--danger);
+    }
+
+    .strength-fair {
+        background: #f1c40f;
+    }
+
+    .strength-good {
+        background: #27ae60;
+    }
+
+    .strength-strong {
+        background: var(--success);
+    }
+
+    /* ──────────────────────────────────────
+   6. Buttons
+   ────────────────────────────────────── */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        font-weight: 600;
+        padding: .75rem 1.5rem;
+        border-radius: 2rem;
+        cursor: pointer;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: #fff;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+
+    .btn-submit .check-icon {
+        opacity: 0;
+        transform: scale(0);
+        transition: var(--transition);
+    }
+
+    .btn-submit.success .check-icon {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* Ripple */
+    .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, .4);
+        transform: scale(0);
+        animation: rippleAnim .6s linear;
+        pointer-events: none;
+    }
+
+    @keyframes rippleAnim {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+
+    /* ──────────────────────────────────────
+   7. Responsive
+   ────────────────────────────────────── */
+    @media (max-width: 576px) {
+        .profile-card {
+            max-width: 100%;
+        }
+
+        .profile-header h1 {
+            font-size: 1.6rem;
+        }
+
+        .avatar-wrapper {
+            width: 110px;
+            height: 110px;
+        }
+
+        .form-control,
+        textarea.form-control {
+            padding: .9rem .9rem .4rem 2.4rem;
+            font-size: 1rem;
+        }
+
+        label {
+            left: 2.4rem;
+        }
+
+        .input-icon {
+            left: .75rem;
+        }
+    }
+</style>
+
+<script>
+    /* ───── Token & API helpers ───── */
+    const sessionToken = '{{ session.token or "" }}';
+    if (sessionToken && !localStorage.getItem('token')) localStorage.setItem('token', sessionToken);
+    const getToken = () => localStorage.getItem('token');
+
+    /* ───── Theme toggle ───── */
+    const themeBtn = document.getElementById('theme-toggle');
+    const setTheme = (dark) => {
+        document.documentElement.dataset.theme = dark ? 'dark' : '';
+        themeBtn.innerHTML = dark ? '<i class="bi bi-moon-fill"></i>' : '<i class="bi bi-sun-fill"></i>';
+    };
+    themeBtn.addEventListener('click', () => setTheme(!document.documentElement.dataset.theme));
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme(true);
+
+    /* ───── Load profile (now includes bio) ───── */
+    async function loadProfile() {
+        try {
+            const res = await fetch('/api/users/profile', { headers: { Authorization: `Bearer ${getToken()}` } });
+            if (res.status === 401 || res.status === 422) {
+                window.location.href = '/login';
+                return;
+            }
+            if (!res.ok) throw new Error();
+            const u = await res.json();
+            document.getElementById('name').value = u.name || '';
+            document.getElementById('email').value = u.email || '';
+            document.getElementById('bio').value = u.bio || '';
+            updateCharCount();
+            if (u.profile_picture) document.getElementById('profile-picture').src = u.profile_picture + '?t=' + Date.now();
+        } catch (e) { Swal.fire('Error', 'Could not load profile', 'error'); }
+    }
+
+    /* ───── Avatar upload (click + drag) ───── */
+    const avatarDrop = document.getElementById('avatar-dropzone');
+    const fileInput = document.getElementById('profile-picture-input');
+    const avatarImg = document.getElementById('profile-picture');
+
+    ['dragover', 'dragenter'].forEach(e => avatarDrop.addEventListener(e, ev => { ev.preventDefault(); avatarDrop.classList.add('dragover'); }));
+    ['dragleave', 'dragend', 'drop'].forEach(e => avatarDrop.addEventListener(e, ev => { ev.preventDefault(); avatarDrop.classList.remove('dragover'); }));
+    avatarDrop.addEventListener('drop', ev => {
+        const files = ev.dataTransfer.files;
+        if (files.length) { fileInput.files = files; fileInput.dispatchEvent(new Event('change')); }
+    });
+
+    avatarDrop.addEventListener('click', () => fileInput.click());
+    document.querySelector('.btn-change').addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', async () => {
+        const file = fileInput.files[0];
         if (!file) return;
+        console.log('File selected:', file.name, file.size);
+        if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) return Swal.fire('Invalid', 'Only JPG/PNG/GIF', 'error');
+        if (file.size > 5 * 1024 * 1024) return Swal.fire('Too large', 'Max 5 MB', 'error');
 
-        // Validate file type
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        if (!allowedTypes.includes(file.type)) {
-            Swal.fire('Error', 'Please select a valid image file (JPG, PNG, GIF)', 'error');
-            return;
-        }
-
-        // Validate file size (5MB)
-        if (file.size > 5 * 1024 * 1024) {
-            Swal.fire('Error', 'Image file too large (max 5MB)', 'error');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('file', file);
-
+        const fd = new FormData(); fd.append('file', file);
+        console.log('Token:', getToken());
         try {
-            const token = getAuthToken();
-            const response = await fetch('/api/uploads/profile-picture', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formData
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                document.getElementById('profile-picture').src = result.profile_picture;
-                Swal.fire('Success', 'Profile picture updated successfully', 'success');
-            } else {
-                const error = await response.json();
-                Swal.fire('Error', error.error || 'Failed to upload profile picture', 'error');
-            }
-        } catch (error) {
-            console.error('Error uploading profile picture:', error);
-            Swal.fire('Error', 'Failed to upload profile picture', 'error');
-        }
+            console.log('Uploading...');
+            const r = await fetch('/api/uploads/profile-picture', { method: 'POST', headers: { Authorization: `Bearer ${getToken()}` }, body: fd });
+            const d = await r.json();
+            console.log('Response:', r.status, d);
+            if (r.ok) {
+                avatarImg.src = d.profile_picture + '?t=' + Date.now();
+                Swal.fire({ icon: 'success', title: 'Updated', text: 'Profile picture changed', timer: 1500, showConfirmButton: false });
+            } else throw d;
+        } catch (e) { console.error('Upload error:', e); Swal.fire('Error', e.error || 'Upload failed', 'error'); }
     });
 
-    document.getElementById('profile-form').addEventListener('submit', async (e) => {
+    /* ───── Bio character counter ───── */
+    const bioTextarea = document.getElementById('bio');
+    const charCount = document.querySelector('.char-count');
+    function updateCharCount() {
+        const len = bioTextarea.value.length;
+        charCount.textContent = `${len} / 280`;
+    }
+    bioTextarea.addEventListener('input', updateCharCount);
+
+    /* ───── Password toggle & strength ───── */
+    document.querySelector('.toggle-pwd').addEventListener('click', function () {
+        const pwd = document.getElementById('password');
+        const icon = this.querySelector('i');
+        if (pwd.type === 'password') { pwd.type = 'text'; icon.classList.replace('bi-eye', 'bi-eye-slash'); }
+        else { pwd.type = 'password'; icon.classList.replace('bi-eye-slash', 'bi-eye'); }
+    });
+
+    document.getElementById('password').addEventListener('input', function () {
+        const val = this.value;
+        const meter = document.getElementById('pwd-strength');
+        let strength = 0;
+        if (val.length > 5) strength++;
+        if (val.length > 8) strength++;
+        if (/[0-9]/.test(val)) strength++;
+        if (/[A-Z]/.test(val)) strength++;
+        if (/[^A-Za-z0-9]/.test(val)) strength++;
+
+        const bar = meter.querySelector('div') || document.createElement('div');
+        bar.className = '';
+        if (strength <= 1) bar.classList.add('strength-weak');
+        else if (strength <= 2) bar.classList.add('strength-fair');
+        else if (strength <= 3) bar.classList.add('strength-good');
+        else bar.classList.add('strength-strong');
+        bar.style.width = (strength * 20) + '%';
+        if (!meter.hasChildNodes()) meter.appendChild(bar);
+    });
+
+    /* ───── Form submit (now sends bio) ───── */
+    document.getElementById('profile-form').addEventListener('submit', async e => {
         e.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const bio = document.getElementById('bio').value.trim();
+        const pwd = document.getElementById('password').value;
+        if (!name) return Swal.fire('Oops', 'Name is required', 'warning');
 
-        const updateData = {
-            name: document.getElementById('name').value
-        };
+        const payload = { name };
+        if (bio) payload.bio = bio;
+        if (pwd) payload.password = pwd;
 
-        if (document.getElementById('password').value) {
-            updateData.password = document.getElementById('password').value;
-        }
+        const btn = e.target.querySelector('.btn-submit');
+        btn.disabled = true;
 
         try {
-            const token = getAuthToken();
-            const response = await fetch('/api/users/update-profile', {
+            const r = await fetch('/api/users/update-profile', {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(updateData)
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+                body: JSON.stringify(payload)
             });
-
-            if (response.ok) {
-                Swal.fire('Success', 'Profile updated successfully', 'success');
-            }
-        } catch (error) {
-            Swal.fire('Error', 'Failed to update profile', 'error');
-        }
+            if (r.ok) {
+                btn.classList.add('success');
+                setTimeout(() => btn.classList.remove('success'), 2000);
+                Swal.fire({ icon: 'success', title: 'Saved!', timer: 1500, showConfirmButton: false });
+            } else throw await r.json();
+        } catch (err) {
+            Swal.fire('Error', err.error || 'Update failed', 'error');
+        } finally { btn.disabled = false; }
     });
 
-    loadProfile();
+    /* ───── Ripple effect on buttons ───── */
+    document.querySelectorAll('.btn').forEach(b => {
+        b.addEventListener('click', function (e) {
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = e.clientX - rect.left - size / 2 + 'px';
+            ripple.style.top = e.clientY - rect.top - size / 2 + 'px';
+            this.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+
+    /* ───── Init ───── */
+    document.addEventListener('DOMContentLoaded', () => {
+        loadProfile();
+        updateCharCount();   // initial count
+    });
 </script>
 {% endblock %}

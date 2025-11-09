@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,36 +12,105 @@
     <style>
         /* Ensure body content doesn't go under the fixed navbar */
         body {
-            padding-top: 70px; /* adjust this if navbar height changes */
+            padding-top: 70px;
+            /* adjust this if navbar height changes */
         }
 
         /* Optional: add higher z-index to navbar to stay on top of modals/other content */
         .navbar {
-            z-index: 1030; /* higher than default modals (1050) if needed) */
+            z-index: 1030;
+            /* higher than default modals (1050) if needed) */
+        }
+
+        .auth-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+            animation: bounce 1s infinite alternate;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .logo-page {
+            width: 50px;
+            height: 50px;
+        }
+
+        /* Navbar improvements */
+        .navbar-nav .nav-link {
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        .navbar-toggler {
+            border: none;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        @media (max-width: 991.98px) {
+            .navbar-nav {
+                text-align: center;
+                margin-top: 1rem;
+            }
         }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
-                <i class="bi bi-newspaper"></i> Student News
+                <img src="/static/images/logoPage.png" alt="Student News Logo"
+                    class="auth-logo logo-page mx-auto d-block"></i>
+                Student News
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="bi bi-house-door me-1"></i>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/library"><i class="bi bi-book me-1"></i>Library</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about"><i class="bi bi-info-circle me-1"></i>About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact"><i class="bi bi-envelope me-1"></i>Contact</a>
+                    </li>
+                </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img id="nav-profile-picture" src="/static/placeholder-user.jpg" alt="Profile" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img id="nav-profile-picture" src="/static/placeholder-user.jpg" alt="Profile"
+                                class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
                             <span id="nav-user-name">Profile</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="/profile"><i class="bi bi-person-circle"></i> View Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                            <li><a class="dropdown-item" href="/profile"><i class="bi bi-person-circle"></i> View
+                                    Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()"><i
+                                        class="bi bi-box-arrow-right"></i> Logout</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -56,31 +126,66 @@
     <footer class="bg-dark text-white mt-5 py-4">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-4 mb-3 mb-md-0">
-                    <h5 class="mb-3">
-                        <i class="bi bi-newspaper"></i> Student News
+                <!-- Logo + description -->
+                <div class="col-md-3 mb-4 mb-md-0 text-center text-md-start">
+                    <h5 class="mb-3 d-flex align-items-center justify-content-center justify-content-md-start gap-2">
+                        <!-- <img src="/static/images/logoPage.png" alt="Student News Logo" class="auth-logo" -->
+                            <!-- style="height: 40px; width: auto;"> -->
+                        Student News
                     </h5>
-                    <p class="text-muted small">Your trusted source for campus news and announcements.</p>
+                    <p class="text-muted small mb-0">
+                        Your trusted source for campus news and announcements.
+                    </p>
                 </div>
-                <div class="col-md-4 mb-3 mb-md-0">
+
+                <!-- Quick Links -->
+                <div class="col-md-3 mb-4 mb-md-0">
                     <h6 class="mb-3">Quick Links</h6>
-                    <ul class="list-unstyled small">
+                    <ul class="list-unstyled small mb-0">
                         <li><a href="/" class="text-decoration-none text-muted">Home</a></li>
+                        <li><a href="/about" class="text-decoration-none text-muted">About</a></li>
+                        <li><a href="/contact" class="text-decoration-none text-muted">Contact</a></li>
+                        <li><a href="/library" class="text-decoration-none text-muted">Library</a></li>
                         <li><a href="/dashboard" class="text-decoration-none text-muted">News Feed</a></li>
                         <li><a href="/profile" class="text-decoration-none text-muted">Profile</a></li>
                     </ul>
                 </div>
-                <div class="col-md-4">
+
+                <!-- Contact -->
+                <div class="col-md-3 mb-4 mb-md-0">
                     <h6 class="mb-3">Contact</h6>
-                    <p class="text-muted small">
-                        Email: <a href="mailto:info@studentnews.com" class="text-decoration-none text-muted">info@studentnews.com</a><br>
+                    <p class="text-muted small mb-0">
+                        Email: <a href="mailto:info@studentnews.com"
+                            class="text-decoration-none text-muted">info@studentnews.com</a><br>
                         Phone: (555) 123-4567
                     </p>
                 </div>
+
+                <!-- Social Media -->
+                <div class="col-md-3">
+                    <h6 class="mb-3">Follow Us</h6>
+                    <ul class="list-unstyled small mb-0">
+                        <li><a href="#" class="text-decoration-none text-muted"><i class="bi bi-facebook me-2"></i>Facebook</a></li>
+                        <li><a href="#" class="text-decoration-none text-muted"><i class="bi bi-twitter me-2"></i>Twitter</a></li>
+                        <li><a href="#" class="text-decoration-none text-muted"><i class="bi bi-instagram me-2"></i>Instagram</a></li>
+                        <li><a href="#" class="text-decoration-none text-muted"><i class="bi bi-linkedin me-2"></i>LinkedIn</a></li>
+                    </ul>
+                </div>
             </div>
-            <hr class="bg-secondary my-3">
-            <div class="text-center text-muted small">
-                <p>&copy; 2025 Student News System. All rights reserved. | <a href="#" class="text-decoration-none text-muted">Privacy Policy</a> | <a href="#" class="text-decoration-none text-muted">Terms of Service</a></p>
+
+            <hr class="bg-secondary my-4">
+
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start text-muted small">
+                    <p class="mb-0 d-flex align-items-center">
+                        <img src="/static/images/logoPage.png" alt="Student News Logo" style="height: 20px; width: auto; margin-right: 10px;">
+                        © 2025 Student News System. All rights reserved.
+                    </p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="#" class="text-decoration-none text-muted small me-3">Privacy Policy</a>
+                    <a href="#" class="text-decoration-none text-muted small">Terms of Service</a>
+                </div>
             </div>
         </div>
     </footer>
@@ -122,4 +227,5 @@
 
     {% block extra_js %}{% endblock %}
 </body>
+
 </html>

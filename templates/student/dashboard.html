@@ -3,45 +3,7 @@
 {% block title %}Student Dashboard - Student News System{% endblock %}
 
 {% block extra_css %}
-<style>
-    .post-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        cursor: pointer;
-        border-left: 4px solid #0d6efd;
-    }
-    .post-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-    .category-badge {
-        font-size: 0.8rem;
-        padding: 5px 10px;
-        border-radius: 20px;
-    }
-    .search-bar {
-        margin-bottom: 20px;
-    }
-    .filter-sidebar {
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 10px;
-        height: fit-content;
-    }
-    .notification-badge {
-        position: absolute;
-        top: -8px;
-        right: -8px;
-        background-color: #dc3545;
-        color: white;
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.7rem;
-    }
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student-style.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -53,27 +15,12 @@
                 <i class="bi bi-bell"></i> Notifications
                 <span id="notification-count" class="badge bg-danger" style="display: none;">0</span>
             </h5>
-            <div id="notifications-container" style="max-height: 300px; overflow-y: auto; margin-bottom: 20px;">
+            <div id="notifications-container" class="notifications-container">
                 <small class="text-muted">No new notifications</small>
             </div>
 
             <hr>
 
-            <h5 class="mb-3">Categories</h5>
-            <div class="btn-group-vertical w-100">
-                <button class="btn btn-outline-primary text-start active" onclick="filterCategory('all')">
-                    All Posts
-                </button>
-                <button class="btn btn-outline-primary text-start" onclick="filterCategory('campus')">
-                    Campus News
-                </button>
-                <button class="btn btn-outline-primary text-start" onclick="filterCategory('events')">
-                    Events
-                </button>
-                <button class="btn btn-outline-primary text-start" onclick="filterCategory('announcements')">
-                    Announcements
-                </button>
-            </div>
 
             <hr>
 
@@ -85,24 +32,48 @@
 
     <!-- Main Content -->
     <div class="col-md-9">
-        <!-- Search Bar -->
-        <div class="search-bar">
-            <input type="text" class="form-control" id="search-input" placeholder="Search posts...">
-        </div>
-
-        <!-- Posts List -->
-        <div id="posts-container">
-            <div class="text-center mt-5">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+        <!-- Search and Filter Bar -->
+        <div class="search-filter-bar">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <h4 class="mb-0">Latest News</h4>
+                <div class="d-flex gap-2 flex-wrap">
+                    <select id="categoryFilter" class="form-select form-select-sm" style="width: auto;" aria-label="Filter by category">
+                        <option value="all">All Categories</option>
+                        <option value="announcement">Announcements</option>
+                        <option value="news">News</option>
+                        <option value="event">Events</option>
+                        <option value="academic">Academic</option>
+                    </select>
+                    <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search posts..." aria-label="Search posts">
+                    <button class="btn btn-primary btn-sm" onclick="loadPosts()" aria-label="Search">
+                        <i class="bi bi-search"></i>
+                    </button>
                 </div>
             </div>
         </div>
+
+        <!-- Posts Container -->
+        <div id="postsContainer">
+            <!-- Posts will be loaded here -->
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav id="paginationNav" class="mt-4" style="display: none;">
+            <ul class="pagination justify-content-center" id="paginationList">
+            </ul>
+        </nav>
     </div>
 </div>
 
 <!-- Post Detail Modal -->
-<div class="modal fade" id="postDetailModal" tabindex="-1" aria-labelledby="postDetailModalLabel">
+<div class="modal fade" id="postDetailModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -131,7 +102,7 @@
 
                 <!-- Comments Section -->
                 <h6>Comments (<span id="comment-count">0</span>)</h6>
-                <div id="comments-container" style="max-height: 300px; overflow-y: auto; margin-bottom: 15px;">
+                <div id="comments-container" class="comments-container">
                 </div>
 
                 <form id="comment-form">
@@ -151,70 +122,15 @@
 <script>
     const token = localStorage.getItem("token");
     let currentPostId = null;
-    let currentCategory = 'all';
 
     // Check if token exists and redirect if not
     if (!token) {
         window.location.href = "/login";
     }
 
-    async function loadPosts(category = 'all', search = '') {
-        try {
-            let url = '/api/posts?category=' + (category === 'all' ? 'all' : category);
-            if (search) url += '&search=' + search;
+    // Load posts on page load
+    loadPosts();
 
-            const response = await fetch(url, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            if (response.status === 401) {
-                window.location.href = "/login";
-                return;
-            }
-            const data = await response.json();
-            const posts = data.posts || [];
-
-            let html = '';
-            if (posts.length === 0) {
-                html = '<p class="text-center text-muted mt-5">No posts found.</p>';
-            } else {
-                posts.forEach(post => {
-                    const badge = `<span class="badge bg-info category-badge">${post.category}</span>`;
-                    html += `
-                        <div class="card post-card mb-3" onclick="showPostDetail(${post.id})">
-                            <div class="card-body">
-                                ${post.image_url ? `<img src="${post.image_url}" class="card-img-top mb-3" style="max-height: 200px; object-fit: cover;" alt="Post image">` : ''}
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div style="flex: 1;">
-                                        <h5 class="card-title">${post.title}</h5>
-                                        <p class="card-text text-muted">${post.content.substring(0, 150)}...</p>
-                                        <div class="d-flex gap-2 align-items-center">
-                                            ${badge}
-                                            <small class="text-muted">${post.created_at}</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-2">
-                                    <small class="text-muted me-3">
-                                        <i class="bi bi-heart"></i> ${post.likes_count}
-                                    </small>
-                                    <small class="text-muted me-3">
-                                        <i class="bi bi-chat"></i> ${post.comments_count}
-                                    </small>
-                                    <small class="text-muted">
-                                        <i class="bi bi-eye"></i> ${post.view_count} views
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-
-            document.getElementById('posts-container').innerHTML = html;
-        } catch (error) {
-            console.error('Error loading posts:', error);
-        }
-    }
 
     async function showPostDetail(postId) {
         currentPostId = postId;
@@ -342,7 +258,8 @@
 
     function sharePost() {
         const postUrl = `${window.location.origin}/post/${currentPostId}`;
-        const text = `Check out this post on Student News: ${document.getElementById('post-detail-title').textContent}`;
+        const titleElement = document.getElementById('postDetailModalLabel');
+        const text = titleElement ? `Check out this post on Student News: ${titleElement.textContent}` : 'Check out this post on Student News';
 
         if (navigator.share) {
             navigator.share({
@@ -356,27 +273,13 @@
         }
     }
 
-    function filterCategory(category) {
-        currentCategory = category;
-        loadPosts(category);
-
-        document.querySelectorAll('.filter-sidebar .btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        event.target.classList.add('active');
-    }
-
-    document.getElementById('search-input').addEventListener('keyup', (e) => {
-        const search = e.target.value;
-        loadPosts(currentCategory, search);
-    });
 
     async function loadNotifications() {
         try {
             const response = await fetch('/api/users/notifications', {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            if (response.status === 401) {
+            if (response.status === 401 || response.status === 422) {
                 window.location.href = "/login";
                 return;
             }
@@ -406,10 +309,181 @@
         }
     }
 
-    loadPosts();
     loadNotifications();
 
     setInterval(loadNotifications, 10000);
+
+    // Add event listeners for search and filter
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            loadPosts();
+        }
+    });
+
+    document.getElementById('categoryFilter').addEventListener('change', function() {
+        loadPosts();
+    });
+
+    async function loadPosts(page = 1) {
+        const postsContainer = document.getElementById('postsContainer');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const paginationNav = document.getElementById('paginationNav');
+        const paginationList = document.getElementById('paginationList');
+
+        // Show loading spinner
+        loadingSpinner.style.display = 'block';
+        postsContainer.innerHTML = '';
+
+        try {
+            const category = document.getElementById('categoryFilter').value;
+            const search = document.getElementById('searchInput').value.trim();
+
+            let url = `/api/posts?page=${page}&per_page=10`;
+            if (category && category !== 'all') {
+                url += `&category=${category}`;
+            }
+            if (search) {
+                url += `&search=${encodeURIComponent(search)}`;
+            }
+
+            const response = await fetch(url, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (response.status === 401) {
+                window.location.href = "/login";
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error('Failed to load posts');
+            }
+
+            const data = await response.json();
+            const posts = data.posts || [];
+
+            // Hide loading spinner
+            loadingSpinner.style.display = 'none';
+
+            if (posts.length === 0) {
+                postsContainer.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="bi bi-newspaper" style="font-size: 3rem; color: #6c757d;"></i>
+                        <h4 class="mt-3 text-muted">No posts found</h4>
+                        <p class="text-muted">Try adjusting your search or filter criteria.</p>
+                    </div>`;
+                paginationNav.style.display = 'none';
+                return;
+            }
+
+            // Render posts
+            postsContainer.innerHTML = posts.map(post => `
+                <div class="card post-card mb-3" onclick="showPostDetail(${post.id})">
+                    ${post.image_url ? `<img src="${post.image_url}" class="card-img-top" alt="Post image">` : ''}
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-primary category-badge">${post.category}</span>
+                            ${post.is_pinned ? '<i class="bi bi-pin-angle-fill text-warning" title="Pinned"></i>' : ''}
+                        </div>
+                        <h5 class="card-title">${post.title}</h5>
+                        <p class="card-text">${post.content}</p>
+                        <div class="d-flex justify-content-between align-items-center text-muted small">
+                            <span><i class="bi bi-person"></i> ${post.author}</span>
+                            <span><i class="bi bi-calendar"></i> ${new Date(post.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>
+                                <button class="btn btn-outline-primary btn-sm me-2" onclick="event.stopPropagation(); toggleLike(${post.id})">
+                                    <i class="bi ${post.is_liked ? 'bi-heart-fill' : 'bi-heart'}"></i> ${post.likes_count}
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="event.stopPropagation(); sharePost(${post.id})">
+                                    <i class="bi bi-share"></i> Share
+                                </button>
+                            </div>
+                            <div class="text-muted small">
+                                <i class="bi bi-eye"></i> ${post.view_count} views
+                                <i class="bi bi-chat me-1 ms-2"></i> ${post.comments_count}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render pagination
+            const totalPages = data.pages || 1;
+            if (totalPages > 1) {
+                paginationNav.style.display = 'block';
+                paginationList.innerHTML = '';
+
+                // Previous button
+                const prevDisabled = page <= 1 ? 'disabled' : '';
+                paginationList.innerHTML += `
+                    <li class="page-item ${prevDisabled}">
+                        <a class="page-link" href="#" onclick="event.preventDefault(); loadPosts(${page - 1})" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>`;
+
+                // Page numbers
+                for (let i = Math.max(1, page - 2); i <= Math.min(totalPages, page + 2); i++) {
+                    const active = i === page ? 'active' : '';
+                    paginationList.innerHTML += `
+                        <li class="page-item ${active}">
+                            <a class="page-link" href="#" onclick="event.preventDefault(); loadPosts(${i})">${i}</a>
+                        </li>`;
+                }
+
+                // Next button
+                const nextDisabled = page >= totalPages ? 'disabled' : '';
+                paginationList.innerHTML += `
+                    <li class="page-item ${nextDisabled}">
+                        <a class="page-link" href="#" onclick="event.preventDefault(); loadPosts(${page + 1})" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>`;
+            } else {
+                paginationNav.style.display = 'none';
+            }
+
+        } catch (error) {
+            console.error('Error loading posts:', error);
+            loadingSpinner.style.display = 'none';
+            postsContainer.innerHTML = `
+                <div class="text-center py-5">
+                    <i class="bi bi-exclamation-triangle" style="font-size: 3rem; color: #dc3545;"></i>
+                    <h4 class="mt-3 text-danger">Unable to load posts</h4>
+                    <p class="text-muted">Please try refreshing the page.</p>
+                </div>`;
+            paginationNav.style.display = 'none';
+        }
+    }
+
+    function sharePost(postId) {
+        const postUrl = `${window.location.origin}/post/${postId}`;
+        if (navigator.share) {
+            navigator.share({
+                title: 'Student News',
+                text: 'Check out this post on Student News',
+                url: postUrl
+            });
+        } else {
+            navigator.clipboard.writeText(postUrl).then(() => {
+                // Show success message
+                const toast = document.createElement('div');
+                toast.className = 'toast align-items-center text-white bg-success border-0';
+                toast.setAttribute('role', 'alert');
+                toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">Post link copied to clipboard!</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>`;
+                document.body.appendChild(toast);
+                const bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+                setTimeout(() => document.body.removeChild(toast), 3000);
+            });
+        }
+    }
 
     async function logout() {
         try {
