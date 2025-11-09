@@ -5,6 +5,7 @@ A comprehensive Flask-based student news platform where admins can publish and m
 ## Features
 
 ### Core Features
+
 - **User Authentication**: Secure login/registration with JWT tokens and password hashing (Bcrypt)
 - **Multi-role System**: Admin, Editor, Moderator, and Student roles with different permissions
 - **Post Management**: Create, edit, delete, and manage posts with categories and scheduling
@@ -12,6 +13,7 @@ A comprehensive Flask-based student news platform where admins can publish and m
 - **User Profiles**: Customizable student profiles with bio, profile pictures, and follower system
 
 ### Advanced Features
+
 - **Pagination & Filtering**: Browse posts with search, category filters, and sorting
 - **Post Scheduling**: Schedule posts to publish at future dates
 - **Draft Posts**: Save posts as drafts before publishing
@@ -36,6 +38,7 @@ A comprehensive Flask-based student news platform where admins can publish and m
 ## Installation
 
 ### Prerequisites
+
 - Python 3.8 or higher
 - pip (Python package manager)
 
@@ -48,11 +51,14 @@ cd student-news-system
 ### Step 2: Create Virtual Environment
 
 \`\`\`bash
+
 # On macOS/Linux
+
 python3 -m venv venv
 source venv/bin/activate
 
 # On Windows
+
 python -m venv venv
 venv\Scripts\activate
 \`\`\`
@@ -104,7 +110,7 @@ student-news-system/
 │   │   ├── login.html         # Login page
 │   │   └── register.html      # Registration page
 │   ├── student/
-│   │   ├── dashboard.html     # Student news feed
+│   │   ├── dashboard.html     # Student dashboard
 │   │   └── profile.html       # Student profile
 │   └── admin/
 │       └── dashboard.html     # Admin panel
@@ -123,6 +129,7 @@ student-news-system/
 ## API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/register` - Register new student
 - `POST /api/auth/login` - Login user
 - `POST /api/auth/logout` - Logout user
@@ -131,6 +138,7 @@ student-news-system/
 - `POST /api/auth/change-password` - Change password
 
 ### Posts
+
 - `GET /api/posts` - Get all posts with pagination
 - `GET /api/posts/trending` - Get trending posts
 - `GET /api/posts/<id>` - Get single post
@@ -141,12 +149,14 @@ student-news-system/
 - `POST /api/posts/<id>/unlike` - Unlike a post
 
 ### Comments
+
 - `POST /api/posts/<id>/comments` - Add comment
 - `GET /api/posts/<id>/comments` - Get post comments
 - `DELETE /api/comments/<id>` - Delete comment
 - `POST /api/comments/<id>/replies` - Reply to comment
 
 ### Admin
+
 - `GET /api/admin/stats` - Dashboard statistics
 - `GET /api/admin/users` - List all users
 - `PUT /api/admin/users/<id>/block` - Block user
@@ -156,6 +166,7 @@ student-news-system/
 - `PUT /api/admin/comments/<id>/reject` - Reject comment
 
 ### Analytics
+
 - `GET /api/analytics/dashboard` - Analytics dashboard data
 - `GET /api/analytics/posts/trending` - Trending posts analysis
 - `GET /api/analytics/engagement` - User engagement metrics
@@ -163,17 +174,20 @@ student-news-system/
 ## Usage Examples
 
 ### Register as a Student
+
 1. Navigate to `http://localhost:5000/register`
 2. Fill in Full Name, Email, and Password
 3. Click "Create Account"
 4. Login with your credentials
 
 ### Login as Admin
+
 1. Navigate to `http://localhost:5000/login`
 2. Use admin credentials (created during setup)
 3. Access admin dashboard at `/admin`
 
 ### Create a Post (Admin Only)
+
 1. Go to Admin Dashboard (`/admin`)
 2. Click "Create Post"
 3. Fill in title, content, category
@@ -181,10 +195,11 @@ student-news-system/
 5. Click "Create Post"
 
 ### Browse Posts (Student)
+
 1. Login as student
 2. Go to Student Dashboard (`/student`)
-3. View news feed, use search, or filter by category
-4. Click post to view full content
+3. View notifications and manage profile
+4. Access other features as needed
 5. Like, comment, or share posts
 
 ## User Roles & Permissions
@@ -215,25 +230,30 @@ student-news-system/
 ## Database Models
 
 ### User
+
 - id, email, full_name, password_hash, bio, profile_picture
 - role (student, editor, moderator, admin)
 - is_blocked, created_at, updated_at
 
 ### Post
+
 - id, title, content, category, author_id, image_url
 - status (draft, published, archived)
 - scheduled_at, published_at, view_count, share_count
 - is_pinned, is_deleted
 
 ### Comment
+
 - id, content, post_id, user_id, parent_id (for replies)
 - status (pending, approved, rejected)
 - created_at, updated_at
 
 ### Like
+
 - id, post_id, user_id, created_at
 
 ### Notification
+
 - id, user_id, message, type, is_read, created_at
 
 ## Environment Variables
@@ -250,15 +270,19 @@ UPLOAD_FOLDER=static/uploads
 ## Troubleshooting
 
 ### Issue: Database locked
+
 **Solution**: Delete `database.db` and restart the app
 
 ### Issue: File upload fails
+
 **Solution**: Ensure `static/uploads/` directory exists and is writable
 
 ### Issue: Login not working
+
 **Solution**: Clear browser cookies and try again
 
 ### Issue: JWT token expired
+
 **Solution**: Default token expires in 30 days. Login again to get a new token.
 
 ## Performance Tips

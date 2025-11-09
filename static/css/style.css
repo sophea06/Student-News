@@ -6,8 +6,8 @@
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f8f9fa;
-  color: #333;
+  background-color: #ffffff;
+  color: #1a1a1a;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -57,23 +57,104 @@ body {
   border-radius: 10px;
 }
 
-/* Added footer styling */
+/* Enhanced footer styling */
 footer {
   margin-top: auto;
-  border-top: 1px solid #495057;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border-top: 2px solid #0d6efd;
+  position: relative;
+  overflow: hidden;
+}
+
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #0d6efd, #6610f2, #e83e8c, #fd7e14);
+}
+
+footer .container-fluid {
+  position: relative;
+  z-index: 1;
 }
 
 footer h5,
 footer h6 {
-  font-weight: 600;
-  color: #fff;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1.5rem;
+}
+
+footer .auth-logo {
+  filter: brightness(0) invert(1);
+  transition: transform 0.3s ease;
+}
+
+footer .auth-logo:hover {
+  transform: scale(1.05);
+}
+
+footer ul li {
+  margin-bottom: 0.5rem;
+}
+
+footer a {
+  color: #e0e0e0 !important;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
 }
 
 footer a:hover {
   color: #0d6efd !important;
-  transition: color 0.3s ease;
+  transform: translateX(5px);
 }
 
 footer .text-muted {
-  color: #adb5bd !important;
+  color: #e0e0e0 !important;
+}
+
+footer hr.bg-secondary {
+  border-color: #495057;
+  margin: 2rem 0;
+}
+
+footer .col-md-6 p {
+  font-size: 0.9rem;
+}
+
+footer .col-md-6 a {
+  font-size: 0.9rem;
+  margin: 0 0.5rem;
+}
+
+footer .col-md-6 a:first-child {
+  margin-left: 0;
+}
+
+footer .col-md-6 a:last-child {
+  margin-right: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  footer .row > div {
+    text-align: center !important;
+    margin-bottom: 2rem;
+  }
+
+  footer h5,
+  footer h6 {
+    margin-bottom: 1rem;
+  }
+
+  footer .d-flex {
+    justify-content: center !important;
+  }
 }

@@ -384,7 +384,11 @@ async function blockUser(userId) {
   try {
     const response = await fetch(`${API_URL}/admin/users/${userId}/block`, {
       method: "PUT",
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ reason: "Blocked by admin" })
     })
 
     if (response.ok) {
@@ -399,7 +403,11 @@ async function unblockUser(userId) {
   try {
     const response = await fetch(`${API_URL}/admin/users/${userId}/unblock`, {
       method: "PUT",
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({})
     })
 
     if (response.ok) {
@@ -460,12 +468,16 @@ async function loadAdminProfile() {
     if (response.ok) {
       const user = await response.json()
 
-      document.getElementById('admin-name').value = user.name
-      document.getElementById('admin-email').value = user.email
+      const nameEl = document.getElementById('admin-name')
+      if (nameEl) nameEl.value = user.name
+
+      const emailEl = document.getElementById('admin-email')
+      if (emailEl) emailEl.value = user.email
 
       // Set profile picture
-      if (user.profile_picture) {
-        document.getElementById('admin-profile-picture').src = user.profile_picture
+      const picEl = document.getElementById('admin-profile-picture')
+      if (picEl && user.profile_picture) {
+        picEl.src = user.profile_picture
       }
     }
   } catch (error) {

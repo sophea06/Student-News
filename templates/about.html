@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - Student News System{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-primary">About Student News System</h1>
+                <p class="lead text-muted">Connecting students with campus news and information</p>
+            </div>
+
+            <div class="card shadow-sm mb-5">
+                <div class="card-body p-5">
+                    <h2 class="h3 mb-4">Our Mission</h2>
+                    <p class="mb-4">
+                        The Student News System is dedicated to keeping students informed about campus events,
+                        announcements, and important updates. We believe that staying connected to campus life
+                        is essential for academic success and personal growth.
+                    </p>
+
+                    <h2 class="h3 mb-4">What We Offer</h2>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-newspaper text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h5 class="mb-2">Latest News</h5>
+                                    <p class="text-muted small mb-0">Stay updated with campus announcements and events</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-people text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h5 class="mb-2">Community Engagement</h5>
+                                    <p class="text-muted small mb-0">Connect and engage with fellow students</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-bell text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h5 class="mb-2">Real-time Updates</h5>
+                                    <p class="text-muted small mb-0">Get notifications for important announcements</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-shield-check text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h5 class="mb-2">Secure Platform</h5>
+                                    <p class="text-muted small mb-0">Your data and privacy are protected</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="h3 mb-4 mt-5">Our Team</h2>
+                    <p class="mb-4">
+                        We are a dedicated team of developers and educators committed to improving campus communication
+                        and student engagement. Our platform is built with modern technologies to ensure reliability,
+                        security, and ease of use.
+                    </p>
+
+                    <div class="text-center">
+                        <a href="/contact" class="btn btn-primary btn-lg">
+                            <i class="bi bi-envelope me-2"></i>Get in Touch
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

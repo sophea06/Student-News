@@ -1,87 +1,550 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Student News System</title>
-    <!-- cspell:ignore stylesheet onclick onsubmit tabindex -->
+
+    <!-- Bootstrap 5 + Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-style.css') }}">
     <link rel="icon" href="/static/images/logo.png" type="image/png">
+
+    <style>
+        :root {
+            --primary: #4e73df;
+            --primary-dark: #224abe;
+            --success: #1cc88a;
+            --warning: #f6c23e;
+            --danger: #e74a3b;
+            --sidebar-bg: #2c3e50;
+            --sidebar-hover: #34495e;
+            --sidebar-active: #4e73df;
+            --sidebar-width: 270px;
+            --sidebar-collapsed: 70px;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom right, #f8f9fc, #e9ecef);
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            min-height: 100vh;
+            background: var(--sidebar-bg);
+            color: #ecf0f1;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: var(--transition);
+            overflow: hidden;
+            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .sidebar-header h4 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: #fff;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar-header .logo-icon {
+            display: none;
+            font-size: 1.8rem;
+            color: #fff;
+        }
+
+        .sidebar.collapsed .sidebar-header h4 {
+            opacity: 0;
+        }
+
+        .sidebar.collapsed .sidebar-header .logo-icon {
+            display: block;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.85rem 1rem;
+            margin: 0.3rem 0.75rem;
+            border-radius: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: var(--transition);
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--sidebar-hover);
+            color: #fff;
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: var(--sidebar-active);
+            font-weight: 600;
+        }
+
+        .nav-link i {
+            width: 24px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .sidebar.collapsed .nav-text {
+            display: none;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+            min-height: 100vh;
+        }
+
+        .main-content.collapsed {
+            margin-left: var(--sidebar-collapsed);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .content-section.active {
+            display: block;
+            opacity: 1;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Page Title */
+        .page-title {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-title .line {
+            width: 5px;
+            height: 32px;
+            background: linear-gradient(to bottom, var(--primary), var(--primary-dark));
+            border-radius: 3px;
+        }
+
+        /* Stats Cards */
+        .stats-card {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 1px solid #e9ecef;
+            overflow: hidden;
+            position: relative;
+            height: 100%;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .stats-card .card-body {
+            padding: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stats-card h6 {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stats-card h3 {
+            font-size: 2.3rem;
+            font-weight: 800;
+            margin: 0;
+            background: linear-gradient(135deg, var(--primary), #8c7ae6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stats-card .icon-bg {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, rgba(78, 115, 223, 0.1), rgba(140, 122, 230, 0.05));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary);
+            opacity: 0.3;
+        }
+
+        .stats-card .growth {
+            font-size: 0.8rem;
+            color: #28a745;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Table Card */
+        .table-card {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            border: 1px solid #e9ecef;
+        }
+
+        .table-card .card-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1rem 1.5rem;
+            border: none;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-card .card-header a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .table-card .card-header a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .table-responsive {
+            border-radius: 0 0 1rem 1rem;
+            overflow: hidden;
+        }
+
+        .table {
+            margin: 0;
+            font-size: 0.92rem;
+        }
+
+        .table th {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #dee2e6;
+            padding: 1rem 0.75rem;
+        }
+
+        .table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .table td {
+            padding: 0.75rem;
+            vertical-align: middle;
+        }
+
+        /* Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: 0.75rem;
+            padding: 0.65rem 1.3rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(78, 115, 223, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #17a673);
+            border: none;
+            border-radius: 0.75rem;
+            padding: 0.65rem 1.3rem;
+            font-weight: 600;
+        }
+
+        /* Modal */
+        .modal-content {
+            border-radius: 1rem;
+            border: none;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #dee2e6;
+            padding: 1.25rem 1.5rem;
+            background: #f8f9fa;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        /* Mobile Toggle */
+        .sidebar-toggle {
+            position: fixed;
+            top: 1rem;
+            left: calc(var(--sidebar-width) + 1rem);
+            z-index: 1001;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: left 0.3s ease;
+            color: #495057;
+            font-size: 1.2rem;
+        }
+
+        .sidebar-toggle.collapsed {
+            left: calc(var(--sidebar-collapsed) + 1rem);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: var(--sidebar-collapsed);
+            }
+
+            .main-content {
+                margin-left: var(--sidebar-collapsed);
+            }
+
+            .sidebar-toggle {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.6rem;
+            }
+
+            .stats-card h3 {
+                font-size: 1.9rem;
+            }
+
+            .row>* {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
+
+    <!-- Mobile Sidebar Toggle -->
+    <button class="sidebar-toggle d-none" id="sidebarToggle">
+        <i class="bi bi-list"></i>
+    </button>
+
     <div class="d-flex">
         <!-- Sidebar -->
-        <nav class="sidebar bg-dark text-white p-4">
-            <h4 class="mb-4">Admin Panel</h4>
-            <ul class="nav flex-column">
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h4>Admin Panel</h4>
+                <i class="bi bi-person-circle logo-icon"></i>
+            </div>
+            <ul class="nav flex-column mt-3 px-2">
                 <li class="nav-item">
                     <a href="#" class="nav-link active" data-section="overview">
-                        <i class="bi bi-speedometer2"></i> Overview
+                        <i class="bi bi-speedometer2"></i>
+                        <span class="nav-text">Overview</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link" data-section="posts">
-                        <i class="bi bi-file-text"></i> Manage Posts
+                        <i class="bi bi-file-text"></i>
+                        <span class="nav-text">Manage Posts</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link" data-section="users">
-                        <i class="bi bi-people"></i> Manage Users
+                        <i class="bi bi-people"></i>
+                        <span class="nav-text">Manage Users</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link" data-section="announcement">
-                        <i class="bi bi-megaphone"></i> Send Announcement
+                        <i class="bi bi-megaphone"></i>
+                        <span class="nav-text">Announcement</span>
                     </a>
                 </li>
-                <li class="nav-item mt-4">
-                    <a href="#" class="nav-link" id="logout-link">
-                        <i class="bi bi-box-arrow-right"></i> Logout
+                <li class="nav-item">
+                    <a href="/profile" class="nav-link">
+                        <i class="bi bi-person"></i>
+                        <span class="nav-text">Profile</span>
+                    </a>
+                </li>
+                <li class="nav-item mt-auto mb-3">
+                    <a href="#" class="nav-link text-danger" id="logout-link">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span class="nav-text">Logout</span>
                     </a>
                 </li>
             </ul>
         </nav>
 
         <!-- Main Content -->
-        <main class="grow p-4">
-            <!-- Overview Section -->
-            <section id="overview" class="content-section">
-                <h2 class="mb-4">Dashboard Overview</h2>
-                <div class="row mb-4">
-                    <div class="col-md-3 w-40">
+        <main class="main-content" id="mainContent">
+            <!-- Overview -->
+            <section id="overview" class="content-section active">
+                <div class="page-title">
+                    <div class="line"></div>
+                    Dashboard Overview
+                </div>
+
+                <div class="row g-4 mb-5">
+                    <div class="col-md-4">
                         <div class="card stats-card">
+                            <div class="icon-bg"><i class="bi bi-people-fill"></i></div>
                             <div class="card-body">
-                                <h6 class="card-title">Total Students</h6>
-                                <h3 id="totalStudents">-</h3>
+                                <h6>Total Students</h6>
+                                <h3 id="totalStudents">0</h3>
+                                <div class="growth">
+                                    <i class="bi bi-arrow-up"></i> +12%
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 w-40">
+                    <div class="col-md-4">
                         <div class="card stats-card">
+                            <div class="icon-bg"><i class="bi bi-file-text-fill"></i></div>
                             <div class="card-body">
-                                <h6 class="card-title">Total Posts</h6>
-                                <h3 id="totalPosts">-</h3>
+                                <h6>Total Posts</h6>
+                                <h3 id="totalPosts">0</h3>
+                                <div class="growth">
+                                    <i class="bi bi-arrow-up"></i> +8%
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 w-40">
+                    <div class="col-md-4">
                         <div class="card stats-card">
+                            <div class="icon-bg"><i class="bi bi-chat-dots-fill"></i></div>
                             <div class="card-body">
-                                <h6 class="card-title">Total Comments</h6>
-                                <h3 id="totalComments">-</h3>
+                                <h6>Total Comments</h6>
+                                <h3 id="totalComments">0</h3>
+                                <div class="growth">
+                                    <i class="bi bi-arrow-up"></i> +23%
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="card w-80">
+
+                <div class="table-card">
                     <div class="card-header">
-                        <h5>Recent Posts</h5>
+                        <span><i class="bi bi-clock-history me-2"></i> Recent Posts</span>
+                        <a href="#">View All</a>
                     </div>
-                    <div class="card-body mr-6">
-                        <table class="table table-sm mr-5">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
                             <thead>
                                 <tr>
                                     <th>Title</th>
@@ -92,23 +555,39 @@
                                 </tr>
                             </thead>
                             <tbody id="recentPostsTable">
-                                <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <div class="skeleton w-100 h-4 rounded"></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <div class="skeleton w-75 h-4 rounded mx-auto"></div>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- Posts Management Section -->
-            <section id="posts" class="content-section d-none">
-                <h2 class="mb-4">Manage Posts</h2>
-                <button class="btn btn-primary mb-3 create-post-btn">
-                    <i class="bi bi-plus"></i> Create New Post
+            <!-- Posts Section -->
+            <section id="posts" class="content-section">
+                <div class="page-title">
+                    <div class="line"></div>
+                    Manage Posts
+                </div>
+                <button class="btn btn-primary mb-4 create-post-btn" data-bs-toggle="modal"
+                    data-bs-target="#createPostModal">
+                    <i class="bi bi-plus-lg me-2"></i> Create New Post
                 </button>
 
-                <div class="card">
-                    <div class="card-body">
-                        <table class="table">
+                <div class="table-card">
+                    <div class="card-header">
+                        <span><i class="bi bi-file-earmark-text me-2"></i> All Posts</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
                             <thead>
                                 <tr>
                                     <th>Title</th>
@@ -120,19 +599,28 @@
                                 </tr>
                             </thead>
                             <tbody id="postsTable">
-                                <tr><td colspan="6" class="text-center">Loading...</td></tr>
+                                <tr>
+                                    <td colspan="6" class="text-center py-4">Loading...</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- Users Management Section -->
-            <section id="users" class="content-section d-none w-80">
-                <h2 class="mb-4">Manage Users</h2>
-                <div class="card">
-                    <div class="card-body">
-                        <table class="table">
+            <!-- Users Section -->
+            <section id="users" class="content-section">
+                <div class="page-title">
+                    <div class="line"></div>
+                    Manage Users
+                </div>
+
+                <div class="table-card">
+                    <div class="card-header">
+                        <span><i class="bi bi-people-fill me-2"></i> All Users</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
                             <thead>
                                 <tr>
                                     <th>Name</th>
@@ -143,7 +631,9 @@
                                 </tr>
                             </thead>
                             <tbody id="usersTable">
-                                <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">Loading...</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -151,16 +641,26 @@
             </section>
 
             <!-- Announcement Section -->
-            <section id="announcement" class="content-section d-none">
-                <h2 class="mb-4">Send Announcement</h2>
-                <div class="card">
-                    <div class="card-body">
+            <section id="announcement" class="content-section">
+                <div class="page-title">
+                    <div class="line"></div>
+                    Send Announcement
+                </div>
+
+                <div class="card table-card">
+                    <div class="card-body p-4">
                         <form onsubmit="sendAnnouncement(event)">
-                            <div class="mb-3">
+                            <div class="mb-4">
                                 <label class="form-label">Announcement Message</label>
-                                <textarea class="form-control" id="announcementMessage" rows="6" required></textarea>
+                                <textarea class="form-control" id="announcementMessage" rows="6"
+                                    placeholder="Type your announcement here..." required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-success">Send to All Students</button>
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-secondary">Cancel</button>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-send me-2"></i> Send to All Students
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -173,20 +673,24 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Create New Post</h5>
+                    <h5 class="modal-title">
+                        <i class="bi bi-plus-circle text-primary"></i> Create New Post
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="createPostForm" onsubmit="createPost(event)">
-                        <div class="mb-3">
-                            <label class="form-label">Title</label>
-                            <input type="text" class="form-control" id="postTitle" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Content</label>
-                            <textarea class="form-control" id="postContent" rows="5" required></textarea>
-                        </div>
-                        <div class="row">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Title</label>
+                                <input type="text" class="form-control form-control-lg" id="postTitle"
+                                    placeholder="Enter post title" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Content</label>
+                                <textarea class="form-control" id="postContent" rows="5"
+                                    placeholder="Write your post content..." required></textarea>
+                            </div>
                             <div class="col-md-6">
                                 <label class="form-label">Category</label>
                                 <select class="form-select" id="postCategory">
@@ -205,38 +709,76 @@
                                     <option>important</option>
                                 </select>
                             </div>
+                            <div class="col-12">
+                                <label class="form-label">Upload Image (Optional)</label>
+                                <input type="file" class="form-control" id="postImage" accept="image/*">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Or Image URL</label>
+                                <input type="text" class="form-control" id="postImageUrl"
+                                    placeholder="https://example.com/image.jpg">
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Upload Image (Optional)</label>
-                            <input type="file" class="form-control" id="postImage" accept="image/*">
+                        <div class="mt-4 text-end">
+                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-check2"></i> Create Post
+                            </button>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Or Image URL (Optional)</label>
-                            <input type="text" class="form-control" id="postImageUrl" placeholder="https://example.com/image.jpg">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Create Post</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Scripts -->
     <script>
-        // Set token from session if not in localStorage
+        // Token & Auth
         const sessionToken = '{{ session.get("token", "") }}';
         if (sessionToken && !localStorage.getItem('token')) {
             localStorage.setItem('token', sessionToken);
         }
-        // If no token in localStorage and no session token, redirect to login
-        if (!localStorage.getItem('token') && !sessionToken) {
-            window.location.href = '/login';
-        }
-        // If no token in localStorage and no session token, redirect to logout
         if (!localStorage.getItem('token') && !sessionToken) {
             window.location.href = '/logout';
         }
+
+        // Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const toggleBtn = document.getElementById('sidebarToggle');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('collapsed');
+            toggleBtn.classList.toggle('collapsed');
+        });
+
+        // Section Navigation
+        document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = link.dataset.section;
+
+                document.querySelectorAll('.content-section').forEach(s => {
+                    s.classList.remove('active');
+                });
+                document.getElementById(section).classList.add('active');
+
+                document.querySelectorAll('.nav-link').forEach(n => {
+                    n.classList.remove('active');
+                });
+                link.classList.add('active');
+            });
+        });
+
+        // Open modal from button
+        document.querySelector('.create-post-btn').addEventListener('click', () => {
+            new bootstrap.Modal(document.getElementById('createPostModal')).show();
+        });
     </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
 </body>
+
 </html>

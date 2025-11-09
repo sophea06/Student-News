@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Library - Student News System{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-primary">Library</h1>
+                <p class="lead text-muted">Access campus resources and study materials</p>
+            </div>
+
+            <div class="card shadow-sm mb-5">
+                <div class="card-body p-5">
+                    <h2 class="h3 mb-4">Available Resources</h2>
+                    <p class="mb-4">
+                        Welcome to the Student News System Library. Here you can find various resources
+                        including study guides, campus policies, event schedules, and more.
+                    </p>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-book text-primary" style="font-size: 3rem;"></i>
+                                    <h5 class="card-title mt-3">Study Materials</h5>
+                                    <p class="card-text text-muted">Access textbooks, notes, and study guides</p>
+                                    <a href="/study" class="btn btn-primary">Explore</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-file-earmark-text text-primary" style="font-size: 3rem;"></i>
+                                    <h5 class="card-title mt-3">Campus Policies</h5>
+                                    <p class="card-text text-muted">View important campus rules and regulations</p>
+                                    <button class="btn btn-outline-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-calendar-event text-primary" style="font-size: 3rem;"></i>
+                                    <h5 class="card-title mt-3">Event Schedules</h5>
+                                    <p class="card-text text-muted">Browse upcoming campus events and activities</p>
+                                    <button class="btn btn-outline-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-question-circle text-primary" style="font-size: 3rem;"></i>
+                                    <h5 class="card-title mt-3">FAQs</h5>
+                                    <p class="card-text text-muted">Frequently asked questions and answers</p>
+                                    <button class="btn btn-outline-primary" disabled>Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-globe text-primary" style="font-size: 3rem;"></i>
+                                    <h5 class="card-title mt-3">International Study</h5>
+                                    <p class="card-text text-muted">Resources for international students and study abroad programs</p>
+                                    <a href="/international-study" class="btn btn-primary">Explore</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info mt-4" role="alert">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Library Feature:</strong> This section is under development. More resources will be available soon!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

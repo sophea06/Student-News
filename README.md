@@ -104,7 +104,7 @@ student-news-system/
 │   │   ├── login.html         # Login page
 │   │   └── register.html      # Registration page
 │   ├── student/
-│   │   ├── dashboard.html     # Student news feed
+│   │   ├── dashboard.html     # Student dashboard
 │   │   └── profile.html       # Student profile
 │   └── admin/
 │       └── dashboard.html     # Admin panel
@@ -183,8 +183,8 @@ student-news-system/
 ### Browse Posts (Student)
 1. Login as student
 2. Go to Student Dashboard (`/student`)
-3. View news feed, use search, or filter by category
-4. Click post to view full content
+3. View notifications and manage profile
+4. Access other features as needed
 5. Like, comment, or share posts
 
 ## User Roles & Permissions
