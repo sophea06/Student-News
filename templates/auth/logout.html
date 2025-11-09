@@ -228,7 +228,7 @@
       homeBtn.addEventListener('click', (e) => {
         e.preventDefault();
         clearInterval(interval);
-        window.location.href = homeBtn.href;
+        window.location.href = "{{ url_for('index') }}";
       });
     });
   </script>

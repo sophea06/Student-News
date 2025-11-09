@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Library{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h2 class="card-title mb-0">
+                        <i class="bi bi-book me-2"></i>Library Resources
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h4>Available Resources</h4>
+                            <p class="text-muted">Access our extensive collection of books, journals, and digital resources.</p>
+
+                            <!-- Resources Grid -->
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">
+                                                <i class="bi bi-book text-primary me-2"></i>
+                                                Books & Textbooks
+                                            </h5>
+                                            <p class="card-text">Browse our collection of academic books and textbooks.</p>
+                                            <a href="#" class="btn btn-outline-primary">Browse Books</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">
+                                                <i class="bi bi-journal-text text-success me-2"></i>
+                                                Journals & Articles
+                                            </h5>
+                                            <p class="card-text">Access academic journals and research articles.</p>
+                                            <a href="#" class="btn btn-outline-success">View Journals</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">
+                                                <i class="bi bi-laptop text-warning me-2"></i>
+                                                Digital Resources
+                                            </h5>
+                                            <p class="card-text">Online databases, e-books, and multimedia content.</p>
+                                            <a href="#" class="btn btn-outline-warning">Digital Library</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">
+                                                <i class="bi bi-newspaper text-info me-2"></i>
+                                                Newspapers & Magazines
+                                            </h5>
+                                            <p class="card-text">Current news and periodicals collection.</p>
+                                            <a href="#" class="btn btn-outline-info">Read News</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Library Services</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-grid gap-2">
+                                        <a href="#" class="btn btn-primary">
+                                            <i class="bi bi-search me-2"></i>Search Catalog
+                                        </a>
+                                        <a href="#" class="btn btn-outline-secondary">
+                                            <i class="bi bi-calendar-check me-2"></i>Reserve Books
+                                        </a>
+                                        <a href="#" class="btn btn-outline-secondary">
+                                            <i class="bi bi-pc-display me-2"></i>Computer Access
+                                        </a>
+                                        <a href="#" class="btn btn-outline-secondary">
+                                            <i class="bi bi-printer me-2"></i>Printing Services
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card mt-3">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Library Hours</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2">
+                                            <strong>Monday - Friday:</strong><br>
+                                            8:00 AM - 10:00 PM
+                                        </li>
+                                        <li class="mb-2">
+                                            <strong>Saturday:</strong><br>
+                                            9:00 AM - 6:00 PM
+                                        </li>
+                                        <li class="mb-0">
+                                            <strong>Sunday:</strong><br>
+                                            Closed
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

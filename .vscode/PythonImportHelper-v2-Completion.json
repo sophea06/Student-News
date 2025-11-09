@@ -924,6 +924,54 @@
         "documentation": {}
     },
     {
+        "label": "auth_bp",
+        "importPath": "routes.auth_routes",
+        "description": "routes.auth_routes",
+        "isExtraImport": true,
+        "detail": "routes.auth_routes",
+        "documentation": {}
+    },
+    {
+        "label": "user_bp",
+        "importPath": "routes.user_routes",
+        "description": "routes.user_routes",
+        "isExtraImport": true,
+        "detail": "routes.user_routes",
+        "documentation": {}
+    },
+    {
+        "label": "post_bp",
+        "importPath": "routes.post_routes",
+        "description": "routes.post_routes",
+        "isExtraImport": true,
+        "detail": "routes.post_routes",
+        "documentation": {}
+    },
+    {
+        "label": "admin_bp",
+        "importPath": "routes.admin_routes",
+        "description": "routes.admin_routes",
+        "isExtraImport": true,
+        "detail": "routes.admin_routes",
+        "documentation": {}
+    },
+    {
+        "label": "upload_bp",
+        "importPath": "routes.upload_routes",
+        "description": "routes.upload_routes",
+        "isExtraImport": true,
+        "detail": "routes.upload_routes",
+        "documentation": {}
+    },
+    {
+        "label": "analytics_bp",
+        "importPath": "routes.analytics_routes",
+        "description": "routes.analytics_routes",
+        "isExtraImport": true,
+        "detail": "routes.analytics_routes",
+        "documentation": {}
+    },
+    {
         "label": "create_app",
         "importPath": "app",
         "description": "app",
@@ -1606,20 +1654,200 @@
         "documentation": {}
     },
     {
-        "label": "create_app",
+        "label": "invalid_token_callback",
         "kind": 2,
         "importPath": "app",
         "description": "app",
-        "peekOfCode": "def create_app():\n    \"\"\"Create and configure the Flask app\"\"\"\n    app = Flask(__name__, template_folder='templates', static_folder='static')\n    app.config.from_object(Config)\n    # Ensure required directories exist\n    os.makedirs(app.instance_path, exist_ok=True)\n    os.makedirs(app.config.get(\"UPLOAD_FOLDER\", \"uploads\"), exist_ok=True)\n    # Initialize extensions\n    db.init_app(app)\n    bcrypt.init_app(app)",
+        "peekOfCode": "def invalid_token_callback(error):\n    return jsonify({'error': 'Invalid token'}), 401\n@jwt.expired_token_loader\ndef expired_token_callback(error):\n    return jsonify({'error': 'Token expired'}), 401\n@jwt.unauthorized_loader\ndef unauthorized_callback(error):\n    return jsonify({'error': 'Missing token'}), 401\n# Register Blueprints\nfrom routes.auth_routes import auth_bp",
         "detail": "app",
         "documentation": {}
     },
     {
-        "label": "main",
+        "label": "expired_token_callback",
         "kind": 2,
         "importPath": "app",
         "description": "app",
-        "peekOfCode": "def main():\n    \"\"\"Main entry point\"\"\"\n    os.makedirs('uploads/posts', exist_ok=True)\n    os.makedirs('flask_session', exist_ok=True)\n    app = create_app()\n    app.run(debug=True, host='0.0.0.0', port=5000)\nif __name__ == '__main__':\n    main()",
+        "peekOfCode": "def expired_token_callback(error):\n    return jsonify({'error': 'Token expired'}), 401\n@jwt.unauthorized_loader\ndef unauthorized_callback(error):\n    return jsonify({'error': 'Missing token'}), 401\n# Register Blueprints\nfrom routes.auth_routes import auth_bp\nfrom routes.user_routes import user_bp\nfrom routes.post_routes import post_bp\nfrom routes.admin_routes import admin_bp",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "unauthorized_callback",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def unauthorized_callback(error):\n    return jsonify({'error': 'Missing token'}), 401\n# Register Blueprints\nfrom routes.auth_routes import auth_bp\nfrom routes.user_routes import user_bp\nfrom routes.post_routes import post_bp\nfrom routes.admin_routes import admin_bp\nfrom routes.upload_routes import upload_bp\nfrom routes.analytics_routes import analytics_bp\napp.register_blueprint(auth_bp, url_prefix=\"/api/auth\")",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "login_required_template",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def login_required_template(f):\n    @wraps(f)\n    def decorated_function(*args, **kwargs):\n        if 'token' not in session or 'role' not in session:\n            return redirect(url_for('login_page'))\n        return f(*args, **kwargs)\n    return decorated_function\n# HTML Page Routes\n@app.route('/')\ndef index():",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "index",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def index():\n    \"\"\"Landing Page\"\"\"\n    if 'token' in session:\n        if session.get('role') == 'admin':\n            return redirect(url_for('admin_page'))\n        return redirect(url_for('student_page'))\n    return render_template('index.html')\n@app.route('/login')\ndef login_page():\n    \"\"\"Login Page\"\"\"",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "login_page",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def login_page():\n    \"\"\"Login Page\"\"\"\n    if 'token' in session:\n        return redirect(url_for('index'))\n    return render_template('auth/login.html')\n@app.route('/register')\ndef register_page():\n    \"\"\"Register Page\"\"\"\n    if 'token' in session:\n        return redirect(url_for('index'))",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "register_page",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def register_page():\n    \"\"\"Register Page\"\"\"\n    if 'token' in session:\n        return redirect(url_for('index'))\n    return render_template('auth/register.html')\n@app.route('/student')\n@login_required_template\ndef student_page():\n    \"\"\"Student Dashboard\"\"\"\n    if session.get('role') != 'student':",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "student_page",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def student_page():\n    \"\"\"Student Dashboard\"\"\"\n    if session.get('role') != 'student':\n        return redirect(url_for('index'))\n    return render_template('student/dashboard.html')\n@app.route('/admin')\n@login_required_template\ndef admin_page():\n    \"\"\"Admin Dashboard\"\"\"\n    if session.get('role') != 'admin':",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "admin_page",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def admin_page():\n    \"\"\"Admin Dashboard\"\"\"\n    if session.get('role') != 'admin':\n        return redirect(url_for('index'))\n    return render_template('admin/dashboard.html')\n@app.route('/profile')\n@login_required_template\ndef profile_page():\n    \"\"\"User Profile (Admin and Student)\"\"\"\n    return render_template('student/profile.html')",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "profile_page",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def profile_page():\n    \"\"\"User Profile (Admin and Student)\"\"\"\n    return render_template('student/profile.html')\n@app.route('/dashboard')\ndef dashboard_page():\n    \"\"\"Redirect dashboard based on role\"\"\"\n    if 'token' not in session or 'role' not in session:\n        return redirect(url_for('login_page'))\n    return redirect(\n        url_for('admin_page' if session.get('role') == 'admin' else 'student_page')",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "dashboard_page",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def dashboard_page():\n    \"\"\"Redirect dashboard based on role\"\"\"\n    if 'token' not in session or 'role' not in session:\n        return redirect(url_for('login_page'))\n    return redirect(\n        url_for('admin_page' if session.get('role') == 'admin' else 'student_page')\n    )\n@app.route('/study')\ndef study_page():\n    \"\"\"Study Materials Page\"\"\"",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "study_page",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def study_page():\n    \"\"\"Study Materials Page\"\"\"\n    return render_template('study.html')\n@app.route('/international-study')\ndef international_study_page():\n    \"\"\"International Study Page\"\"\"\n    return render_template('international-study.html')\n@app.route('/library')\ndef library_page():\n    \"\"\"Library Page\"\"\"",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "international_study_page",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def international_study_page():\n    \"\"\"International Study Page\"\"\"\n    return render_template('international-study.html')\n@app.route('/library')\ndef library_page():\n    \"\"\"Library Page\"\"\"\n    return render_template('library.html')\n@app.route('/about')\ndef about_page():\n    \"\"\"About Page\"\"\"",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "library_page",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def library_page():\n    \"\"\"Library Page\"\"\"\n    return render_template('library.html')\n@app.route('/about')\ndef about_page():\n    \"\"\"About Page\"\"\"\n    return render_template('about.html')\n@app.route('/contact')\ndef contact_page():\n    \"\"\"Contact Page\"\"\"",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "about_page",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def about_page():\n    \"\"\"About Page\"\"\"\n    return render_template('about.html')\n@app.route('/contact')\ndef contact_page():\n    \"\"\"Contact Page\"\"\"\n    return render_template('contact.html')\n# Logout Routes\n@app.route('/logout')\ndef logout_page():",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "contact_page",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def contact_page():\n    \"\"\"Contact Page\"\"\"\n    return render_template('contact.html')\n# Logout Routes\n@app.route('/logout')\ndef logout_page():\n    \"\"\"Logout and show confirmation page\"\"\"\n    next_url = request.args.get('next') or url_for('index')\n    # Clear all session data\n    session.clear()",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "logout_page",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def logout_page():\n    \"\"\"Logout and show confirmation page\"\"\"\n    next_url = request.args.get('next') or url_for('index')\n    # Clear all session data\n    session.clear()\n    response = make_response(render_template('auth/logout.html', next_url=next_url))\n    # Remove session cookies\n    for cookie in ['session', 'session.sig', 'token', 'remember_token', 'user_id', 'username', 'role']:\n        response.set_cookie(cookie, '', expires=0, path='/')\n    # Prevent caching of logout page",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "api_logout",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def api_logout():\n    \"\"\"API Logout Endpoint\"\"\"\n    session.clear()\n    response = jsonify({\n        'success': True,\n        'message': 'Successfully logged out',\n        'redirect': url_for('login_page')\n    })\n    for cookie in ['session', 'session.sig', 'token', 'remember_token']:\n        response.set_cookie(cookie, '', expires=0, path='/')",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "uploaded_file",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def uploaded_file(filename):\n    \"\"\"Serve uploaded files\"\"\"\n    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)\n# CLI Commands\n@app.cli.command(\"logout-user\")\n@click.argument(\"user_id\", type=int)\n@with_appcontext\ndef logout_user_command(user_id):\n    \"\"\"Force logout a specific user\"\"\"\n    from models import User",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "logout_user_command",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def logout_user_command(user_id):\n    \"\"\"Force logout a specific user\"\"\"\n    from models import User\n    from flask_jwt_extended import decode_token\n    user = db.session.get(User, user_id)\n    if not user:\n        click.echo(f\"❌ User with ID {user_id} not found.\")\n        return\n    session_dir = os.path.join(app.root_path, 'flask_session')\n    if not os.path.exists(session_dir):",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "logout_all_command",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def logout_all_command():\n    \"\"\"Force logout all users\"\"\"\n    session_dir = os.path.join(app.root_path, 'flask_session')\n    if os.path.exists(session_dir):\n        shutil.rmtree(session_dir)\n        os.makedirs(session_dir)\n        click.echo(\"✅ All sessions cleared.\")\n    else:\n        click.echo(\"⚠️  Session directory not found.\")\n    click.echo(\"Note: JWT tokens remain valid until expiration.\")",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "app = Flask(__name__, template_folder='templates', static_folder='static')\napp.config.from_object(Config)\n# Ensure required directories exist\nos.makedirs(app.instance_path, exist_ok=True)\nos.makedirs(app.config.get(\"UPLOAD_FOLDER\", \"uploads\"), exist_ok=True)\n# Initialize extensions\ndb.init_app(app)\nbcrypt.init_app(app)\njwt.init_app(app)\nlimiter.init_app(app)",
         "detail": "app",
         "documentation": {}
     },
