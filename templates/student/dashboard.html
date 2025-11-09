@@ -24,7 +24,7 @@
 
             <hr>
 
-            <button class="btn btn-outline-danger w-100" onclick="logout()">
+            <button class="btn btn-outline-danger w-100" id="logoutBtn">
                 <i class="bi bi-box-arrow-right"></i> Logout
             </button>
         </div>
@@ -130,6 +130,9 @@
 
     // Load posts on page load
     loadPosts();
+
+    // Add event listener for logout button
+    document.getElementById('logoutBtn').addEventListener('click', logout);
 
 
     async function showPostDetail(postId) {
@@ -279,11 +282,16 @@
             const response = await fetch('/api/users/notifications', {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            if (response.status === 401 || response.status === 422) {
+            if (response.status === 401) {
+                localStorage.clear();
                 window.location.href = "/login";
                 return;
             }
-            const data = response.ok ? await response.json() : { notifications: [] };
+            if (!response.ok) {
+                console.error('Failed to load notifications:', response.status);
+                return;
+            }
+            const data = await response.json();
             const notifications = data.notifications || [];
 
             let unreadCount = 0;
@@ -303,6 +311,8 @@
             if (unreadCount > 0) {
                 document.getElementById('notification-count').textContent = unreadCount;
                 document.getElementById('notification-count').style.display = 'inline-block';
+            } else {
+                document.getElementById('notification-count').style.display = 'none';
             }
         } catch (error) {
             console.error('Error loading notifications:', error);

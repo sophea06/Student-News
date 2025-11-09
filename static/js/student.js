@@ -221,6 +221,14 @@ async function loadNotifications() {
       headers: { Authorization: `Bearer ${token}` },
     })
 
+    if (!response.ok) {
+      if (response.status === 401) {
+        window.location.href = "/login"
+        return
+      }
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+    }
+
     const { notifications } = await response.json()
 
     const dropdown = document.getElementById("notificationDropdown")
