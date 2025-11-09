@@ -8,6 +8,11 @@
         <div class="card shadow-lg">
             <div class="card-body p-5">
                 <h2 class="mb-4">My Profile</h2>
+                {% if session.role == 'admin' %}
+                <div class="alert alert-info">
+                    <strong>Admin Account</strong> - You have administrative privileges.
+                </div>
+                {% endif %}
 
                 <!-- Profile Picture Section -->
                 <div class="text-center mb-4">
@@ -35,7 +40,11 @@
                         <input type="password" class="form-control" id="password">
                     </div>
                     <button type="submit" class="btn btn-primary">Update Profile</button>
+                    {% if session.role == 'admin' %}
+                    <a href="/admin" class="btn btn-secondary">Back to Admin Dashboard</a>
+                    {% else %}
                     <a href="/student" class="btn btn-secondary">Back to Dashboard</a>
+                    {% endif %}
                 </form>
             </div>
         </div>

@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadDashboardStats()
   loadPosts()
   loadUsers()
+  loadAdminProfile()
 
   // Add event listeners for navigation links
   const navLinks = document.querySelectorAll('.nav-link[data-section]')
@@ -449,6 +450,105 @@ async function sendAnnouncement(event) {
     console.error("Error:", error)
   }
 }
+
+async function loadAdminProfile() {
+  try {
+    const response = await fetch(`${API_URL}/users/profile`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+
+    if (response.ok) {
+      const user = await response.json()
+
+      document.getElementById('admin-name').value = user.name
+      document.getElementById('admin-email').value = user.email
+
+      // Set profile picture
+      if (user.profile_picture) {
+        document.getElementById('admin-profile-picture').src = user.profile_picture
+      }
+    }
+  } catch (error) {
+    console.error('Error loading admin profile:', error)
+  }
+}
+
+// Handle admin profile picture upload
+document.getElementById('admin-profile-picture-input')?.addEventListener('change', async (e) => {
+  const file = e.target.files[0]
+  if (!file) return
+
+  // Validate file type
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']
+  if (!allowedTypes.includes(file.type)) {
+    alert('Please select a valid image file (JPG, PNG, GIF)')
+    return
+  }
+
+  // Validate file size (5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Image file too large (max 5MB)')
+    return
+  }
+
+  const formData = new FormData()
+  formData.append('file', file)
+
+  try {
+    const response = await fetch(`${API_URL}/uploads/profile-picture`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData
+    })
+
+    if (response.ok) {
+      const result = await response.json()
+      document.getElementById('admin-profile-picture').src = result.profile_picture
+      alert('Profile picture updated successfully')
+    } else {
+      const error = await response.json()
+      alert(error.error || 'Failed to upload profile picture')
+    }
+  } catch (error) {
+    console.error('Error uploading profile picture:', error)
+    alert('Failed to upload profile picture')
+  }
+})
+
+// Handle admin profile form submission
+document.getElementById('admin-profile-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault()
+
+  const updateData = {
+    name: document.getElementById('admin-name').value
+  }
+
+  if (document.getElementById('admin-password').value) {
+    updateData.password = document.getElementById('admin-password').value
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/users/update-profile`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(updateData)
+    })
+
+    if (response.ok) {
+      alert('Profile updated successfully')
+    } else {
+      alert('Failed to update profile')
+    }
+  } catch (error) {
+    console.error('Error updating profile:', error)
+    alert('Failed to update profile')
+  }
+})
 
 function logout() {
   // Clear all storage
