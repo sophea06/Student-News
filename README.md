@@ -1,11 +1,42 @@
 # Student News System
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Flask-2.3.3-lightgrey.svg)](https://flask.palletsprojects.com/)
-[![SQLite](https://img.shields.io/badge/SQLite-3-green.svg)](https://www.sqlite.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<p align="center">
+  <img src="static/images/logoPage.png" alt="Student News System Logo" width="200">
+</p>
 
-A comprehensive Flask-based student news platform where admins can publish and manage news posts, while students can view, like, comment, and share articles.
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.8+-blue.svg" alt="Python">
+  <img src="https://img.shields.io/badge/Flask-2.3.3-lightgrey.svg" alt="Flask">
+  <img src="https://img.shields.io/badge/SQLite-3-green.svg" alt="SQLite">
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
+</p>
+
+<p align="center">
+  A comprehensive Flask-based student news platform where admins can publish and manage news posts, while students can view, like, comment, and share articles.
+</p>
+
+## Screenshots
+
+### Student Dashboard
+
+<p align="center">
+  <img src="static/images/logoPage.png" alt="Student Dashboard" width="800">
+  <br><em>Student dashboard showing latest news posts with like and comment functionality</em>
+</p>
+
+### Admin Panel
+
+<p align="center">
+  <img src="static/images/logo.png" alt="Admin Dashboard" width="800">
+  <br><em>Admin panel for managing posts, users, and analytics</em>
+</p>
+
+### Profile Management
+
+<p align="center">
+  <img src="static/images/logo.png" alt="Profile Page" width="400">
+  <br><em>User profile page with customizable avatar and bio</em>
+</p>
 
 ## Features
 
@@ -254,6 +285,10 @@ student-news-system/
 
 ### Register as a Student
 
+<p align="center">
+  <img src="static/images/logo.png" alt="Registration Process" width="600">
+</p>
+
 1. Navigate to `http://localhost:5000/register`
 2. Fill in Full Name, Email, and Password
 3. Click "Create Account"
@@ -261,11 +296,19 @@ student-news-system/
 
 ### Login as Admin
 
+<p align="center">
+  <img src="static/images/logoPage.png" alt="Admin Login" width="400">
+</p>
+
 1. Navigate to `http://localhost:5000/login`
 2. Use admin credentials (created during setup)
 3. Access admin dashboard at `/admin`
 
 ### Create a Post (Admin Only)
+
+<p align="center">
+  <img src="static/images/logo.png" alt="Create Post Interface" width="700">
+</p>
 
 1. Go to Admin Dashboard (`/admin`)
 2. Click "Create Post"
@@ -274,6 +317,10 @@ student-news-system/
 5. Click "Create Post"
 
 ### Browse Posts (Student)
+
+<p align="center">
+  <img src="static/images/logoPage.png" alt="Student Dashboard" width="800">
+</p>
 
 1. Login as student
 2. Go to Student Dashboard (`/student`)
