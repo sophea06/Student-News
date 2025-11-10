@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/api"
+const API_URL = "http://127.0.0.1:5000/api"
 const token = localStorage.getItem("token")
 let currentPage = 1
 let currentCategory = null
@@ -27,6 +27,7 @@ async function likePost(postId, button) {
     // First check current like status from the API
     const postResponse = await fetch(`${API_URL}/posts/${postId}`, {
       headers: { Authorization: `Bearer ${token}` },
+      credentials: 'same-origin'
     })
 
     if (!postResponse.ok) {
@@ -41,6 +42,7 @@ async function likePost(postId, button) {
     const response = await fetch(url, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
+      credentials: 'same-origin'
     })
 
     if (response.ok) {
@@ -63,6 +65,7 @@ async function openPostDetail(postId) {
   try {
     const response = await fetch(`${API_URL}/posts/${postId}`, {
       headers: { Authorization: `Bearer ${token}` },
+      credentials: 'same-origin'
     })
 
     const { title, content, author, created_at, likes_count, image_url, is_liked, comments } = await response.json()
@@ -122,6 +125,7 @@ async function toggleLike() {
     // First check current like status from the API
     const postResponse = await fetch(`${API_URL}/posts/${currentPostId}`, {
       headers: { Authorization: `Bearer ${token}` },
+      credentials: 'same-origin'
     })
 
     if (!postResponse.ok) {
@@ -136,6 +140,7 @@ async function toggleLike() {
     const response = await fetch(url, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
+      credentials: 'same-origin'
     })
 
     if (response.ok) {
@@ -167,6 +172,7 @@ async function addComment() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ content }),
+      credentials: 'same-origin'
     })
 
     if (response.ok) {
@@ -196,6 +202,7 @@ async function checkUnreadNotifications() {
   try {
     const response = await fetch(`${API_URL}/users/unread-count`, {
       headers: { Authorization: `Bearer ${token}` },
+      credentials: 'same-origin'
     })
 
     const { unread_count } = await response.json()
@@ -219,6 +226,7 @@ async function loadNotifications() {
   try {
     const response = await fetch(`${API_URL}/users/notifications`, {
       headers: { Authorization: `Bearer ${token}` },
+      credentials: 'same-origin'
     })
 
     if (!response.ok) {
@@ -260,6 +268,7 @@ async function showProfile() {
   try {
     const response = await fetch(`${API_URL}/auth/profile`, {
       headers: { Authorization: `Bearer ${token}` },
+      credentials: 'same-origin'
     })
 
     const { name, email, created_at } = await response.json()
@@ -300,7 +309,7 @@ async function logout() {
     const response = await fetch(`${API_URL}/auth/logout`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
-      credentials: 'include'
+      credentials: 'same-origin'
     })
   } catch (error) {
     console.error('Logout error:', error);

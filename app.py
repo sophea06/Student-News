@@ -31,7 +31,7 @@ def create_app():
     jwt.init_app(app)
     limiter.init_app(app)
     sess.init_app(app)
-    CORS(app, supports_credentials=True)
+    CORS(app, resources={r"/api/*": {"origins": "*", "allow_headers": ["Authorization", "Content-Type"], "supports_credentials": True}})
 
     # ---------------------------
     # Register Blueprints
@@ -108,6 +108,21 @@ def create_app():
     def profile_page():
         """User Profile (Admin and Student)"""
         return render_template('student/profile.html')
+
+    @app.route('/contact')
+    def contact_page():
+        """Contact Page"""
+        return render_template('contact.html')
+
+    @app.route('/about')
+    def about_page():
+        """About Page"""
+        return render_template('about.html')
+
+    @app.route('/library')
+    def library_page():
+        """Library Page"""
+        return render_template('library.html')
 
     @app.route('/dashboard')
     def dashboard_page():

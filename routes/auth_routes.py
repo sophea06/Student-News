@@ -98,7 +98,7 @@ def get_profile():
         'bio': user.bio,
         'followers_count': len(user.followers) if hasattr(user, 'followers') else 0,
         'following_count': len(user.following) if hasattr(user, 'following') else 0,
-        'created_at': user.created_at.isoformat()
+        'created_at': user.created_at.isoformat() if user.created_at else None
     }), 200
 
 @auth_bp.route('/update-profile', methods=['PUT'])
@@ -160,6 +160,7 @@ def change_password():
     return jsonify({'message': 'Password changed successfully'}), 200
 
 @auth_bp.route('/logout', methods=['POST'])
+@jwt_required()
 def logout():
     """Logout user by clearing session"""
     # Clear session

@@ -10,13 +10,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="icon" href="/static/images/logo.png" type="image/png">
     <style>
-        /* Ensure body content doesn't go under the fixed navbar */
-        body {
-            padding-top: 70px;
-            /* adjust this if navbar height changes */
-        }
-
-        /* Optional: add higher z-index to navbar to stay on top of modals/other content */
         .navbar {
             z-index: 1100;
             /* higher than default modals (1050) if needed) */
@@ -104,13 +97,13 @@
                             <span id="nav-user-name">Profile</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="/profile"><i class="bi bi-person-circle"></i> View
+                            <li><a class="dropdown-item" href="/profile"><i class="bi bi-person-circle me-2"></i> View
                                     Profile</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
                             <li><a class="dropdown-item" href="#" onclick="logout()"><i
-                                        class="bi bi-box-arrow-right"></i> Logout</a></li>
+                                        class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -118,7 +111,7 @@
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <div class="container" style="margin-top: 80px;">
         {% block content %}{% endblock %}
     </div>
 

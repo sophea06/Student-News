@@ -140,6 +140,7 @@
         try {
             const response = await fetch(`/api/posts/${postId}`, {
                 headers: { Authorization: `Bearer ${token}` },
+                credentials: 'same-origin'
             });
             if (response.status === 401) {
                 window.location.href = "/login";
@@ -203,6 +204,7 @@
             // First check current like status
             const postResponse = await fetch(`/api/posts/${currentPostId}`, {
                 headers: { Authorization: `Bearer ${token}` },
+                credentials: 'same-origin'
             });
             if (postResponse.status === 401) {
                 window.location.href = "/login";
@@ -220,6 +222,7 @@
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}` },
+                credentials: 'same-origin'
             });
 
             if (response.ok) {
@@ -243,7 +246,8 @@
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
                 },
-                body: JSON.stringify({ content: commentText })
+                body: JSON.stringify({ content: commentText }),
+                credentials: 'same-origin'
             });
             if (response.status === 401) {
                 window.location.href = "/login";
@@ -281,6 +285,7 @@
         try {
             const response = await fetch('/api/users/notifications', {
                 headers: { Authorization: `Bearer ${token}` },
+                credentials: 'same-origin'
             });
             if (response.status === 401) {
                 localStorage.clear();
@@ -358,6 +363,7 @@
 
             const response = await fetch(url, {
                 headers: { Authorization: `Bearer ${token}` },
+                credentials: 'same-origin'
             });
 
             if (response.status === 401) {
@@ -500,7 +506,7 @@
             const response = await fetch('/api/auth/logout', {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}` },
-                credentials: 'include'
+                credentials: 'same-origin'
             });
         } catch (error) {
             console.error('Logout error:', error);

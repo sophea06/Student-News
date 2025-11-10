@@ -1,0 +1,436 @@
+{% extends "base.html" %}
+
+{% block title %}Library - Student News System{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-primary mb-3">
+                    <i class="bi bi-book-half me-3"></i>Digital Library
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Access textbooks, research papers, study guides, and educational resources all in one place.
+                </p>
+            </div>
+
+            <!-- Search and Filters -->
+            <div class="card shadow-sm mb-5">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                <input type="text" class="form-control form-control-lg" id="searchInput"
+                                       placeholder="Search books, papers, guides...">
+                                <button class="btn btn-primary" type="button" id="searchBtn">
+                                    <i class="bi bi-search me-2"></i>Search
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <select class="form-select form-select-lg" id="categoryFilter">
+                                <option value="">All Categories</option>
+                                <option value="textbook">Textbooks</option>
+                                <option value="research">Research Papers</option>
+                                <option value="study-guide">Study Guides</option>
+                                <option value="reference">Reference Materials</option>
+                                <option value="journal">Journals</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Quick Filters -->
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <button class="btn btn-outline-primary btn-sm filter-tag" data-filter="popular">Popular</button>
+                        <button class="btn btn-outline-success btn-sm filter-tag" data-filter="new">Recently Added</button>
+                        <button class="btn btn-outline-info btn-sm filter-tag" data-filter="free">Free Access</button>
+                        <button class="btn btn-outline-warning btn-sm filter-tag" data-filter="premium">Premium</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Library Stats -->
+            <div class="row mb-5">
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="stat-icon mb-2">
+                                <i class="bi bi-book text-primary" style="font-size: 2rem;"></i>
+                            </div>
+                            <h3 class="text-primary mb-1">2,500+</h3>
+                            <small class="text-muted">Books Available</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="stat-icon mb-2">
+                                <i class="bi bi-file-earmark-text text-success" style="font-size: 2rem;"></i>
+                            </div>
+                            <h3 class="text-success mb-1">1,200+</h3>
+                            <small class="text-muted">Research Papers</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="stat-icon mb-2">
+                                <i class="bi bi-journal text-info" style="font-size: 2rem;"></i>
+                            </div>
+                            <h3 class="text-info mb-1">500+</h3>
+                            <small class="text-muted">Journals</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="stat-icon mb-2">
+                                <i class="bi bi-people text-warning" style="font-size: 2rem;"></i>
+                            </div>
+                            <h3 class="text-warning mb-1">50,000+</h3>
+                            <small class="text-muted">Active Users</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Books -->
+            <div class="mb-5">
+                <h2 class="mb-4">
+                    <i class="bi bi-star-fill text-warning me-2"></i>Featured Books
+                </h2>
+                <div class="row" id="featuredBooks">
+                    <!-- Books will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="mb-5">
+                <h2 class="mb-4">
+                    <i class="bi bi-grid me-2"></i>Browse by Category
+                </h2>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 category-card shadow-sm" data-category="computer-science">
+                            <div class="card-body text-center">
+                                <i class="bi bi-laptop text-primary mb-3" style="font-size: 3rem;"></i>
+                                <h5 class="card-title">Computer Science</h5>
+                                <p class="card-text text-muted">Programming, algorithms, data structures, and more</p>
+                                <span class="badge bg-primary">850+ resources</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 category-card shadow-sm" data-category="mathematics">
+                            <div class="card-body text-center">
+                                <i class="bi bi-calculator text-success mb-3" style="font-size: 3rem;"></i>
+                                <h5 class="card-title">Mathematics</h5>
+                                <p class="card-text text-muted">Calculus, algebra, statistics, and mathematical theory</p>
+                                <span class="badge bg-success">620+ resources</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 category-card shadow-sm" data-category="science">
+                            <div class="card-body text-center">
+                                <i class="bi bi-flask text-info mb-3" style="font-size: 3rem;"></i>
+                                <h5 class="card-title">Science</h5>
+                                <p class="card-text text-muted">Physics, chemistry, biology, and environmental science</p>
+                                <span class="badge bg-info">580+ resources</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 category-card shadow-sm" data-category="business">
+                            <div class="card-body text-center">
+                                <i class="bi bi-briefcase text-warning mb-3" style="font-size: 3rem;"></i>
+                                <h5 class="card-title">Business</h5>
+                                <p class="card-text text-muted">Management, finance, marketing, and entrepreneurship</p>
+                                <span class="badge bg-warning">420+ resources</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 category-card shadow-sm" data-category="literature">
+                            <div class="card-body text-center">
+                                <i class="bi bi-book text-danger mb-3" style="font-size: 3rem;"></i>
+                                <h5 class="card-title">Literature</h5>
+                                <p class="card-text text-muted">Classic and contemporary literature, poetry, and criticism</p>
+                                <span class="badge bg-danger">380+ resources</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 category-card shadow-sm" data-category="languages">
+                            <div class="card-body text-center">
+                                <i class="bi bi-translate text-secondary mb-3" style="font-size: 3rem;"></i>
+                                <h5 class="card-title">Languages</h5>
+                                <p class="card-text text-muted">English, Spanish, French, and other language resources</p>
+                                <span class="badge bg-secondary">290+ resources</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Additions -->
+            <div class="mb-5">
+                <h2 class="mb-4">
+                    <i class="bi bi-clock me-2"></i>Recently Added
+                </h2>
+                <div class="row" id="recentBooks">
+                    <!-- Recent books will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="text-center bg-light rounded p-5">
+                <h3 class="mb-3">Can't Find What You're Looking For?</h3>
+                <p class="mb-4 text-muted">
+                    Our library is constantly growing. Let us know what resources you need,
+                    and we'll work to add them to our collection.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="/contact" class="btn btn-primary btn-lg">
+                        <i class="bi bi-plus-circle me-2"></i>Request a Book
+                    </a>
+                    <a href="/login" class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Login for Full Access
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Sample book data (in a real app, this would come from an API)
+const sampleBooks = [
+    {
+        id: 1,
+        title: "Introduction to Algorithms",
+        author: "Thomas H. Cormen",
+        category: "Computer Science",
+        type: "textbook",
+        rating: 4.8,
+        downloads: 1250,
+        image: "/static/placeholder.jpg",
+        featured: true
+    },
+    {
+        id: 2,
+        title: "Calculus: Early Transcendentals",
+        author: "James Stewart",
+        category: "Mathematics",
+        type: "textbook",
+        rating: 4.6,
+        downloads: 980,
+        image: "/static/placeholder.jpg",
+        featured: true
+    },
+    {
+        id: 3,
+        title: "Chemistry: The Central Science",
+        author: "Theodore L. Brown",
+        category: "Science",
+        type: "textbook",
+        rating: 4.7,
+        downloads: 1100,
+        image: "/static/placeholder.jpg",
+        featured: true
+    },
+    {
+        id: 4,
+        title: "Principles of Economics",
+        author: "N. Gregory Mankiw",
+        category: "Business",
+        type: "textbook",
+        rating: 4.5,
+        downloads: 890,
+        image: "/static/placeholder.jpg",
+        featured: false
+    },
+    {
+        id: 5,
+        title: "To Kill a Mockingbird",
+        author: "Harper Lee",
+        category: "Literature",
+        type: "book",
+        rating: 4.9,
+        downloads: 2100,
+        image: "/static/placeholder.jpg",
+        featured: false
+    }
+];
+
+// Load featured books
+function loadFeaturedBooks() {
+    const featuredContainer = document.getElementById('featuredBooks');
+    const featuredBooks = sampleBooks.filter(book => book.featured);
+
+    featuredContainer.innerHTML = featuredBooks.map(book => `
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm book-card">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary">${book.category}</span>
+                        <div class="rating">
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <small class="text-muted ms-1">${book.rating}</small>
+                        </div>
+                    </div>
+                    <h5 class="card-title">${book.title}</h5>
+                    <p class="card-text text-muted">by ${book.author}</p>
+                    <div class="mt-auto">
+                        <div class="d-flex justify-content-between align-items-center text-muted small mb-2">
+                            <span><i class="bi bi-download me-1"></i>${book.downloads} downloads</span>
+                            <span class="badge bg-success">Free</span>
+                        </div>
+                        <button class="btn btn-primary btn-sm w-100" onclick="viewBook(${book.id})">
+                            <i class="bi bi-eye me-1"></i>View Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Load recent books
+function loadRecentBooks() {
+    const recentContainer = document.getElementById('recentBooks');
+    const recentBooks = sampleBooks.slice(0, 6); // Show first 6 books
+
+    recentContainer.innerHTML = recentBooks.map(book => `
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 shadow-sm book-card-small">
+                <div class="card-body text-center">
+                    <div class="book-icon mb-2">
+                        <i class="bi bi-book text-primary" style="font-size: 2rem;"></i>
+                    </div>
+                    <h6 class="card-title">${book.title.substring(0, 30)}${book.title.length > 30 ? '...' : ''}</h6>
+                    <p class="card-text text-muted small">${book.author}</p>
+                    <button class="btn btn-outline-primary btn-sm" onclick="viewBook(${book.id})">
+                        View
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// View book details (placeholder function)
+function viewBook(bookId) {
+    const book = sampleBooks.find(b => b.id === bookId);
+    if (book) {
+        Swal.fire({
+            title: book.title,
+            html: `
+                <p><strong>Author:</strong> ${book.author}</p>
+                <p><strong>Category:</strong> ${book.category}</p>
+                <p><strong>Rating:</strong> ${book.rating}/5</p>
+                <p><strong>Downloads:</strong> ${book.downloads}</p>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Download',
+            cancelButtonText: 'Close'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // In a real app, this would trigger a download
+                Swal.fire('Download Started!', 'Your download will begin shortly.', 'success');
+            }
+        });
+    }
+}
+
+// Category click handlers
+document.addEventListener('DOMContentLoaded', function() {
+    loadFeaturedBooks();
+    loadRecentBooks();
+
+    // Category card clicks
+    document.querySelectorAll('.category-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const category = this.dataset.category;
+            // In a real app, this would filter books by category
+            Swal.fire('Category Selected', `Showing books in ${category.replace('-', ' ')}`, 'info');
+        });
+    });
+
+    // Search functionality
+    document.getElementById('searchBtn').addEventListener('click', function() {
+        const query = document.getElementById('searchInput').value.trim();
+        if (query) {
+            // In a real app, this would search the library
+            Swal.fire('Search Results', `Searching for "${query}"...`, 'info');
+        }
+    });
+
+    // Filter tags
+    document.querySelectorAll('.filter-tag').forEach(tag => {
+        tag.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            // In a real app, this would apply filters
+            Swal.fire('Filter Applied', `Showing ${filter} books`, 'info');
+        });
+    });
+});
+</script>
+
+<style>
+.book-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+
+.category-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+
+.book-card-small {
+    transition: transform 0.2s ease;
+}
+
+.book-card-small:hover {
+    transform: scale(1.05);
+}
+
+.stat-icon {
+    opacity: 0.8;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+}
+
+.filter-tag {
+    transition: all 0.2s ease;
+}
+
+.filter-tag:hover {
+    transform: scale(1.05);
+}
+</style>
+{% endblock %}

@@ -217,7 +217,7 @@
                 const response = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
+                    credentials: 'same-origin',
                     body: JSON.stringify({ name, email, password, role })
                 });
 

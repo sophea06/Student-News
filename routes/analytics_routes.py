@@ -22,7 +22,7 @@ def get_trending_posts():
     ).outerjoin(Like).outerjoin(Comment).filter(
         Post.created_at >= week_ago,
         Post.is_deleted == False
-    ).group_by(Post.id).order_by('engagement_count'.desc()).limit(10).all()
+    ).group_by(Post.id).order_by(desc('engagement_count')).limit(10).all()
     
     posts_data = [
         {
@@ -34,7 +34,7 @@ def get_trending_posts():
             'comments_count': len(post.comments),
             'view_count': post.view_count,
             'engagement_score': engagement,
-            'created_at': post.created_at.isoformat()
+            'created_at': post.created_at.isoformat() if post.created_at else None
         }
         for post, engagement in trending_posts
         if user.role != 'student' or (post.visibility == 'public' and post.status == 'published')
@@ -66,7 +66,7 @@ def get_popular_posts():
             'comments_count': len(post.comments),
             'view_count': post.view_count,
             'share_count': post.share_count,
-            'created_at': post.created_at.isoformat()
+            'created_at': post.created_at.isoformat() if post.created_at else None
         }
         for post in popular_posts
     ]
@@ -164,7 +164,7 @@ def get_post_analytics(post_id):
         'share_count': post.share_count,
         'likes_by_day': [{'day': str(day), 'count': count} for day, count in likes_by_day],
         'comments_by_day': [{'day': str(day), 'count': count} for day, count in comments_by_day],
-        'created_at': post.created_at.isoformat()
+        'created_at': post.created_at.isoformat() if post.created_at else None
     }), 200
 
 @analytics_bp.route('/user-engagement/<int:user_id>', methods=['GET'])

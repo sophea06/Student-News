@@ -1259,7 +1259,7 @@
         "kind": 2,
         "importPath": "routes.post_routes",
         "description": "routes.post_routes",
-        "peekOfCode": "def build_comment_tree(comment):\n    return {\n        'id': comment.id,\n        'author': comment.user.name,\n        'author_id': comment.user_id,\n        'content': comment.content,\n        'status': comment.status,\n        'is_flagged': comment.is_flagged,\n        'created_at': comment.created_at.isoformat(),\n        'replies': [build_comment_tree(reply) for reply in (comment.replies or [])]",
+        "peekOfCode": "def build_comment_tree(comment):\n    return {\n        'id': comment.id,\n        'author': comment.user.name if comment.user else 'Deleted User',\n        'author_id': comment.user_id,\n        'content': comment.content,\n        'status': comment.status,\n        'is_flagged': comment.is_flagged,\n        'created_at': comment.created_at.isoformat() if comment.created_at else None,\n        'replies': [build_comment_tree(reply) for reply in (comment.replies or [])]",
         "detail": "routes.post_routes",
         "documentation": {}
     },

@@ -45,13 +45,13 @@ def get_public_posts():
         'content': f"{post.content[:150]}..." if len(post.content) > 150 else post.content,
         'category': post.category,
         'image_url': post.image_url,
-        'author': post.author.name,
+        'author': post.author.name if post.author else 'Deleted User',
         'likes_count': len(post.likes),
         'comments_count': len(post.comments),
         'view_count': post.view_count,
         'share_count': post.share_count,
         'is_pinned': post.is_pinned,
-        'created_at': post.created_at.isoformat()
+        'created_at': post.created_at.isoformat() if post.created_at else None
     } for post in pagination.items]
 
     return jsonify({
@@ -65,12 +65,12 @@ def get_public_posts():
 def build_comment_tree(comment):
     return {
         'id': comment.id,
-        'author': comment.user.name,
+        'author': comment.user.name if comment.user else 'Deleted User',
         'author_id': comment.user_id,
         'content': comment.content,
         'status': comment.status,
         'is_flagged': comment.is_flagged,
-        'created_at': comment.created_at.isoformat(),
+        'created_at': comment.created_at.isoformat() if comment.created_at else None,
         'replies': [build_comment_tree(reply) for reply in (comment.replies or [])]
     }
 
@@ -129,7 +129,7 @@ def get_posts():
         'content': f"{post.content[:150]}..." if len(post.content) > 150 else post.content,
         'category': post.category,
         'image_url': post.image_url,
-        'author': post.author.name,
+        'author': post.author.name if post.author else 'Deleted User',
         'author_id': post.author_id,
         'likes_count': len(post.likes),
         'comments_count': len(post.comments),
@@ -138,7 +138,7 @@ def get_posts():
         'is_liked': any(like.user_id == user_id for like in post.likes),
         'is_pinned': post.is_pinned,
         'status': post.status,
-        'created_at': post.created_at.isoformat()
+        'created_at': post.created_at.isoformat() if post.created_at else None
     } for post in pagination.items]
     
     return jsonify({
@@ -274,12 +274,12 @@ def get_post(post_id):
 
     comments_data = [{
         'id': comment.id,
-        'author': comment.user.name,
+        'author': comment.user.name if comment.user else 'Deleted User',
         'author_id': comment.user_id,
         'content': comment.content,
         'status': comment.status,
         'is_flagged': comment.is_flagged,
-        'created_at': comment.created_at.isoformat(),
+        'created_at': comment.created_at.isoformat() if comment.created_at else None,
         'replies': [build_comment_tree(reply) for reply in (comment.replies or [])]
     } for comment in comments]
     
@@ -290,7 +290,7 @@ def get_post(post_id):
         'category': post.category,
         'image_url': post.image_url,
         'visibility': post.visibility,
-        'author': post.author.name,
+        'author': post.author.name if post.author else 'Deleted User',
         'author_id': post.author_id,
         'likes_count': len(post.likes),
         'comments_count': len(post.comments),
@@ -298,8 +298,8 @@ def get_post(post_id):
         'share_count': post.share_count,
         'is_liked': any(like.user_id == user_id for like in post.likes),
         'comments': comments_data,
-        'created_at': post.created_at.isoformat(),
-        'updated_at': post.updated_at.isoformat(),
+        'created_at': post.created_at.isoformat() if post.created_at else None,
+        'updated_at': post.updated_at.isoformat() if post.updated_at else None,
         'is_pinned': post.is_pinned,
         'status': post.status
     }), 200
@@ -507,10 +507,10 @@ def add_comment(post_id):
         'message': 'Comment added successfully',
         'comment': {
             'id': comment.id,
-            'author': user.name,
+            'author': user.name if user else 'Deleted User',
             'content': comment.content,
             'status': status,
-            'created_at': comment.created_at.isoformat()
+            'created_at': comment.created_at.isoformat() if comment.created_at else None
         },
         'comments_count': len(post.comments)
     }), 201

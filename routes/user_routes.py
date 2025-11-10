@@ -11,22 +11,22 @@ user_bp = Blueprint('users', __name__)
 def get_notifications():
     """Get user notifications"""
     user_id = get_jwt_identity()
-    
+
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 10, type=int)
-    
+
     notifications = db.session.query(Notification).filter_by(user_id=user_id).order_by(
         desc(Notification.created_at)
     ).paginate(page=page, per_page=per_page)
-    
+
     notifications_data = [{
         'id': notif.id,
         'message': notif.message,
         'status': notif.status,
         'post_id': notif.post_id,
-        'created_at': notif.created_at.isoformat()
-    } for notif in notifications.items]
-    
+        'created_at': notif.created_at.isoformat() if notif.created_at else None
+    } for notif in notifications.items]  # Removed the if notif.user check as it was causing issues
+
     return jsonify({
         'total': notifications.total,
         'pages': notifications.pages,
@@ -67,13 +67,13 @@ def get_unread_count():
 def get_student_feed():
     """Get news feed for student with filters and search"""
     user_id = get_jwt_identity()
-    
+
     # Query parameters
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 10, type=int)
     category = request.args.get('category', None)
     search = request.args.get('search', None)
-    
+
     posts_query = db.session.query(Post).filter_by(
         visibility='public',
         status='published',
@@ -92,7 +92,7 @@ def get_student_feed():
         )
 
     posts = posts_query.order_by(desc(Post.is_pinned), desc(Post.created_at)).paginate(page=page, per_page=per_page)
-    
+
     posts_data = [
         {
             'id': post.id,
@@ -100,17 +100,17 @@ def get_student_feed():
             'content': f"{post.content[:200]}..." if len(post.content) > 200 else post.content,
             'category': post.category,
             'image_url': post.image_url,
-            'author': post.author.name,
+            'author': post.author.name if post.author else 'Deleted User',
             'author_id': post.author_id,
             'likes_count': len(post.likes),
             'comments_count': len(post.comments),
             'view_count': post.view_count,
             'is_liked': any(like.user_id == user_id for like in post.likes),
-            'created_at': post.created_at.isoformat()
+            'created_at': post.created_at.isoformat() if post.created_at else None
         }
         for post in posts.items
     ]
-    
+
     return jsonify({
         'total': posts.total,
         'pages': posts.pages,
@@ -150,7 +150,7 @@ def get_user_profile():
         'comments_count': len(user.comments),
         'followers_count': len(user.followers) if hasattr(user, 'followers') else 0,
         'following_count': len(user.following) if hasattr(user, 'following') else 0,
-        'created_at': user.created_at.isoformat()
+        'created_at': user.created_at.isoformat() if user.created_at else None
     }), 200
 
 @user_bp.route('/follow/<int:target_user_id>', methods=['POST'])
@@ -194,7 +194,7 @@ def get_activity_logs():
                 'id': log.id,
                 'action': log.action,
                 'description': log.description,
-                'created_at': log.created_at.isoformat()
+                'created_at': log.created_at.isoformat() if log.created_at else None
             }
             for log in logs
         ]

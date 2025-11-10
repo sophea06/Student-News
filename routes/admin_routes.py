@@ -37,7 +37,7 @@ def get_dashboard_stats():
         'author': post.author.name,
         'likes': len(post.likes),
         'comments': len(post.comments),
-        'created_at': post.created_at.isoformat()
+        'created_at': post.created_at.isoformat() if post.created_at else None
     } for post in recent_posts]
     
     return jsonify({
@@ -61,7 +61,7 @@ def get_all_users():
         'name': user.name,
         'email': user.email,
         'is_blocked': user.is_blocked,
-        'created_at': user.created_at.isoformat(),
+        'created_at': user.created_at.isoformat() if user.created_at else None,
         'posts_count': len(user.posts)
     } for user in users.items]
     
