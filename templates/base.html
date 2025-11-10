@@ -58,6 +58,608 @@
                 margin-top: 1rem;
             }
         }
+
+        /* Footer improvements */
+        footer {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 50%, #4a5568 100%);
+            border-top: 3px solid #4299e1;
+            position: relative;
+        }
+
+        footer a:hover {
+            color: #63b3ed !important;
+            transition: color 0.3s ease;
+        }
+
+        /* Enhanced animations for new sections */
+        footer .blockquote {
+            position: relative;
+            padding: 0.75rem;
+            border-left: 3px solid #4299e1;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        footer .blockquote:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        footer .blockquote-footer {
+            color: #63b3ed !important;
+            font-weight: 500;
+        }
+
+        /* News highlights hover effects */
+        footer .d-flex.align-items-start:hover {
+            color: #63b3ed !important;
+        }
+
+        footer .d-flex.align-items-start:hover i {
+            transform: scale(1.1);
+            transition: transform 0.2s ease;
+        }
+
+        /* Pulse animation for social links */
+        .social-links a {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(66, 153, 225, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(66, 153, 225, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(66, 153, 225, 0); }
+        }
+
+        /* Newsletter enhancement */
+        .newsletter-form .input-group {
+            position: relative;
+        }
+
+        .newsletter-form .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #4299e1;
+            box-shadow: 0 0 0 0.2rem rgba(66, 153, 225, 0.25);
+        }
+
+        .newsletter-form .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .newsletter-form .btn-primary {
+            background: #4299e1;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form .btn-primary:hover {
+            background: #3182ce;
+            transform: translateY(-1px);
+        }
+
+        /* Feedback form enhancement */
+        .feedback-form .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-form .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #4299e1;
+            box-shadow: 0 0 0 0.2rem rgba(66, 153, 225, 0.25);
+        }
+
+        .feedback-form .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .feedback-form .btn-primary {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-form .btn-primary:hover {
+            background: linear-gradient(135deg, #3182ce, #2c5282);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Footer link styles */
+        .footer-link {
+            transition: all 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #63b3ed !important;
+            transform: translateX(3px);
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            color: #a0aec0;
+            text-decoration: none;
+            border: 2px solid transparent;
+        }
+
+        .social-link:hover {
+            background: #4299e1;
+            color: white;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(66, 153, 225, 0.3);
+            border-color: #4299e1;
+        }
+
+        /* Notification dropdown styles */
+        .notification-dropdown .dropdown-header {
+            padding: 0.75rem 1rem;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .notification-dropdown .dropdown-footer {
+            padding: 0.5rem 1rem;
+        }
+
+        .notification-list {
+            padding: 0;
+        }
+
+        .notification-item {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .notification-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .notification-item.unread {
+            background-color: #e3f2fd;
+            border-left: 3px solid #2196f3;
+        }
+
+        .notification-item.unread:hover {
+            background-color: #bbdefb;
+        }
+
+        .notification-item .notification-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .notification-item .notification-content {
+            flex: 1;
+        }
+
+        .notification-item .notification-message {
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            line-height: 1.4;
+        }
+
+        .notification-item .notification-time {
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+
+        .notification-item .mark-read-btn {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            background: none;
+            border: none;
+            color: #6c757d;
+            font-size: 0.75rem;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+        }
+
+        .notification-item:hover .mark-read-btn {
+            opacity: 1;
+        }
+
+        .notification-item .mark-read-btn:hover {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+
+        /* Notification badge animation */
+        .notification-badge-pulse {
+            animation: notificationPulse 2s infinite;
+        }
+
+        @keyframes notificationPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .news-highlights-card, .testimonials-card, .stats-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .news-item {
+            background: rgba(255, 255, 255, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        .news-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
+        }
+
+        .testimonial-slider {
+            position: relative;
+            min-height: 200px;
+        }
+
+        .testimonial-item {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .testimonial-item.active {
+            display: block;
+        }
+
+        .testimonial-indicators .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-indicators .indicator.active {
+            background: #4299e1;
+            transform: scale(1.2);
+        }
+
+        .stat-item {
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .trust-badges .trust-badge {
+            transition: all 0.3s ease;
+        }
+
+        .trust-badges .trust-badge:hover {
+            transform: translateY(-2px);
+        }
+
+        .brand-section {
+            padding: 0.5rem 0;
+        }
+
+        .smaller {
+            font-size: 0.75rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        footer h5, footer h6 {
+            color: #ffffff;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        footer h5::after, footer h6::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, #4299e1, #63b3ed);
+            border-radius: 1px;
+        }
+
+        footer .text-muted {
+            color: #a0aec0 !important;
+            font-size: 0.9rem;
+        }
+
+        footer hr {
+            border: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #4a5568, transparent);
+            margin: 2rem 0;
+        }
+
+        footer .col-md-6 p {
+            margin-bottom: 0;
+            font-size: 0.85rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            color: #a0aec0;
+            text-decoration: none;
+        }
+
+        .social-links a:hover {
+            background: #4299e1;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4299e1;
+            color: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-to-top:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 767.98px) {
+            footer .row > div {
+                text-align: center !important;
+                margin-bottom: 2.5rem;
+            }
+
+            footer .col-md-6 {
+                margin-bottom: 1.5rem;
+            }
+
+            footer h5::after, footer h6::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (min-width: 768px) {
+            footer .row > div:not(:last-child) {
+                border-right: 1px solid rgba(255, 255, 255, 0.1);
+                padding-right: 2rem;
+            }
+        }
+
+        /* Enhanced responsive design for new sections */
+        @media (max-width: 1199.98px) {
+            .brand-section {
+                text-align: center;
+            }
+
+            footer .col-xl-3, footer .col-xl-2 {
+                margin-bottom: 2rem;
+            }
+        }
+
+        @media (max-width: 991.98px) {
+            footer .row.mt-4 > div {
+                margin-bottom: 2rem;
+            }
+
+            footer .blockquote {
+                margin-bottom: 1rem;
+            }
+
+            .news-highlights-card, .testimonials-card, .stats-card {
+                padding: 1rem;
+            }
+
+            .stat-item {
+                padding: 1rem !important;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            footer .row.mt-4 .col-lg-6 {
+                margin-bottom: 2rem;
+            }
+
+            footer .blockquote {
+                font-size: 0.8rem;
+            }
+
+            footer .d-flex.align-items-start span {
+                font-size: 0.85rem;
+            }
+
+            .newsletter-form .btn {
+                font-size: 0.8rem;
+                padding: 0.25rem 0.5rem;
+            }
+
+            .news-item {
+                padding: 0.75rem !important;
+            }
+
+            .testimonial-content {
+                padding: 1rem !important;
+            }
+
+            .trust-badges {
+                gap: 2rem !important;
+                flex-direction: column !important;
+                align-items: center !important;
+            }
+
+            .footer-bottom-links {
+                text-align: center !important;
+            }
+
+            .copyright-section {
+                justify-content: center !important;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            footer .row.mt-4 .col-md-6 {
+                margin-bottom: 1.5rem;
+            }
+
+            footer h6 {
+                font-size: 1rem;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+
+            .brand-section {
+                padding: 0.25rem 0;
+            }
+
+            .stat-number {
+                font-size: 1.5rem !important;
+            }
+
+            .news-highlights-card, .testimonials-card, .stats-card {
+                padding: 0.75rem;
+                margin-bottom: 1.5rem;
+            }
+
+            footer .row.g-4 {
+                --bs-gutter-x: 1rem;
+                --bs-gutter-y: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .social-link {
+                width: 40px !important;
+                height: 40px !important;
+            }
+
+            .testimonial-controls {
+                gap: 1rem !important;
+            }
+
+            .quick-actions {
+                flex-direction: column;
+                gap: 0.5rem !important;
+            }
+
+            .quick-actions .btn {
+                width: 100%;
+            }
+        }
+
+        /* Animation enhancements */
+        @media (prefers-reduced-motion: reduce) {
+            .footer-link, .social-link, .hover-lift, .stat-item, .trust-badge,
+            .testimonial-item, .news-item {
+                transition: none !important;
+                animation: none !important;
+            }
+
+            .back-to-top {
+                transition: opacity 0.2s ease, visibility 0.2s ease;
+            }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            footer {
+                background: #000000;
+                border-top: 4px solid #ffffff;
+            }
+
+            .footer-link:hover {
+                color: #ffffff !important;
+            }
+
+            .social-link:hover {
+                background: #ffffff;
+                color: #000000;
+                border-color: #ffffff;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            footer {
+                background: white !important;
+                color: black !important;
+                border-top: 2px solid #000 !important;
+                box-shadow: none !important;
+            }
+
+            footer a {
+                color: #000 !important;
+                text-decoration: underline !important;
+            }
+
+            .social-links, .newsletter-form, .quick-actions,
+            .testimonial-controls, .back-to-top {
+                display: none !important;
+            }
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -82,6 +684,12 @@
                         <a class="nav-link" href="/library"><i class="bi bi-book me-1"></i>Library</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/study"><i class="bi bi-book-half me-1"></i>Study</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/international-study"><i class="bi bi-airplane me-1"></i>International Study</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/about"><i class="bi bi-info-circle me-1"></i>About</a>
                     </li>
                     <li class="nav-item">
@@ -89,6 +697,38 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
+                    <!-- Notifications Dropdown -->
+                    <li class="nav-item dropdown d-none" id="notification-nav-item">
+                        <a class="nav-link dropdown-toggle position-relative" href="#" id="notificationDropdownToggle"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notifications">
+                            <i class="bi bi-bell"></i>
+                            <span id="notificationBadge" class="badge bg-danger position-absolute top-0 start-100 translate-middle"
+                                style="display: none; font-size: 0.6rem; padding: 0.2em 0.4em;">0</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="notificationDropdownToggle" style="min-width: 350px; max-width: 400px;">
+                            <li class="dropdown-header d-flex justify-content-between align-items-center">
+                                <strong>Notifications</strong>
+                                <button class="btn btn-sm btn-outline-primary" onclick="markAllNotificationsRead()" id="markAllReadBtn" style="display: none;">Mark all read</button>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <div id="notificationDropdownList" class="notification-list" style="max-height: 400px; overflow-y: auto;">
+                                    <div class="text-center py-3">
+                                        <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <small class="text-muted d-block mt-2">Loading notifications...</small>
+                                    </div>
+                                </div>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li class="dropdown-footer text-center">
+                                <a href="/notifications" class="text-decoration-none">View all notifications</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- User Profile Dropdown -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
                             role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -118,80 +758,124 @@
     <!-- Footer -->
     <footer class="bg-dark text-white mt-5 py-4">
         <div class="container-fluid">
-            <div class="row">
-                <!-- Logo + description -->
-                <div class="col-md-3 mb-4 mb-md-0 text-center text-md-start">
-                    <h5 class="mb-3 d-flex align-items-center justify-content-center justify-content-md-start gap-2">
-                        <!-- <img src="/static/images/logoPage.png" alt="Student News Logo" class="auth-logo" -->
-                            <!-- style="height: 40px; width: auto;"> -->
-                        Student News
-                    </h5>
-                    <p class="text-muted small mb-0">
-                        Your trusted source for campus news and announcements.
-                    </p>
-                </div>
-
-                <!-- Quick Links -->
-                <div class="col-md-3 mb-4 mb-md-0">
-                    <h6 class="mb-3">Quick Links</h6>
-                    <ul class="list-unstyled small mb-0">
-                        <li><a href="/" class="text-decoration-none text-muted">Home</a></li>
-                        <li><a href="/about" class="text-decoration-none text-muted">About</a></li>
-                        <li><a href="/contact" class="text-decoration-none text-muted">Contact</a></li>
-                        <li><a href="/library" class="text-decoration-none text-muted">Library</a></li>
-                        <li><a href="/dashboard" class="text-decoration-none text-muted">News Feed</a></li>
-                        <li><a href="/profile" class="text-decoration-none text-muted">Profile</a></li>
-                    </ul>
-                </div>
-
-                <!-- Contact -->
-                <div class="col-md-3 mb-4 mb-md-0">
-                    <h6 class="mb-3">Contact</h6>
-                    <p class="text-muted small mb-0">
-                        Email: <a href="mailto:info@studentnews.com"
-                            class="text-decoration-none text-muted">info@studentnews.com</a><br>
-                        Phone: (555) 123-4567
-                    </p>
-                </div>
-
-                <!-- Social Media -->
-                <div class="col-md-3">
-                    <h6 class="mb-3">Follow Us</h6>
-                    <ul class="list-unstyled small mb-0">
-                        <li><a href="#" class="text-decoration-none text-muted"><i class="bi bi-facebook me-2"></i>Facebook</a></li>
-                        <li><a href="#" class="text-decoration-none text-muted"><i class="bi bi-twitter me-2"></i>Twitter</a></li>
-                        <li><a href="#" class="text-decoration-none text-muted"><i class="bi bi-instagram me-2"></i>Instagram</a></li>
-                        <li><a href="#" class="text-decoration-none text-muted"><i class="bi bi-linkedin me-2"></i>LinkedIn</a></li>
-                    </ul>
+            <!-- User-Specific Welcome Section -->
+            <div class="row mb-4">
+                <div class="col-12 text-center">
+                    <div id="user-welcome-section" class="d-none">
+                        <h6 class="text-primary mb-2">Welcome back, <span id="user-name-display"></span>!</h6>
+                        <p class="text-muted small mb-0">Your personalized dashboard is ready</p>
+                    </div>
                 </div>
             </div>
 
-            <hr class="bg-secondary my-4">
+            <!-- Main Footer Content -->
+            <div class="row g-4">
+                <!-- Brand Section -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="brand-section">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="/static/images/logoPage.png" alt="Student News Logo" class="me-3" style="height: 40px; width: auto;">
+                            <h5 class="mb-0 fw-bold">Student News</h5>
+                        </div>
+                        <p class="text-muted mb-3 lh-base">
+                            Your trusted source for campus news, academic resources, and student success.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
+                    <h6 class="mb-3 fw-bold text-uppercase">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="/" class="text-decoration-none text-muted footer-link"><i class="bi bi-house-door me-2"></i>Home</a></li>
+                        <li class="mb-2"><a href="/about" class="text-decoration-none text-muted footer-link"><i class="bi bi-info-circle me-2"></i>About</a></li>
+                        <li class="mb-2"><a href="/contact" class="text-decoration-none text-muted footer-link"><i class="bi bi-envelope me-2"></i>Contact</a></li>
+                        <li class="mb-2"><a href="/library" class="text-decoration-none text-muted footer-link"><i class="bi bi-book me-2"></i>Library</a></li>
+                        <li class="mb-2"><a href="/study" class="text-decoration-none text-muted footer-link"><i class="bi bi-book-half me-2"></i>Study</a></li>
+                        <li class="mb-2"><a href="/dashboard" class="text-decoration-none text-muted footer-link"><i class="bi bi-newspaper me-2"></i>News</a></li>
+                    </ul>
+                </div>
+
+                <!-- User-Specific Links -->
+                <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
+                    <h6 class="mb-3 fw-bold text-uppercase">My Account</h6>
+                    <ul class="list-unstyled" id="user-links">
+                        <li class="mb-2 d-none" id="profile-link"><a href="/profile" class="text-decoration-none text-muted footer-link"><i class="bi bi-person-circle me-2"></i>Profile</a></li>
+                        <li class="mb-2 d-none" id="dashboard-link"><a href="/dashboard" class="text-decoration-none text-muted footer-link"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                        <li class="mb-2 d-none" id="admin-link"><a href="/admin/dashboard" class="text-decoration-none text-muted footer-link"><i class="bi bi-gear me-2"></i>Admin Panel</a></li>
+                        <li class="mb-2"><a href="/login" class="text-decoration-none text-muted footer-link" id="login-link"><i class="bi bi-box-arrow-in-right me-2"></i>Login</a></li>
+                        <li class="mb-2 d-none" id="logout-link"><a href="#" onclick="logout()" class="text-decoration-none text-muted footer-link"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact & Newsletter -->
+                <div class="col-lg-4 col-md-12 mb-4">
+                    <h6 class="mb-3 fw-bold text-uppercase">Stay Connected</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <p class="text-muted small mb-2">
+                                <i class="bi bi-envelope me-2 text-primary"></i>
+                                <a href="mailto:info@studentnews.com" class="text-decoration-none text-muted">info@studentnews.com</a>
+                            </p>
+                            <p class="text-muted small mb-2">
+                                <i class="bi bi-telephone me-2 text-success"></i>
+                                <a href="tel:+15551234567" class="text-decoration-none text-muted">(555) 123-4567</a>
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <form class="newsletter-form">
+                                <div class="input-group input-group-sm">
+                                    <input type="email" class="form-control" placeholder="Your email" required aria-label="Email for newsletter">
+                                    <button class="btn btn-primary" type="submit" title="Subscribe to newsletter">
+                                        <i class="bi bi-send"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <hr class="bg-secondary my-3">
 
             <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-start text-muted small">
-                    <p class="mb-0 d-flex align-items-center">
-                        <img src="/static/images/logoPage.png" alt="Student News Logo" style="height: 20px; width: auto; margin-right: 10px;">
-                        © 2025 Student News System. All rights reserved.
-                    </p>
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0 text-muted small">© 2025 Student News System. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
-                    <a href="#" class="text-decoration-none text-muted small me-3">Privacy Policy</a>
-                    <a href="#" class="text-decoration-none text-muted small">Terms of Service</a>
+                    <a href="#" class="text-decoration-none text-muted small me-3">Privacy</a>
+                    <a href="#" class="text-decoration-none text-muted small me-3">Terms</a>
+                    <a href="#" class="text-decoration-none text-muted small">Support</a>
                 </div>
             </div>
         </div>
     </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top" aria-label="Back to top">
+        <i class="bi bi-arrow-up"></i>
+    </a>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
     <script>
-        // Load navbar profile info
+        // Load navbar and footer profile info
         async function loadNavbarProfile() {
             const token = localStorage.getItem("token");
-            if (!token) return;
+            if (!token) {
+                // Show login link, hide user-specific elements
+                document.getElementById('login-link').classList.remove('d-none');
+                document.getElementById('logout-link').classList.add('d-none');
+                document.getElementById('profile-link').classList.add('d-none');
+                document.getElementById('dashboard-link').classList.add('d-none');
+                document.getElementById('admin-link').classList.add('d-none');
+                document.getElementById('user-welcome-section').classList.add('d-none');
+                document.getElementById('notification-nav-item').classList.add('d-none');
+                return;
+            }
 
             try {
                 const response = await fetch('/api/users/profile', {
@@ -200,10 +884,30 @@
                 if (!response.ok) return;
                 const user = await response.json();
 
+                // Update navbar
                 document.getElementById('nav-user-name').textContent = user.name;
                 if (user.profile_picture) {
                     document.getElementById('nav-profile-picture').src = user.profile_picture;
                 }
+
+                // Update footer with user-specific content
+                document.getElementById('user-name-display').textContent = user.name;
+                document.getElementById('user-welcome-section').classList.remove('d-none');
+
+                // Show user-specific links
+                document.getElementById('login-link').classList.add('d-none');
+                document.getElementById('logout-link').classList.remove('d-none');
+                document.getElementById('profile-link').classList.remove('d-none');
+                document.getElementById('dashboard-link').classList.remove('d-none');
+                document.getElementById('notification-nav-item').classList.remove('d-none');
+
+                // Show admin link if user is admin
+                if (user.role === 'admin') {
+                    document.getElementById('admin-link').classList.remove('d-none');
+                }
+
+                // Load initial notifications
+                loadNavbarNotifications();
             } catch (err) {
                 console.error('Error loading navbar profile:', err);
             }
@@ -216,6 +920,480 @@
             localStorage.removeItem('token');
             window.location.href = '/login';
         }
+
+        // Back to top
+        document.querySelector('.back-to-top').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Newsletter form with enhanced UX
+        document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input').value;
+            const button = this.querySelector('button');
+            const originalText = button.innerHTML;
+
+            // Show loading state
+            button.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Subscribing...';
+            button.disabled = true;
+
+            // Simulate API call delay
+            setTimeout(() => {
+                Swal.fire({
+                    title: 'Subscribed!',
+                    text: 'Thank you for subscribing with ' + email + '. Check your inbox for confirmation!',
+                    icon: 'success',
+                    confirmButtonColor: '#4299e1',
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+                this.reset();
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 1500);
+        });
+
+        // Notification functions
+        async function loadNavbarNotifications() {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+            try {
+                const response = await fetch('/api/users/notifications?page=1&per_page=5', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) return;
+
+                const data = await response.json();
+                const notifications = data.notifications || [];
+                const unreadCount = await getUnreadCount();
+
+                updateNotificationBadge(unreadCount);
+                renderNotificationDropdown(notifications);
+            } catch (error) {
+                console.error('Error loading navbar notifications:', error);
+            }
+        }
+
+        async function getUnreadCount() {
+            const token = localStorage.getItem("token");
+            if (!token) return 0;
+
+            try {
+                const response = await fetch('/api/users/unread-count', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) return 0;
+
+                const data = await response.json();
+                return data.unread_count || 0;
+            } catch (error) {
+                console.error('Error getting unread count:', error);
+                return 0;
+            }
+        }
+
+        function updateNotificationBadge(count) {
+            const badge = document.getElementById('notificationBadge');
+            const markAllReadBtn = document.getElementById('markAllReadBtn');
+
+            if (count > 0) {
+                badge.textContent = count > 99 ? '99+' : count;
+                badge.style.display = 'inline-block';
+                badge.classList.add('notification-badge-pulse');
+                markAllReadBtn.style.display = 'inline-block';
+            } else {
+                badge.style.display = 'none';
+                badge.classList.remove('notification-badge-pulse');
+                markAllReadBtn.style.display = 'none';
+            }
+        }
+
+        function renderNotificationDropdown(notifications) {
+            const listContainer = document.getElementById('notificationDropdownList');
+
+            if (notifications.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="bi bi-bell-slash text-muted" style="font-size: 2rem;"></i>
+                        <p class="text-muted mb-0 mt-2">No notifications yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const notificationHtml = notifications.map(notification => {
+                const isUnread = notification.status === 'unread';
+                const timeAgo = getTimeAgo(new Date(notification.created_at));
+                const iconClass = getNotificationIcon(notification.message);
+
+                return `
+                    <div class="notification-item d-flex align-items-start ${isUnread ? 'unread' : ''}"
+                         onclick="handleNotificationClick(${notification.id}, ${notification.post_id || 'null'})">
+                        <div class="notification-icon bg-primary text-white">
+                            <i class="bi ${iconClass}"></i>
+                        </div>
+                        <div class="notification-content flex-grow-1">
+                            <div class="notification-message">${notification.message}</div>
+                            <div class="notification-time">${timeAgo}</div>
+                        </div>
+                        ${isUnread ? `<button class="mark-read-btn" onclick="event.stopPropagation(); markNotificationRead(${notification.id})" title="Mark as read">
+                            <i class="bi bi-check2"></i>
+                        </button>` : ''}
+                    </div>
+                `;
+            }).join('');
+
+            listContainer.innerHTML = notificationHtml;
+        }
+
+        function getNotificationIcon(message) {
+            const lowerMessage = message.toLowerCase();
+            if (lowerMessage.includes('like') || lowerMessage.includes('liked')) {
+                return 'bi-heart-fill text-danger';
+            } else if (lowerMessage.includes('comment') || lowerMessage.includes('replied')) {
+                return 'bi-chat-dots text-info';
+            } else if (lowerMessage.includes('follow') || lowerMessage.includes('followed')) {
+                return 'bi-person-plus text-success';
+            } else if (lowerMessage.includes('mention') || lowerMessage.includes('mentioned')) {
+                return 'bi-at text-warning';
+            } else {
+                return 'bi-bell text-primary';
+            }
+        }
+
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+
+            if (diffInSeconds < 60) return 'Just now';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+            if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+
+            return date.toLocaleDateString();
+        }
+
+        async function handleNotificationClick(notificationId, postId) {
+            // Mark as read
+            await markNotificationRead(notificationId);
+
+            // Close dropdown
+            const dropdown = bootstrap.Dropdown.getInstance(document.getElementById('notificationDropdownToggle'));
+            if (dropdown) dropdown.hide();
+
+            // Navigate to post if available
+            if (postId && postId !== 'null') {
+                window.location.href = `/post/${postId}`;
+            }
+        }
+
+        async function markNotificationRead(notificationId) {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+            try {
+                const response = await fetch(`/api/users/notifications/${notificationId}/read`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    // Refresh notifications
+                    loadNavbarNotifications();
+                }
+            } catch (error) {
+                console.error('Error marking notification as read:', error);
+            }
+        }
+
+        async function markAllNotificationsRead() {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+            try {
+                // Get all unread notifications
+                const response = await fetch('/api/users/notifications?page=1&per_page=50', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) return;
+
+                const data = await response.json();
+                const unreadNotifications = data.notifications.filter(n => n.status === 'unread');
+
+                // Mark each as read
+                const markPromises = unreadNotifications.map(notification =>
+                    fetch(`/api/users/notifications/${notification.id}/read`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    })
+                );
+
+                await Promise.all(markPromises);
+
+                // Refresh notifications
+                loadNavbarNotifications();
+            } catch (error) {
+                console.error('Error marking all notifications as read:', error);
+            }
+        }
+
+        // Set up periodic notification checking
+        setInterval(loadNavbarNotifications, 30000); // Check every 30 seconds
+
+        // WebSocket connection for real-time notifications (if available)
+        let notificationSocket = null;
+
+        function initializeWebSocket() {
+            if (typeof WebSocket !== 'undefined') {
+                try {
+                    const token = localStorage.getItem("token");
+                    if (token) {
+                        // For now, we'll use polling, but this can be upgraded to WebSocket
+                        // notificationSocket = new WebSocket(`ws://127.0.0.1:5000/notifications?token=${token}`);
+                        // notificationSocket.onmessage = handleWebSocketMessage;
+                    }
+                } catch (error) {
+                    console.log('WebSocket not available, using polling');
+                }
+            }
+        }
+
+        function handleWebSocketMessage(event) {
+            try {
+                const data = JSON.parse(event.data);
+                if (data.type === 'notification') {
+                    // Refresh notifications when new one arrives
+                    loadNavbarNotifications();
+                    // Optional: Show browser notification
+                    showBrowserNotification(data.notification);
+                }
+            } catch (error) {
+                console.error('Error handling WebSocket message:', error);
+            }
+        }
+
+        function showBrowserNotification(notification) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('Student News', {
+                    body: notification.message,
+                    icon: '/static/images/logo.png',
+                    tag: `notification-${notification.id}`
+                });
+            }
+        }
+
+        // Request notification permission on user interaction
+        function requestNotificationPermission() {
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+        }
+
+        // Initialize WebSocket when page loads
+        initializeWebSocket();
+
+        // Add click handler for notification dropdown to request permission
+        document.addEventListener('DOMContentLoaded', function() {
+            const notificationDropdown = document.getElementById('notificationDropdownToggle');
+            if (notificationDropdown) {
+                notificationDropdown.addEventListener('click', requestNotificationPermission);
+            }
+        });
+
+        // Testimonial slider functionality
+        let currentTestimonial = 0;
+        const testimonials = document.querySelectorAll('.testimonial-item');
+        const indicators = document.querySelectorAll('.testimonial-indicators .indicator');
+        const prevBtn = document.querySelector('.testimonial-prev');
+        const nextBtn = document.querySelector('.testimonial-next');
+
+        function showTestimonial(index) {
+            testimonials.forEach((testimonial, i) => {
+                testimonial.classList.toggle('active', i === index);
+            });
+            indicators.forEach((indicator, i) => {
+                indicator.classList.toggle('active', i === index);
+            });
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === testimonials.length - 1;
+        }
+
+        if (prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', () => {
+                if (currentTestimonial > 0) {
+                    currentTestimonial--;
+                    showTestimonial(currentTestimonial);
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentTestimonial < testimonials.length - 1) {
+                    currentTestimonial++;
+                    showTestimonial(currentTestimonial);
+                }
+            });
+
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    currentTestimonial = index;
+                    showTestimonial(currentTestimonial);
+                });
+            });
+        }
+
+        // Social media hover effects
+        document.querySelectorAll('.social-link').forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                const platform = this.getAttribute('data-platform');
+                // Add platform-specific hover effects if needed
+                this.style.animation = 'pulse 1s infinite';
+            });
+
+            link.addEventListener('mouseleave', function() {
+                this.style.animation = '';
+            });
+        });
+
+        // Enhanced back to top with smooth scroll and visibility
+        const backToTopBtn = document.querySelector('.back-to-top');
+
+        function toggleBackToTop() {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.style.opacity = '1';
+                backToTopBtn.style.visibility = 'visible';
+            } else {
+                backToTopBtn.style.opacity = '0';
+                backToTopBtn.style.visibility = 'hidden';
+            }
+        }
+
+        window.addEventListener('scroll', toggleBackToTop);
+        toggleBackToTop(); // Initial check
+
+        // Feedback modal functions
+        function openFeedbackModal() {
+            Swal.fire({
+                title: 'Share Your Feedback',
+                html: `
+                    <form id="quick-feedback-form" class="text-start">
+                        <div class="mb-3">
+                            <label for="feedback-name" class="form-label text-dark">Name</label>
+                            <input type="text" class="form-control" id="feedback-name" placeholder="Your name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="feedback-email" class="form-label text-dark">Email</label>
+                            <input type="email" class="form-control" id="feedback-email" placeholder="your.email@example.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="feedback-message" class="form-label text-dark">Message</label>
+                            <textarea class="form-control" id="feedback-message" rows="4" placeholder="Tell us what you think..." required></textarea>
+                        </div>
+                    </form>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Send Feedback',
+                confirmButtonColor: '#4299e1',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    popup: 'feedback-modal'
+                },
+                preConfirm: () => {
+                    const name = document.getElementById('feedback-name').value;
+                    const email = document.getElementById('feedback-email').value;
+                    const message = document.getElementById('feedback-message').value;
+
+                    if (!name || !email || !message) {
+                        Swal.showValidationMessage('Please fill in all fields');
+                        return false;
+                    }
+
+                    return { name, email, message };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Simulate sending feedback
+                    Swal.fire({
+                        title: 'Thank you!',
+                        text: 'Your feedback has been sent successfully. We appreciate your input!',
+                        icon: 'success',
+                        confirmButtonColor: '#4299e1',
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+                }
+            });
+        }
+
+        function openSupportChat() {
+            Swal.fire({
+                title: 'Live Support',
+                text: 'Our support team is here to help! How can we assist you today?',
+                input: 'textarea',
+                inputPlaceholder: 'Describe your question or issue...',
+                inputAttributes: {
+                    'aria-label': 'Describe your question or issue'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Start Chat',
+                confirmButtonColor: '#4299e1',
+                cancelButtonText: 'Cancel',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Please describe your question or issue!';
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Connecting...',
+                        text: 'Please hold while we connect you to a support agent.',
+                        icon: 'info',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        timerProgressBar: true
+                    }).then(() => {
+                        Swal.fire({
+                            title: 'Chat Started!',
+                            text: 'A support agent will be with you shortly. You can also reach us at support@studentnews.com',
+                            icon: 'success',
+                            confirmButtonColor: '#4299e1'
+                        });
+                    });
+                }
+            });
+        }
+
+        // Newsletter form with enhanced UX
+        document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input').value;
+            const button = this.querySelector('button');
+            const originalText = button.innerHTML;
+
+            // Show loading state
+            button.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Subscribing...';
+            button.disabled = true;
+
+            // Simulate API call delay
+            setTimeout(() => {
+                Swal.fire({
+                    title: 'Subscribed!',
+                    text: 'Thank you for subscribing with ' + email + '. Check your inbox for confirmation!',
+                    icon: 'success',
+                    confirmButtonColor: '#4299e1',
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+                this.reset();
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 1500);
+        });
     </script>
 
     {% block extra_js %}{% endblock %}

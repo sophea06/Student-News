@@ -1,0 +1,441 @@
+{% extends "base.html" %}
+
+{% block title %}Study Materials - Student News System{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-primary mb-3">
+                    <i class="bi bi-book me-3"></i>Study Materials
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Access textbooks, notes, study guides, and educational resources to support your academic journey.
+                </p>
+            </div>
+
+            <!-- Search and Filters -->
+            <div class="card shadow-sm mb-5">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                <input type="text" class="form-control form-control-lg" id="searchInput"
+                                       placeholder="Search study materials, notes, guides...">
+                                <button class="btn btn-primary" type="button" id="searchBtn">
+                                    <i class="bi bi-search me-2"></i>Search
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <select class="form-select form-select-lg" id="subjectFilter">
+                                <option value="">All Subjects</option>
+                                <option value="mathematics">Mathematics</option>
+                                <option value="physics">Physics</option>
+                                <option value="chemistry">Chemistry</option>
+                                <option value="biology">Biology</option>
+                                <option value="computer-science">Computer Science</option>
+                                <option value="english">English</option>
+                                <option value="history">History</option>
+                                <option value="economics">Economics</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Quick Filters -->
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <button class="btn btn-outline-primary btn-sm filter-tag" data-filter="notes">Lecture Notes</button>
+                        <button class="btn btn-outline-success btn-sm filter-tag" data-filter="guides">Study Guides</button>
+                        <button class="btn btn-outline-info btn-sm filter-tag" data-filter="practice">Practice Tests</button>
+                        <button class="btn btn-outline-warning btn-sm filter-tag" data-filter="videos">Video Lectures</button>
+                        <button class="btn btn-outline-danger btn-sm filter-tag" data-filter="assignments">Assignments</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Study Stats -->
+            <div class="row mb-5">
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="stat-icon mb-2">
+                                <i class="bi bi-file-text text-primary" style="font-size: 2rem;"></i>
+                            </div>
+                            <h3 class="text-primary mb-1">5,000+</h3>
+                            <small class="text-muted">Study Notes</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="stat-icon mb-2">
+                                <i class="bi bi-journal-text text-success" style="font-size: 2rem;"></i>
+                            </div>
+                            <h3 class="text-success mb-1">1,800+</h3>
+                            <small class="text-muted">Study Guides</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="stat-icon mb-2">
+                                <i class="bi bi-play-circle text-info" style="font-size: 2rem;"></i>
+                            </div>
+                            <h3 class="text-info mb-1">2,200+</h3>
+                            <small class="text-muted">Video Lectures</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="stat-icon mb-2">
+                                <i class="bi bi-trophy text-warning" style="font-size: 2rem;"></i>
+                            </div>
+                            <h3 class="text-warning mb-1">95%</h3>
+                            <small class="text-muted">Success Rate</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Study Materials -->
+            <div class="mb-5">
+                <h2 class="mb-4">
+                    <i class="bi bi-star-fill text-warning me-2"></i>Featured Study Materials
+                </h2>
+                <div class="row" id="featuredMaterials">
+                    <!-- Materials will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Subjects -->
+            <div class="mb-5">
+                <h2 class="mb-4">
+                    <i class="bi bi-grid me-2"></i>Browse by Subject
+                </h2>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 subject-card shadow-sm" data-subject="mathematics">
+                            <div class="card-body text-center">
+                                <i class="bi bi-calculator text-primary mb-3" style="font-size: 3rem;"></i>
+                                <h5 class="card-title">Mathematics</h5>
+                                <p class="card-text text-muted">Calculus, Algebra, Statistics, and more</p>
+                                <span class="badge bg-primary">450+ resources</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 subject-card shadow-sm" data-subject="physics">
+                            <div class="card-body text-center">
+                                <i class="bi bi-lightning text-success mb-3" style="font-size: 3rem;"></i>
+                                <h5 class="card-title">Physics</h5>
+                                <p class="card-text text-muted">Mechanics, Thermodynamics, Quantum Physics</p>
+                                <span class="badge bg-success">320+ resources</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 subject-card shadow-sm" data-subject="chemistry">
+                            <div class="card-body text-center">
+                                <i class="bi bi-flask text-info mb-3" style="font-size: 3rem;"></i>
+                                <h5 class="card-title">Chemistry</h5>
+                                <p class="card-text text-muted">Organic, Inorganic, Physical Chemistry</p>
+                                <span class="badge bg-info">280+ resources</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 subject-card shadow-sm" data-subject="biology">
+                            <div class="card-body text-center">
+                                <i class="bi bi-dna text-warning mb-3" style="font-size: 3rem;"></i>
+                                <h5 class="card-title">Biology</h5>
+                                <p class="card-text text-muted">Cell Biology, Genetics, Ecology</p>
+                                <span class="badge bg-warning">350+ resources</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 subject-card shadow-sm" data-subject="computer-science">
+                            <div class="card-body text-center">
+                                <i class="bi bi-laptop text-danger mb-3" style="font-size: 3rem;"></i>
+                                <h5 class="card-title">Computer Science</h5>
+                                <p class="card-text text-muted">Programming, Algorithms, Data Structures</p>
+                                <span class="badge bg-danger">520+ resources</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 subject-card shadow-sm" data-subject="languages">
+                            <div class="card-body text-center">
+                                <i class="bi bi-translate text-secondary mb-3" style="font-size: 3rem;"></i>
+                                <h5 class="card-title">Languages</h5>
+                                <p class="card-text text-muted">English, Literature, Grammar</p>
+                                <span class="badge bg-secondary">290+ resources</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Study Materials -->
+            <div class="mb-5">
+                <h2 class="mb-4">
+                    <i class="bi bi-clock me-2"></i>Recently Added
+                </h2>
+                <div class="row" id="recentMaterials">
+                    <!-- Recent materials will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="text-center bg-light rounded p-5">
+                <h3 class="mb-3">Need Help with Your Studies?</h3>
+                <p class="mb-4 text-muted">
+                    Can't find the study materials you need? Our collection is constantly growing.
+                    Let us know what you need, and we'll work to add it.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="/contact" class="btn btn-primary btn-lg">
+                        <i class="bi bi-plus-circle me-2"></i>Request Materials
+                    </a>
+                    <a href="/login" class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Login for Full Access
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Sample study materials data (in a real app, this would come from an API)
+const sampleMaterials = [
+    {
+        id: 1,
+        title: "Calculus I Study Guide",
+        subject: "Mathematics",
+        type: "study-guide",
+        rating: 4.8,
+        downloads: 1250,
+        image: "/static/placeholder.jpg",
+        featured: true,
+        description: "Comprehensive study guide covering limits, derivatives, and integrals"
+    },
+    {
+        id: 2,
+        title: "Physics Mechanics Notes",
+        subject: "Physics",
+        type: "notes",
+        rating: 4.6,
+        downloads: 980,
+        image: "/static/placeholder.jpg",
+        featured: true,
+        description: "Detailed lecture notes on classical mechanics and kinematics"
+    },
+    {
+        id: 3,
+        title: "Organic Chemistry Practice Tests",
+        subject: "Chemistry",
+        type: "practice",
+        rating: 4.7,
+        downloads: 1100,
+        image: "/static/placeholder.jpg",
+        featured: true,
+        description: "Practice exams and quizzes for organic chemistry concepts"
+    },
+    {
+        id: 4,
+        title: "Data Structures Video Lectures",
+        subject: "Computer Science",
+        type: "videos",
+        rating: 4.9,
+        downloads: 890,
+        image: "/static/placeholder.jpg",
+        featured: false,
+        description: "Video series covering arrays, linked lists, trees, and graphs"
+    },
+    {
+        id: 5,
+        title: "English Literature Analysis",
+        subject: "English",
+        type: "notes",
+        rating: 4.5,
+        downloads: 2100,
+        image: "/static/placeholder.jpg",
+        featured: false,
+        description: "Critical analysis notes for classic and contemporary literature"
+    }
+];
+
+// Load featured materials
+function loadFeaturedMaterials() {
+    const featuredContainer = document.getElementById('featuredMaterials');
+    const featuredMaterials = sampleMaterials.filter(material => material.featured);
+
+    featuredContainer.innerHTML = featuredMaterials.map(material => `
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm material-card">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary">${material.subject}</span>
+                        <div class="rating">
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <small class="text-muted ms-1">${material.rating}</small>
+                        </div>
+                    </div>
+                    <h5 class="card-title">${material.title}</h5>
+                    <p class="card-text text-muted small">${material.description}</p>
+                    <div class="mt-auto">
+                        <div class="d-flex justify-content-between align-items-center text-muted small mb-2">
+                            <span><i class="bi bi-download me-1"></i>${material.downloads} downloads</span>
+                            <span class="badge bg-success">Free</span>
+                        </div>
+                        <button class="btn btn-primary btn-sm w-100" onclick="viewMaterial(${material.id})">
+                            <i class="bi bi-eye me-1"></i>View Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Load recent materials
+function loadRecentMaterials() {
+    const recentContainer = document.getElementById('recentMaterials');
+    const recentMaterials = sampleMaterials.slice(0, 6); // Show first 6 materials
+
+    recentContainer.innerHTML = recentMaterials.map(material => `
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 shadow-sm material-card-small">
+                <div class="card-body text-center">
+                    <div class="material-icon mb-2">
+                        <i class="bi bi-file-text text-primary" style="font-size: 2rem;"></i>
+                    </div>
+                    <h6 class="card-title">${material.title.substring(0, 30)}${material.title.length > 30 ? '...' : ''}</h6>
+                    <p class="card-text text-muted small">${material.subject}</p>
+                    <button class="btn btn-outline-primary btn-sm" onclick="viewMaterial(${material.id})">
+                        View
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// View material details (placeholder function)
+function viewMaterial(materialId) {
+    const material = sampleMaterials.find(m => m.id === materialId);
+    if (material) {
+        Swal.fire({
+            title: material.title,
+            html: `
+                <p><strong>Subject:</strong> ${material.subject}</p>
+                <p><strong>Type:</strong> ${material.type.replace('-', ' ')}</p>
+                <p><strong>Description:</strong> ${material.description}</p>
+                <p><strong>Rating:</strong> ${material.rating}/5</p>
+                <p><strong>Downloads:</strong> ${material.downloads}</p>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Download',
+            cancelButtonText: 'Close'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // In a real app, this would trigger a download
+                Swal.fire('Download Started!', 'Your download will begin shortly.', 'success');
+            }
+        });
+    }
+}
+
+// Subject click handlers
+document.addEventListener('DOMContentLoaded', function() {
+    loadFeaturedMaterials();
+    loadRecentMaterials();
+
+    // Subject card clicks
+    document.querySelectorAll('.subject-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const subject = this.dataset.subject;
+            // In a real app, this would filter materials by subject
+            Swal.fire('Subject Selected', `Showing materials for ${subject.replace('-', ' ')}`, 'info');
+        });
+    });
+
+    // Search functionality
+    document.getElementById('searchBtn').addEventListener('click', function() {
+        const query = document.getElementById('searchInput').value.trim();
+        if (query) {
+            // In a real app, this would search the study materials
+            Swal.fire('Search Results', `Searching for "${query}"...`, 'info');
+        }
+    });
+
+    // Filter tags
+    document.querySelectorAll('.filter-tag').forEach(tag => {
+        tag.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            // In a real app, this would apply filters
+            Swal.fire('Filter Applied', `Showing ${filter.replace('-', ' ')} materials`, 'info');
+        });
+    });
+});
+</script>
+
+<style>
+.material-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.material-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+
+.subject-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.subject-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+
+.material-card-small {
+    transition: transform 0.2s ease;
+}
+
+.material-card-small:hover {
+    transform: scale(1.05);
+}
+
+.stat-icon {
+    opacity: 0.8;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+}
+
+.filter-tag {
+    transition: all 0.2s ease;
+}
+
+.filter-tag:hover {
+    transform: scale(1.05);
+}
+</style>
+{% endblock %}

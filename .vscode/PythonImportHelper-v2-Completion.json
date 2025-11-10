@@ -1511,7 +1511,7 @@
         "kind": 2,
         "importPath": "routes.user_routes",
         "description": "routes.user_routes",
-        "peekOfCode": "def get_notifications():\n    \"\"\"Get user notifications\"\"\"\n    user_id = get_jwt_identity()\n    page = request.args.get('page', 1, type=int)\n    per_page = request.args.get('per_page', 10, type=int)\n    notifications = db.session.query(Notification).filter_by(user_id=user_id).order_by(\n        desc(Notification.created_at)\n    ).paginate(page=page, per_page=per_page)\n    notifications_data = [{\n        'id': notif.id,",
+        "peekOfCode": "def get_notifications():\n    \"\"\"Get user notifications\"\"\"\n    user_id = get_jwt_identity()\n    page = request.args.get('page', 1, type=int)\n    per_page = request.args.get('per_page', 10, type=int)\n    query = db.session.query(Notification).filter_by(user_id=user_id)\n    # Apply filters\n    status_filter = request.args.get('status', None)  # 'read', 'unread', or None for all\n    type_filter = request.args.get('type', None)  # notification type filter\n    if status_filter:",
         "detail": "routes.user_routes",
         "documentation": {}
     },
@@ -1565,7 +1565,7 @@
         "kind": 2,
         "importPath": "routes.user_routes",
         "description": "routes.user_routes",
-        "peekOfCode": "def follow_user(target_user_id):\n    \"\"\"Follow a user\"\"\"\n    user_id = get_jwt_identity()\n    if user_id == target_user_id:\n        return jsonify({'error': 'Cannot follow yourself'}), 400\n    target_user = db.session.query(User).get(target_user_id)\n    if not target_user:\n        return jsonify({'error': 'User not found'}), 404\n    if hasattr(User, 'followers'):\n        if existing := db.session.query(Follow).filter_by(follower_id=user_id, following_id=target_user_id).first():",
+        "peekOfCode": "def follow_user(target_user_id):\n    \"\"\"Follow a user\"\"\"\n    user_id = get_jwt_identity()\n    user = db.session.query(User).get(user_id)\n    if not user:\n        return jsonify({'error': 'User not found'}), 404\n    if user_id == target_user_id:\n        return jsonify({'error': 'Cannot follow yourself'}), 400\n    target_user = db.session.query(User).get(target_user_id)\n    if not target_user:",
         "detail": "routes.user_routes",
         "documentation": {}
     },
@@ -1597,11 +1597,29 @@
         "documentation": {}
     },
     {
+        "label": "get_notification_settings",
+        "kind": 2,
+        "importPath": "routes.user_routes",
+        "description": "routes.user_routes",
+        "peekOfCode": "def get_notification_settings():\n    \"\"\"Get user notification settings\"\"\"\n    user_id = get_jwt_identity()\n    user = db.session.query(User).get(user_id)\n    if not user:\n        return jsonify({'error': 'User not found'}), 404\n    # For now, return default settings. In future, this could be stored in user preferences\n    settings = {\n        'email_notifications': True,\n        'push_notifications': True,",
+        "detail": "routes.user_routes",
+        "documentation": {}
+    },
+    {
+        "label": "update_notification_settings",
+        "kind": 2,
+        "importPath": "routes.user_routes",
+        "description": "routes.user_routes",
+        "peekOfCode": "def update_notification_settings():\n    \"\"\"Update user notification settings\"\"\"\n    user_id = get_jwt_identity()\n    user = db.session.query(User).get(user_id)\n    if not user:\n        return jsonify({'error': 'User not found'}), 404\n    data = request.get_json()\n    if not data:\n        return jsonify({'error': 'No data provided'}), 400\n    # For now, just validate the settings. In future, store in database",
+        "detail": "routes.user_routes",
+        "documentation": {}
+    },
+    {
         "label": "user_bp",
         "kind": 5,
         "importPath": "routes.user_routes",
         "description": "routes.user_routes",
-        "peekOfCode": "user_bp = Blueprint('users', __name__)\n@user_bp.route('/notifications', methods=['GET'])\n@jwt_required()\ndef get_notifications():\n    \"\"\"Get user notifications\"\"\"\n    user_id = get_jwt_identity()\n    page = request.args.get('page', 1, type=int)\n    per_page = request.args.get('per_page', 10, type=int)\n    notifications = db.session.query(Notification).filter_by(user_id=user_id).order_by(\n        desc(Notification.created_at)",
+        "peekOfCode": "user_bp = Blueprint('users', __name__)\n@user_bp.route('/notifications', methods=['GET'])\n@jwt_required()\ndef get_notifications():\n    \"\"\"Get user notifications\"\"\"\n    user_id = get_jwt_identity()\n    page = request.args.get('page', 1, type=int)\n    per_page = request.args.get('per_page', 10, type=int)\n    query = db.session.query(Notification).filter_by(user_id=user_id)\n    # Apply filters",
         "detail": "routes.user_routes",
         "documentation": {}
     },
@@ -1790,7 +1808,7 @@
         "kind": 6,
         "importPath": "models",
         "description": "models",
-        "peekOfCode": "class Notification(db.Model):\n    __tablename__ = 'notifications'\n    id = db.Column(db.Integer, primary_key=True)\n    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)\n    message = db.Column(db.String(255), nullable=False)\n    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), default=None)\n    status = db.Column(db.String(20), default='unread', nullable=False)  # read or unread\n    created_at = db.Column(db.DateTime, default=datetime.utcnow)\n    def __repr__(self):\n        return f'<Notification user={self.user_id} status={self.status}>'",
+        "peekOfCode": "class Notification(db.Model):\n    __tablename__ = 'notifications'\n    id = db.Column(db.Integer, primary_key=True)\n    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)\n    message = db.Column(db.String(255), nullable=False)\n    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), default=None)\n    status = db.Column(db.String(20), default='unread', nullable=False)  # read or unread\n    notification_type = db.Column(db.String(50), default='general', nullable=False)  # like, comment, follow, mention, system\n    related_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), default=None)  # user who triggered the notification\n    created_at = db.Column(db.DateTime, default=datetime.utcnow)",
         "detail": "models",
         "documentation": {}
     },

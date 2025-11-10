@@ -124,6 +124,16 @@ def create_app():
         """Library Page"""
         return render_template('library.html')
 
+    @app.route('/study')
+    def study_page():
+        """Study Materials Page"""
+        return render_template('study.html')
+
+    @app.route('/international-study')
+    def international_study_page():
+        """International Study Page"""
+        return render_template('international-study.html')
+
     @app.route('/dashboard')
     def dashboard_page():
         """Redirect dashboard based on role"""

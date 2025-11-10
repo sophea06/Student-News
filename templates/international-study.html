@@ -1,0 +1,518 @@
+{% extends "base.html" %}
+
+{% block title %}International Study - Student News System{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-primary mb-3">
+                    <i class="bi bi-airplane me-3"></i>International Study
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Discover study abroad programs, international scholarships, and global academic opportunities.
+                </p>
+            </div>
+
+            <!-- Search and Filters -->
+            <div class="card shadow-sm mb-5">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                <input type="text" class="form-control form-control-lg" id="searchInput"
+                                       placeholder="Search countries, universities, programs...">
+                                <button class="btn btn-primary" type="button" id="searchBtn">
+                                    <i class="bi bi-search me-2"></i>Search
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <select class="form-select form-select-lg" id="countryFilter">
+                                <option value="">All Countries</option>
+                                <option value="usa">United States</option>
+                                <option value="uk">United Kingdom</option>
+                                <option value="canada">Canada</option>
+                                <option value="australia">Australia</option>
+                                <option value="germany">Germany</option>
+                                <option value="france">France</option>
+                                <option value="japan">Japan</option>
+                                <option value="singapore">Singapore</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <select class="form-select form-select-lg" id="programFilter">
+                                <option value="">All Programs</option>
+                                <option value="undergraduate">Undergraduate</option>
+                                <option value="graduate">Graduate</option>
+                                <option value="phd">PhD</option>
+                                <option value="exchange">Exchange Programs</option>
+                                <option value="summer">Summer Programs</option>
+                                <option value="internship">Internships</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Quick Filters -->
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <button class="btn btn-outline-primary btn-sm filter-tag" data-filter="scholarships">Scholarships</button>
+                        <button class="btn btn-outline-success btn-sm filter-tag" data-filter="fully-funded">Fully Funded</button>
+                        <button class="btn btn-outline-info btn-sm filter-tag" data-filter="top-ranked">Top Ranked</button>
+                        <button class="btn btn-outline-warning btn-sm filter-tag" data-filter="deadline-soon">Deadline Soon</button>
+                        <button class="btn btn-outline-danger btn-sm filter-tag" data-filter="popular">Most Popular</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- International Study Stats -->
+            <div class="row mb-5">
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="stat-icon mb-2">
+                                <i class="bi bi-globe text-primary" style="font-size: 2rem;"></i>
+                            </div>
+                            <h3 class="text-primary mb-1">50+</h3>
+                            <small class="text-muted">Countries</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="stat-icon mb-2">
+                                <i class="bi bi-building text-success" style="font-size: 2rem;"></i>
+                            </div>
+                            <h3 class="text-success mb-1">1,200+</h3>
+                            <small class="text-muted">Universities</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="stat-icon mb-2">
+                                <i class="bi bi-trophy text-info" style="font-size: 2rem;"></i>
+                            </div>
+                            <h3 class="text-info mb-1">500+</h3>
+                            <small class="text-muted">Scholarships</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="stat-icon mb-2">
+                                <i class="bi bi-people text-warning" style="font-size: 2rem;"></i>
+                            </div>
+                            <h3 class="text-warning mb-1">25,000+</h3>
+                            <small class="text-muted">Students Placed</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Programs -->
+            <div class="mb-5">
+                <h2 class="mb-4">
+                    <i class="bi bi-star-fill text-warning me-2"></i>Featured Programs
+                </h2>
+                <div class="row" id="featuredPrograms">
+                    <!-- Programs will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Countries -->
+            <div class="mb-5">
+                <h2 class="mb-4">
+                    <i class="bi bi-geo-alt me-2"></i>Study Destinations
+                </h2>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 country-card shadow-sm" data-country="usa">
+                            <div class="card-body text-center">
+                                <div class="flag-icon mb-3" style="font-size: 3rem;">🇺🇸</div>
+                                <h5 class="card-title">United States</h5>
+                                <p class="card-text text-muted">World-class universities, diverse culture, innovation hub</p>
+                                <span class="badge bg-primary">200+ programs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 country-card shadow-sm" data-country="uk">
+                            <div class="card-body text-center">
+                                <div class="flag-icon mb-3" style="font-size: 3rem;">🇬🇧</div>
+                                <h5 class="card-title">United Kingdom</h5>
+                                <p class="card-text text-muted">Historic universities, shorter degree programs, global recognition</p>
+                                <span class="badge bg-success">150+ programs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 country-card shadow-sm" data-country="canada">
+                            <div class="card-body text-center">
+                                <div class="flag-icon mb-3" style="font-size: 3rem;">🇨🇦</div>
+                                <h5 class="card-title">Canada</h5>
+                                <p class="card-text text-muted">High quality education, post-study work visas, safe environment</p>
+                                <span class="badge bg-info">120+ programs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 country-card shadow-sm" data-country="australia">
+                            <div class="card-body text-center">
+                                <div class="flag-icon mb-3" style="font-size: 3rem;">🇦🇺</div>
+                                <h5 class="card-title">Australia</h5>
+                                <p class="card-text text-muted">Research excellence, practical learning, beautiful lifestyle</p>
+                                <span class="badge bg-warning">100+ programs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 country-card shadow-sm" data-country="germany">
+                            <div class="card-body text-center">
+                                <div class="flag-icon mb-3" style="font-size: 3rem;">🇩🇪</div>
+                                <h5 class="card-title">Germany</h5>
+                                <p class="card-text text-muted">Free tuition, strong economy, engineering excellence</p>
+                                <span class="badge bg-danger">90+ programs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 country-card shadow-sm" data-country="singapore">
+                            <div class="card-body text-center">
+                                <div class="flag-icon mb-3" style="font-size: 3rem;">🇸🇬</div>
+                                <h5 class="card-title">Singapore</h5>
+                                <p class="card-text text-muted">Asia's education hub, multicultural society, high employability</p>
+                                <span class="badge bg-secondary">80+ programs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Opportunities -->
+            <div class="mb-5">
+                <h2 class="mb-4">
+                    <i class="bi bi-clock me-2"></i>Recent Opportunities
+                </h2>
+                <div class="row" id="recentOpportunities">
+                    <!-- Recent opportunities will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Success Stories -->
+            <div class="mb-5">
+                <h2 class="mb-4">
+                    <i class="bi bi-trophy me-2"></i>Success Stories
+                </h2>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="text-center mb-3">
+                                    <img src="/static/placeholder-user.jpg" class="rounded-circle" width="60" height="60" alt="Student">
+                                </div>
+                                <h6 class="card-title text-center">Sarah Johnson</h6>
+                                <p class="card-text text-muted small text-center">Full Scholarship to MIT</p>
+                                <p class="card-text">"The guidance I received helped me secure a full scholarship to study Computer Science at MIT. The experience has been life-changing."</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="text-center mb-3">
+                                    <img src="/static/placeholder-user.jpg" class="rounded-circle" width="60" height="60" alt="Student">
+                                </div>
+                                <h6 class="card-title text-center">Michael Chen</h6>
+                                <p class="card-text text-muted small text-center">Exchange Program in Germany</p>
+                                <p class="card-text">"My exchange semester in Berlin opened my eyes to new perspectives and helped me grow both academically and personally."</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="text-center mb-3">
+                                    <img src="/static/placeholder-user.jpg" class="rounded-circle" width="60" height="60" alt="Student">
+                                </div>
+                                <h6 class="card-title text-center">Emma Rodriguez</h6>
+                                <p class="card-text text-muted small text-center">Master's in Canada</p>
+                                <p class="card-text">"Thanks to the support, I completed my Master's degree in Environmental Science and now work for a leading research institute."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="text-center bg-light rounded p-5">
+                <h3 class="mb-3">Ready to Study Abroad?</h3>
+                <p class="mb-4 text-muted">
+                    Take the first step towards your international education journey.
+                    Our expert counselors are here to guide you through every step.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="/contact" class="btn btn-primary btn-lg">
+                        <i class="bi bi-calendar-event me-2"></i>Book Consultation
+                    </a>
+                    <a href="/login" class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Access Full Database
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Sample international programs data (in a real app, this would come from an API)
+const samplePrograms = [
+    {
+        id: 1,
+        title: "MIT Full Scholarship Program",
+        country: "United States",
+        university: "Massachusetts Institute of Technology",
+        program: "undergraduate",
+        funding: "Full Scholarship",
+        deadline: "2025-01-15",
+        rating: 4.9,
+        image: "/static/placeholder.jpg",
+        featured: true,
+        description: "Complete undergraduate scholarship covering tuition, accommodation, and living expenses"
+    },
+    {
+        id: 2,
+        title: "Oxford Graduate Program",
+        country: "United Kingdom",
+        university: "University of Oxford",
+        program: "graduate",
+        funding: "Partial Funding",
+        deadline: "2025-02-28",
+        rating: 4.8,
+        image: "/static/placeholder.jpg",
+        featured: true,
+        description: "Master's programs with research opportunities and academic excellence"
+    },
+    {
+        id: 3,
+        title: "Toronto International Exchange",
+        country: "Canada",
+        university: "University of Toronto",
+        program: "exchange",
+        funding: "Exchange Program",
+        deadline: "2025-03-15",
+        rating: 4.7,
+        image: "/static/placeholder.jpg",
+        featured: true,
+        description: "Semester exchange program with Canadian universities and post-study work options"
+    },
+    {
+        id: 4,
+        title: "DAAD Scholarship Germany",
+        country: "Germany",
+        university: "Various Universities",
+        program: "graduate",
+        funding: "Full Funding",
+        deadline: "2024-12-31",
+        rating: 4.6,
+        image: "/static/placeholder.jpg",
+        featured: false,
+        description: "German Academic Exchange Service scholarships for international students"
+    },
+    {
+        id: 5,
+        title: "Singapore Engineering Excellence",
+        country: "Singapore",
+        university: "National University of Singapore",
+        program: "undergraduate",
+        funding: "Merit Scholarship",
+        deadline: "2025-04-01",
+        rating: 4.8,
+        image: "/static/placeholder.jpg",
+        featured: false,
+        description: "Engineering programs with industry partnerships and research opportunities"
+    }
+];
+
+// Load featured programs
+function loadFeaturedPrograms() {
+    const featuredContainer = document.getElementById('featuredPrograms');
+    const featuredPrograms = samplePrograms.filter(program => program.featured);
+
+    featuredContainer.innerHTML = featuredPrograms.map(program => `
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm program-card">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary">${program.country}</span>
+                        <div class="rating">
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <small class="text-muted ms-1">${program.rating}</small>
+                        </div>
+                    </div>
+                    <h5 class="card-title">${program.title}</h5>
+                    <p class="card-text text-muted small">${program.university}</p>
+                    <p class="card-text text-muted small">${program.description}</p>
+                    <div class="mt-auto">
+                        <div class="d-flex justify-content-between align-items-center text-muted small mb-2">
+                            <span><i class="bi bi-calendar me-1"></i>Deadline: ${program.deadline}</span>
+                            <span class="badge bg-success">${program.funding}</span>
+                        </div>
+                        <button class="btn btn-primary btn-sm w-100" onclick="viewProgram(${program.id})">
+                            <i class="bi bi-eye me-1"></i>View Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Load recent opportunities
+function loadRecentOpportunities() {
+    const recentContainer = document.getElementById('recentOpportunities');
+    const recentPrograms = samplePrograms.slice(0, 6); // Show first 6 programs
+
+    recentContainer.innerHTML = recentPrograms.map(program => `
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 shadow-sm program-card-small">
+                <div class="card-body text-center">
+                    <div class="flag-icon mb-2" style="font-size: 2rem;">
+                        ${program.country === 'United States' ? '🇺🇸' :
+                          program.country === 'United Kingdom' ? '🇬🇧' :
+                          program.country === 'Canada' ? '🇨🇦' :
+                          program.country === 'Germany' ? '🇩🇪' :
+                          program.country === 'Singapore' ? '🇸🇬' : '🌍'}
+                    </div>
+                    <h6 class="card-title">${program.title.substring(0, 25)}${program.title.length > 25 ? '...' : ''}</h6>
+                    <p class="card-text text-muted small">${program.university.substring(0, 20)}${program.university.length > 20 ? '...' : ''}</p>
+                    <button class="btn btn-outline-primary btn-sm" onclick="viewProgram(${program.id})">
+                        View
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// View program details (placeholder function)
+function viewProgram(programId) {
+    const program = samplePrograms.find(p => p.id === programId);
+    if (program) {
+        Swal.fire({
+            title: program.title,
+            html: `
+                <p><strong>University:</strong> ${program.university}</p>
+                <p><strong>Country:</strong> ${program.country}</p>
+                <p><strong>Program:</strong> ${program.program}</p>
+                <p><strong>Funding:</strong> ${program.funding}</p>
+                <p><strong>Deadline:</strong> ${program.deadline}</p>
+                <p><strong>Description:</strong> ${program.description}</p>
+                <p><strong>Rating:</strong> ${program.rating}/5</p>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Apply Now',
+            cancelButtonText: 'Close'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // In a real app, this would redirect to application page
+                Swal.fire('Application Started!', 'Redirecting to application form...', 'success');
+            }
+        });
+    }
+}
+
+// Country click handlers
+document.addEventListener('DOMContentLoaded', function() {
+    loadFeaturedPrograms();
+    loadRecentOpportunities();
+
+    // Country card clicks
+    document.querySelectorAll('.country-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const country = this.dataset.country;
+            // In a real app, this would filter programs by country
+            Swal.fire('Country Selected', `Showing programs in ${country.toUpperCase()}`, 'info');
+        });
+    });
+
+    // Search functionality
+    document.getElementById('searchBtn').addEventListener('click', function() {
+        const query = document.getElementById('searchInput').value.trim();
+        if (query) {
+            // In a real app, this would search the international programs
+            Swal.fire('Search Results', `Searching for "${query}"...`, 'info');
+        }
+    });
+
+    // Filter tags
+    document.querySelectorAll('.filter-tag').forEach(tag => {
+        tag.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            // In a real app, this would apply filters
+            Swal.fire('Filter Applied', `Showing ${filter.replace('-', ' ')} programs`, 'info');
+        });
+    });
+});
+</script>
+
+<style>
+.program-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.program-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+
+.country-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.country-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+
+.program-card-small {
+    transition: transform 0.2s ease;
+}
+
+.program-card-small:hover {
+    transform: scale(1.05);
+}
+
+.stat-icon {
+    opacity: 0.8;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+}
+
+.filter-tag {
+    transition: all 0.2s ease;
+}
+
+.filter-tag:hover {
+    transform: scale(1.05);
+}
+
+.flag-icon {
+    opacity: 0.9;
+}
+</style>
+{% endblock %}

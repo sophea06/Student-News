@@ -15,22 +15,53 @@ def get_notifications():
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 10, type=int)
 
-    notifications = db.session.query(Notification).filter_by(user_id=user_id).order_by(
+    query = db.session.query(Notification).filter_by(user_id=user_id)
+
+    # Apply filters
+    status_filter = request.args.get('status', None)  # 'read', 'unread', or None for all
+    type_filter = request.args.get('type', None)  # notification type filter
+
+    if status_filter:
+        query = query.filter_by(status=status_filter)
+
+    if type_filter:
+        query = query.filter_by(notification_type=type_filter)
+
+    # Order by creation date, unread first
+    notifications = query.order_by(
+        Notification.status == 'unread',  # Unread notifications first
         desc(Notification.created_at)
     ).paginate(page=page, per_page=per_page)
 
-    notifications_data = [{
-        'id': notif.id,
-        'message': notif.message,
-        'status': notif.status,
-        'post_id': notif.post_id,
-        'created_at': notif.created_at.isoformat() if notif.created_at else None
-    } for notif in notifications.items]  # Removed the if notif.user check as it was causing issues
+    notifications_data = []
+    for notif in notifications.items:
+        data = {
+            'id': notif.id,
+            'message': notif.message,
+            'status': notif.status,
+            'notification_type': getattr(notif, 'notification_type', 'general'),
+            'post_id': notif.post_id,
+            'related_user_id': getattr(notif, 'related_user_id', None),
+            'created_at': notif.created_at.isoformat() if notif.created_at else None
+        }
+
+        # Add related user info if available
+        if getattr(notif, 'related_user_id', None):
+            related_user = db.session.query(User).get(notif.related_user_id)
+            if related_user:
+                data['related_user'] = {
+                    'id': related_user.id,
+                    'name': related_user.name,
+                    'profile_picture': related_user.profile_picture
+                }
+
+        notifications_data.append(data)
 
     return jsonify({
         'total': notifications.total,
         'pages': notifications.pages,
         'current_page': page,
+        'per_page': per_page,
         'notifications': notifications_data
     }), 200
 
@@ -158,24 +189,39 @@ def get_user_profile():
 def follow_user(target_user_id):
     """Follow a user"""
     user_id = get_jwt_identity()
-    
+    user = db.session.query(User).get(user_id)
+
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
     if user_id == target_user_id:
         return jsonify({'error': 'Cannot follow yourself'}), 400
-    
+
     target_user = db.session.query(User).get(target_user_id)
     if not target_user:
         return jsonify({'error': 'User not found'}), 404
-    
+
     if hasattr(User, 'followers'):
         if existing := db.session.query(Follow).filter_by(follower_id=user_id, following_id=target_user_id).first():
             return jsonify({'error': 'Already following'}), 409
-        
+
         follow = Follow(follower_id=user_id, following_id=target_user_id)
         db.session.add(follow)
         db.session.commit()
-        
+
+        # Create notification for the followed user
+        notification = Notification(
+            user_id=target_user_id,
+            message=f'{user.name} started following you',
+            notification_type='follow',
+            related_user_id=user_id,
+            status='unread'
+        )
+        db.session.add(notification)
+        db.session.commit()
+
         return jsonify({'message': 'Successfully followed user'}), 201
-    
+
     return jsonify({'message': 'Follow feature not yet available'}), 200
 
 @user_bp.route('/activity-logs', methods=['GET'])
@@ -249,3 +295,56 @@ def get_categories():
     ]
 
     return jsonify({'categories': categories}), 200
+
+@user_bp.route('/notifications/settings', methods=['GET'])
+@jwt_required()
+def get_notification_settings():
+    """Get user notification settings"""
+    user_id = get_jwt_identity()
+    user = db.session.query(User).get(user_id)
+
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    # For now, return default settings. In future, this could be stored in user preferences
+    settings = {
+        'email_notifications': True,
+        'push_notifications': True,
+        'like_notifications': True,
+        'comment_notifications': True,
+        'follow_notifications': True,
+        'system_notifications': True
+    }
+
+    return jsonify({'settings': settings}), 200
+
+@user_bp.route('/notifications/settings', methods=['PUT'])
+@jwt_required()
+def update_notification_settings():
+    """Update user notification settings"""
+    user_id = get_jwt_identity()
+    user = db.session.query(User).get(user_id)
+
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+
+    # For now, just validate the settings. In future, store in database
+    valid_settings = ['email_notifications', 'push_notifications', 'like_notifications',
+                     'comment_notifications', 'follow_notifications', 'system_notifications']
+
+    settings = {}
+    for setting in valid_settings:
+        if setting in data:
+            settings[setting] = bool(data[setting])
+
+    # Here you would save settings to database
+    # For now, just return success
+
+    return jsonify({
+        'message': 'Notification settings updated successfully',
+        'settings': settings
+    }), 200

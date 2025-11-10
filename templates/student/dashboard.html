@@ -4,6 +4,75 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/student-style.css') }}">
+<style>
+    .notification-item {
+        padding: 0.5rem;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background-color 0.2s ease;
+        cursor: pointer;
+        border-radius: 0.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .notification-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .notification-item.unread {
+        background-color: #e3f2fd;
+        border-left: 3px solid #2196f3;
+    }
+
+    .notification-item.unread:hover {
+        background-color: #bbdefb;
+    }
+
+    .notification-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        margin-right: 0.5rem;
+    }
+
+    .notification-content {
+        flex: 1;
+    }
+
+    .notification-message {
+        font-size: 0.8rem;
+        margin-bottom: 0.25rem;
+        line-height: 1.3;
+    }
+
+    .notification-time {
+        font-size: 0.7rem;
+        color: #6c757d;
+    }
+
+    .mark-read-btn {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        background: none;
+        border: none;
+        color: #6c757d;
+        font-size: 0.7rem;
+        padding: 0.2rem;
+        border-radius: 0.2rem;
+    }
+
+    .notification-item:hover .mark-read-btn {
+        opacity: 1;
+    }
+
+    .mark-read-btn:hover {
+        background-color: #e9ecef;
+        color: #495057;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -16,7 +85,12 @@
                 <span id="notification-count" class="badge bg-danger" style="display: none;">0</span>
             </h5>
             <div id="notifications-container" class="notifications-container">
-                <small class="text-muted">No new notifications</small>
+                <div class="text-center py-2">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <small class="text-muted d-block">Loading notifications...</small>
+                </div>
             </div>
 
             <hr>
@@ -43,6 +117,8 @@
                         <option value="news">News</option>
                         <option value="event">Events</option>
                         <option value="academic">Academic</option>
+                        <option value="study">Study</option>
+                        <option value="international study">International Study</option>
                     </select>
                     <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search posts..." aria-label="Search posts">
                     <button class="btn btn-primary btn-sm" onclick="loadPosts()" aria-label="Search">
@@ -283,7 +359,7 @@
 
     async function loadNotifications() {
         try {
-            const response = await fetch('/api/users/notifications', {
+            const response = await fetch('/api/users/notifications?page=1&per_page=5', {
                 headers: { Authorization: `Bearer ${token}` },
                 credentials: 'same-origin'
             });
@@ -304,9 +380,23 @@
 
             notifications.slice(0, 5).forEach(notif => {
                 if (notif.status === 'unread') unreadCount++;
+                const isUnread = notif.status === 'unread';
+                const timeAgo = getTimeAgo(new Date(notif.created_at));
+                const iconClass = getNotificationIcon(notif.message);
+
                 html += `
-                    <div class="alert alert-info alert-sm p-2 mb-2">
-                        <small>${notif.message}</small>
+                    <div class="notification-item d-flex align-items-start mb-2 ${isUnread ? 'unread' : ''}"
+                         onclick="handleNotificationClick(${notif.id}, ${notif.post_id || 'null'})">
+                        <div class="notification-icon bg-primary text-white me-2">
+                            <i class="bi ${iconClass}"></i>
+                        </div>
+                        <div class="notification-content flex-grow-1">
+                            <div class="notification-message small mb-1">${notif.message}</div>
+                            <div class="notification-time small text-muted">${timeAgo}</div>
+                        </div>
+                        ${isUnread ? `<button class="mark-read-btn btn btn-sm btn-outline-secondary ms-1" onclick="event.stopPropagation(); markNotificationRead(${notif.id})" title="Mark as read">
+                            <i class="bi bi-check2"></i>
+                        </button>` : ''}
                     </div>
                 `;
             });
@@ -321,6 +411,61 @@
             }
         } catch (error) {
             console.error('Error loading notifications:', error);
+            document.getElementById('notifications-container').innerHTML = '<small class="text-muted">Failed to load notifications</small>';
+        }
+    }
+
+    function getNotificationIcon(message) {
+        const lowerMessage = message.toLowerCase();
+        if (lowerMessage.includes('like') || lowerMessage.includes('liked')) {
+            return 'bi-heart-fill text-danger';
+        } else if (lowerMessage.includes('comment') || lowerMessage.includes('replied')) {
+            return 'bi-chat-dots text-info';
+        } else if (lowerMessage.includes('follow') || lowerMessage.includes('followed')) {
+            return 'bi-person-plus text-success';
+        } else if (lowerMessage.includes('mention') || lowerMessage.includes('mentioned')) {
+            return 'bi-at text-warning';
+        } else {
+            return 'bi-bell text-primary';
+        }
+    }
+
+    function getTimeAgo(date) {
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+
+        if (diffInSeconds < 60) return 'Just now';
+        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+        if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+
+        return date.toLocaleDateString();
+    }
+
+    async function handleNotificationClick(notificationId, postId) {
+        // Mark as read
+        await markNotificationRead(notificationId);
+
+        // Navigate to post if available
+        if (postId && postId !== 'null') {
+            window.location.href = `/post/${postId}`;
+        }
+    }
+
+    async function markNotificationRead(notificationId) {
+        try {
+            const response = await fetch(`/api/users/notifications/${notificationId}/read`, {
+                method: 'PUT',
+                headers: { Authorization: `Bearer ${token}` },
+                credentials: 'same-origin'
+            });
+
+            if (response.ok) {
+                // Refresh notifications
+                loadNotifications();
+            }
+        } catch (error) {
+            console.error('Error marking notification as read:', error);
         }
     }
 

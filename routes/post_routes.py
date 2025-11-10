@@ -234,6 +234,7 @@ def create_post():
                 user_id=student.id,
                 message=f'New post: {post.title}',
                 post_id=post.id,
+                notification_type='system',
                 status='unread'
             )
             db.session.add(notification)
@@ -439,7 +440,20 @@ def like_post(post_id):
     like = Like(user_id=user_id, post_id=post_id)
     db.session.add(like)
     db.session.commit()
-    
+
+    # Create notification for post author (if not liking own post)
+    if post.author_id != user_id:
+        notification = Notification(
+            user_id=post.author_id,
+            message=f'{user.name} liked your post "{post.title}"',
+            post_id=post.id,
+            notification_type='like',
+            related_user_id=user_id,
+            status='unread'
+        )
+        db.session.add(notification)
+        db.session.commit()
+
     return jsonify({
         'message': 'Post liked successfully',
         'likes_count': len(post.likes)
@@ -502,7 +516,20 @@ def add_comment(post_id):
     
     db.session.add(comment)
     db.session.commit()
-    
+
+    # Create notification for post author (if not commenting on own post)
+    if post.author_id != user_id:
+        notification = Notification(
+            user_id=post.author_id,
+            message=f'{user.name} commented on your post "{post.title}"',
+            post_id=post.id,
+            notification_type='comment',
+            related_user_id=user_id,
+            status='unread'
+        )
+        db.session.add(notification)
+        db.session.commit()
+
     return jsonify({
         'message': 'Comment added successfully',
         'comment': {
