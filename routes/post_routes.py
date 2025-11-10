@@ -18,49 +18,52 @@ def allowed_image_file(filename):
 @post_bp.route('/public', methods=['GET'])
 def get_public_posts():
     """Get public posts for home page (no auth required)"""
-    page = request.args.get('page', 1, type=int)
-    per_page = request.args.get('per_page', 5, type=int)  # Show fewer on home page
-    category = request.args.get('category', None)
+    try:
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 5, type=int)  # Show fewer on home page
+        category = request.args.get('category', None)
 
-    # Base query - only public, published posts, not deleted
-    query = db.session.query(Post).filter_by(
-        visibility='public',
-        status='published',
-        is_deleted=False
-    )
+        # Base query - only public, published posts, not deleted
+        query = db.session.query(Post).filter_by(
+            visibility='public',
+            status='published',
+            is_deleted=False
+        )
 
-    # Filter by category if specified
-    if category and category != 'all':
-        query = query.filter_by(category=category)
+        # Filter by category if specified
+        if category and category != 'all':
+            query = query.filter_by(category=category)
 
-    # Sort by pinned first, then newest
-    query = query.order_by(desc(Post.is_pinned), desc(Post.created_at))
+        # Sort by pinned first, then newest
+        query = query.order_by(desc(Post.is_pinned), desc(Post.created_at))
 
-    # Paginate
-    pagination = query.paginate(page=page, per_page=per_page)
+        # Paginate
+        pagination = query.paginate(page=page, per_page=per_page)
 
-    posts_data = [{
-        'id': post.id,
-        'title': post.title,
-        'content': f"{post.content[:150]}..." if len(post.content) > 150 else post.content,
-        'category': post.category,
-        'image_url': post.image_url,
-        'author': post.author.name if post.author else 'Deleted User',
-        'likes_count': len(post.likes),
-        'comments_count': len(post.comments),
-        'view_count': post.view_count,
-        'share_count': post.share_count,
-        'is_pinned': post.is_pinned,
-        'created_at': post.created_at.isoformat() if post.created_at else None
-    } for post in pagination.items]
+        posts_data = [{
+            'id': post.id,
+            'title': post.title,
+            'content': f"{post.content[:150]}..." if len(post.content) > 150 else post.content,
+            'category': post.category,
+            'image_url': post.image_url,
+            'author': post.author.name if post.author else 'Deleted User',
+            'likes_count': len(post.likes),
+            'comments_count': len(post.comments),
+            'view_count': post.view_count,
+            'share_count': post.share_count,
+            'is_pinned': post.is_pinned,
+            'created_at': post.created_at.isoformat() if post.created_at else None
+        } for post in pagination.items]
 
-    return jsonify({
-        'posts': posts_data,
-        'total': pagination.total,
-        'pages': pagination.pages,
-        'current_page': page,
-        'per_page': per_page
-    }), 200
+        return jsonify({
+            'posts': posts_data,
+            'total': pagination.total,
+            'pages': pagination.pages,
+            'current_page': page,
+            'per_page': per_page
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 def build_comment_tree(comment):
     return {

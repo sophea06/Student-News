@@ -80,6 +80,9 @@ def block_user(user_id):
 
     if not user or user.role == 'admin':
         return jsonify({'error': 'User not found or cannot block admin'}), 404
+
+    if db.session.query(User).filter_by(role='admin').count() <= 1 and user.role == 'admin':
+        return jsonify({'error': 'Cannot block the only admin account'}), 403
     
     data = request.get_json() or {}
     reason = data.get('reason', 'No reason provided')
@@ -118,11 +121,14 @@ def unblock_user(user_id):
 def reset_user_password(user_id):
     """Reset user password to default"""
     from app import bcrypt
-    
+
     user = db.session.query(User).get(user_id)
 
     if not user:
         return jsonify({'error': 'User not found'}), 404
+
+    if user.role == 'admin' and db.session.query(User).filter_by(role='admin').count() <= 1:
+        return jsonify({'error': 'Cannot reset password for the only admin account'}), 403
     
     default_password = 'temp123456'
     user.password_hash = bcrypt.generate_password_hash(default_password).decode('utf-8')

@@ -1061,7 +1061,7 @@
         "kind": 2,
         "importPath": "routes.admin_routes",
         "description": "routes.admin_routes",
-        "peekOfCode": "def block_user(user_id):\n    \"\"\"Block a student account\"\"\"\n    user = db.session.query(User).get(user_id)\n    if not user or user.role == 'admin':\n        return jsonify({'error': 'User not found or cannot block admin'}), 404\n    data = request.get_json() or {}\n    reason = data.get('reason', 'No reason provided')\n    user.is_blocked = True\n    if hasattr(user, 'block_reason'):\n        user.block_reason = reason",
+        "peekOfCode": "def block_user(user_id):\n    \"\"\"Block a student account\"\"\"\n    user = db.session.query(User).get(user_id)\n    if not user or user.role == 'admin':\n        return jsonify({'error': 'User not found or cannot block admin'}), 404\n    if db.session.query(User).filter_by(role='admin').count() <= 1 and user.role == 'admin':\n        return jsonify({'error': 'Cannot block the only admin account'}), 403\n    data = request.get_json() or {}\n    reason = data.get('reason', 'No reason provided')\n    user.is_blocked = True",
         "detail": "routes.admin_routes",
         "documentation": {}
     },
@@ -1079,7 +1079,7 @@
         "kind": 2,
         "importPath": "routes.admin_routes",
         "description": "routes.admin_routes",
-        "peekOfCode": "def reset_user_password(user_id):\n    \"\"\"Reset user password to default\"\"\"\n    from app import bcrypt\n    user = db.session.query(User).get(user_id)\n    if not user:\n        return jsonify({'error': 'User not found'}), 404\n    default_password = 'temp123456'\n    user.password_hash = bcrypt.generate_password_hash(default_password).decode('utf-8')\n    db.session.commit()\n    return jsonify({",
+        "peekOfCode": "def reset_user_password(user_id):\n    \"\"\"Reset user password to default\"\"\"\n    from app import bcrypt\n    user = db.session.query(User).get(user_id)\n    if not user:\n        return jsonify({'error': 'User not found'}), 404\n    if user.role == 'admin' and db.session.query(User).filter_by(role='admin').count() <= 1:\n        return jsonify({'error': 'Cannot reset password for the only admin account'}), 403\n    default_password = 'temp123456'\n    user.password_hash = bcrypt.generate_password_hash(default_password).decode('utf-8')",
         "detail": "routes.admin_routes",
         "documentation": {}
     },
@@ -1169,7 +1169,7 @@
         "kind": 2,
         "importPath": "routes.auth_routes",
         "description": "routes.auth_routes",
-        "peekOfCode": "def register():\n    \"\"\"Register a new student or admin account\"\"\"\n    data = request.get_json()\n    # Validation\n    if not data or not data.get('email') or not data.get('password') or not data.get('name') or not data.get('role'):\n        return jsonify({'error': 'Missing required fields'}), 400\n    if data['role'] not in ['admin', 'student']:\n        return jsonify({'error': 'Invalid role. Must be admin or student'}), 400\n    if db.session.query(User).filter_by(email=data['email']).first():\n        return jsonify({'error': 'Email already registered'}), 409",
+        "peekOfCode": "def register():\n    \"\"\"Register a new student or admin account\"\"\"\n    data = request.get_json()\n    # Validation\n    if not data or not data.get('email') or not data.get('password') or not data.get('name') or not data.get('role'):\n        return jsonify({'error': 'Missing required fields'}), 400\n    if data['role'] not in ['admin', 'student']:\n        return jsonify({'error': 'Invalid role. Must be admin or student'}), 400\n    if data['role'] == 'admin' and db.session.query(User).filter_by(role='admin').count() > 0:\n        return jsonify({'error': 'Only one admin account is allowed'}), 403",
         "detail": "routes.auth_routes",
         "documentation": {}
     },
@@ -1241,7 +1241,7 @@
         "kind": 2,
         "importPath": "routes.post_routes",
         "description": "routes.post_routes",
-        "peekOfCode": "def allowed_image_file(filename):\n    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS\n@post_bp.route('/public', methods=['GET'])\ndef get_public_posts():\n    \"\"\"Get public posts for home page (no auth required)\"\"\"\n    page = request.args.get('page', 1, type=int)\n    per_page = request.args.get('per_page', 5, type=int)  # Show fewer on home page\n    category = request.args.get('category', None)\n    # Base query - only public, published posts, not deleted\n    query = db.session.query(Post).filter_by(",
+        "peekOfCode": "def allowed_image_file(filename):\n    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS\n@post_bp.route('/public', methods=['GET'])\ndef get_public_posts():\n    \"\"\"Get public posts for home page (no auth required)\"\"\"\n    try:\n        page = request.args.get('page', 1, type=int)\n        per_page = request.args.get('per_page', 5, type=int)  # Show fewer on home page\n        category = request.args.get('category', None)\n        # Base query - only public, published posts, not deleted",
         "detail": "routes.post_routes",
         "documentation": {}
     },
@@ -1250,7 +1250,7 @@
         "kind": 2,
         "importPath": "routes.post_routes",
         "description": "routes.post_routes",
-        "peekOfCode": "def get_public_posts():\n    \"\"\"Get public posts for home page (no auth required)\"\"\"\n    page = request.args.get('page', 1, type=int)\n    per_page = request.args.get('per_page', 5, type=int)  # Show fewer on home page\n    category = request.args.get('category', None)\n    # Base query - only public, published posts, not deleted\n    query = db.session.query(Post).filter_by(\n        visibility='public',\n        status='published',\n        is_deleted=False",
+        "peekOfCode": "def get_public_posts():\n    \"\"\"Get public posts for home page (no auth required)\"\"\"\n    try:\n        page = request.args.get('page', 1, type=int)\n        per_page = request.args.get('per_page', 5, type=int)  # Show fewer on home page\n        category = request.args.get('category', None)\n        # Base query - only public, published posts, not deleted\n        query = db.session.query(Post).filter_by(\n            visibility='public',\n            status='published',",
         "detail": "routes.post_routes",
         "documentation": {}
     },
@@ -1421,7 +1421,7 @@
         "kind": 5,
         "importPath": "routes.post_routes",
         "description": "routes.post_routes",
-        "peekOfCode": "post_bp = Blueprint('posts', __name__)\nALLOWED_IMAGE_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}\nMAX_IMAGE_SIZE = 10 * 1024 * 1024  # 10MB\ndef allowed_image_file(filename):\n    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS\n@post_bp.route('/public', methods=['GET'])\ndef get_public_posts():\n    \"\"\"Get public posts for home page (no auth required)\"\"\"\n    page = request.args.get('page', 1, type=int)\n    per_page = request.args.get('per_page', 5, type=int)  # Show fewer on home page",
+        "peekOfCode": "post_bp = Blueprint('posts', __name__)\nALLOWED_IMAGE_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}\nMAX_IMAGE_SIZE = 10 * 1024 * 1024  # 10MB\ndef allowed_image_file(filename):\n    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS\n@post_bp.route('/public', methods=['GET'])\ndef get_public_posts():\n    \"\"\"Get public posts for home page (no auth required)\"\"\"\n    try:\n        page = request.args.get('page', 1, type=int)",
         "detail": "routes.post_routes",
         "documentation": {}
     },
@@ -1430,7 +1430,7 @@
         "kind": 5,
         "importPath": "routes.post_routes",
         "description": "routes.post_routes",
-        "peekOfCode": "ALLOWED_IMAGE_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}\nMAX_IMAGE_SIZE = 10 * 1024 * 1024  # 10MB\ndef allowed_image_file(filename):\n    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS\n@post_bp.route('/public', methods=['GET'])\ndef get_public_posts():\n    \"\"\"Get public posts for home page (no auth required)\"\"\"\n    page = request.args.get('page', 1, type=int)\n    per_page = request.args.get('per_page', 5, type=int)  # Show fewer on home page\n    category = request.args.get('category', None)",
+        "peekOfCode": "ALLOWED_IMAGE_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}\nMAX_IMAGE_SIZE = 10 * 1024 * 1024  # 10MB\ndef allowed_image_file(filename):\n    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS\n@post_bp.route('/public', methods=['GET'])\ndef get_public_posts():\n    \"\"\"Get public posts for home page (no auth required)\"\"\"\n    try:\n        page = request.args.get('page', 1, type=int)\n        per_page = request.args.get('per_page', 5, type=int)  # Show fewer on home page",
         "detail": "routes.post_routes",
         "documentation": {}
     },
@@ -1439,7 +1439,7 @@
         "kind": 5,
         "importPath": "routes.post_routes",
         "description": "routes.post_routes",
-        "peekOfCode": "MAX_IMAGE_SIZE = 10 * 1024 * 1024  # 10MB\ndef allowed_image_file(filename):\n    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS\n@post_bp.route('/public', methods=['GET'])\ndef get_public_posts():\n    \"\"\"Get public posts for home page (no auth required)\"\"\"\n    page = request.args.get('page', 1, type=int)\n    per_page = request.args.get('per_page', 5, type=int)  # Show fewer on home page\n    category = request.args.get('category', None)\n    # Base query - only public, published posts, not deleted",
+        "peekOfCode": "MAX_IMAGE_SIZE = 10 * 1024 * 1024  # 10MB\ndef allowed_image_file(filename):\n    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS\n@post_bp.route('/public', methods=['GET'])\ndef get_public_posts():\n    \"\"\"Get public posts for home page (no auth required)\"\"\"\n    try:\n        page = request.args.get('page', 1, type=int)\n        per_page = request.args.get('per_page', 5, type=int)  # Show fewer on home page\n        category = request.args.get('category', None)",
         "detail": "routes.post_routes",
         "documentation": {}
     },

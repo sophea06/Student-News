@@ -1,6 +1,37 @@
 # Student News System
 
-A comprehensive full-stack student news platform with a Flask backend API and Next.js frontend. Admins can publish and manage news posts, while students can view, like, comment, and share articles through a modern React interface.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-2.0+-red.svg)](https://flask.palletsprojects.com/)
+[![SQLite](https://img.shields.io/badge/SQLite-3.0+-green.svg)](https://www.sqlite.org/)
+
+A comprehensive full-stack student news platform built with Flask backend and Jinja2 templates. Features a modern, responsive design with role-based access control. Admins can publish and manage news posts, while students can view, like, comment, and share articles through an intuitive web interface with real-time notifications.
+
+## Table of Contents
+
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Architecture Diagram](#architecture-diagram)
+- [Tech Stack](#tech-stack)
+- [Quick Start](#quick-start)
+- [Installation](#installation)
+- [Project Structure](#project-structure)
+- [API Endpoints](#api-endpoints)
+- [Usage Examples](#usage-examples)
+- [User Roles & Permissions](#user-roles--permissions)
+- [Security Features](#security-features)
+- [Database Models](#database-models)
+- [Environment Variables](#environment-variables)
+- [Development](#development)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Troubleshooting](#troubleshooting)
+- [Performance Tips](#performance-tips)
+- [Future Enhancements](#future-enhancements)
+- [Contributing](#contributing)
+- [License](#license)
+- [Support](#support)
+- [Acknowledgments](#acknowledgments)
 
 ## Features
 
@@ -25,23 +56,53 @@ A comprehensive full-stack student news platform with a Flask backend API and Ne
 - **Rate Limiting**: Prevent spam with intelligent rate limiting on API endpoints
 - **Soft Delete**: Archive posts instead of permanently deleting them
 
+## Quick Start
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd student-news-system
+
+# Backend setup
+python -m venv venv
+venv\Scripts\activate  # On Windows
+pip install -r requirements.txt
+
+# Frontend setup (if using Next.js)
+npm install
+
+# Run the application
+python app.py
+# In another terminal: npm run dev
+```
+
+Visit `http://localhost:5000` to access the application.
+
 ## Screenshots
 
 ### Landing Page
 
 ![Landing Page](public/placeholder.jpg)
 
+*The main landing page showcasing featured news posts and navigation options for students and administrators.*
+
 ### Student Dashboard
 
 ![Student Dashboard](static/images/logo.png)
+
+*Student dashboard displaying the news feed, recent posts, trending articles, and user engagement features.*
 
 ### Admin Dashboard
 
 ![Admin Dashboard](static/images/logoPage.png)
 
+*Administrative control panel with analytics, user management, post moderation, and system statistics.*
+
 ### Login Page
 
 ![Login Page](public/placeholder.svg)
+
+*Secure authentication page supporting multiple user roles with JWT-based session management.*
 
 *Note: Replace placeholder images with actual screenshots of your application.*
 
@@ -50,16 +111,16 @@ A comprehensive full-stack student news platform with a Flask backend API and Ne
 ```
 ┌─────────────────┐    HTTP/HTTPS    ┌─────────────────┐    SQL    ┌─────────────────┐
 │   Frontend      │◄────────────────►│   Flask API     │◄─────────►│   SQLite DB     │
-│   (Next.js)     │                  │   Backend       │           │   Database      │
+│   (Jinja2)      │                  │   Backend       │           │   Database      │
 │                 │                  │                 │           │                 │
-│ - React Components│                │ - Routes        │           │ - Users         │
-│ - TypeScript     │                │ - Models        │           │ - Posts         │
-│ - Tailwind CSS   │                │ - Authentication│           │ - Comments      │
-│ - Radix UI       │                │ - File Uploads  │           │ - Analytics     │
+│ - HTML Templates│                  │ - Routes        │           │ - Users         │
+│ - Bootstrap/CSS │                  │ - Models        │           │ - Posts         │
+│ - JavaScript    │                  │ - Authentication│           │ - Comments      │
+│ - AJAX          │                  │ - File Uploads  │           │ - Analytics     │
 └─────────────────┘                  └─────────────────┘           └─────────────────┘
-         │                                   │
-         │                                   │
-         ▼                                   ▼
+          │                                   │
+          │                                   │
+          ▼                                   ▼
 ┌─────────────────┐                  ┌─────────────────┐
 │   Static Assets │                  │   Session Store  │
 │   (Images, CSS) │                  │   (Flask-Session)│
@@ -68,13 +129,14 @@ A comprehensive full-stack student news platform with a Flask backend API and Ne
 
 ## Tech Stack
 
-- **Backend**: Flask, SQLAlchemy ORM
+- **Backend**: Flask, SQLAlchemy ORM, Flask-JWT-Extended
 - **Database**: SQLite (easily upgradeable to PostgreSQL)
-- **Authentication**: JWT (JSON Web Tokens)
-- **Password Security**: Bcrypt hashing
-- **File Upload**: Secure file handling with validation
-- **Frontend**: Next.js 16, React 19, TypeScript, Tailwind CSS, Radix UI components
-- **Security**: CORS, Rate Limiting, Input validation
+- **Authentication**: JWT (JSON Web Tokens) with Bcrypt password hashing
+- **File Upload**: Secure file handling with validation and Flask-Uploads
+- **Frontend**: Jinja2 templates with Bootstrap/CSS, JavaScript (ES6+)
+- **Security**: Flask-CORS, Flask-Limiter, Input validation, CSRF protection
+- **Session Management**: Flask-Session for server-side sessions
+- **Development**: Python 3.8+, pip, virtualenv
 
 ## Installation
 
@@ -82,8 +144,24 @@ A comprehensive full-stack student news platform with a Flask backend API and Ne
 
 - Python 3.8 or higher
 - pip (Python package manager)
-- Node.js 18 or higher
-- npm or yarn or pnpm
+- Node.js 18 or higher (optional, for Next.js frontend)
+- npm, yarn, or pnpm (optional, for Next.js frontend)
+
+### Version Check Commands
+
+```bash
+# Check Python version
+python --version
+
+# Check pip version
+pip --version
+
+# Check Node.js version (if using Next.js)
+node --version
+
+# Check npm version (if using Next.js)
+npm --version
+```
 
 ### Step 1: Clone or Download the Project
 
@@ -111,7 +189,13 @@ venv\Scripts\activate
 #### Install Python Dependencies
 
 \`\`\`bash
-pip install flask flask-sqlalchemy flask-bcrypt flask-jwt-extended flask-cors flask-limiter
+pip install -r requirements.txt
+\`\`\`
+
+Or install manually:
+
+\`\`\`bash
+pip install flask flask-sqlalchemy flask-bcrypt flask-jwt-extended flask-cors flask-limiter flask-session python-dotenv
 \`\`\`
 
 #### Configure Environment (Optional)
@@ -176,8 +260,8 @@ The Next.js frontend will start at `http://localhost:3000`
 
 ### Step 5: Access the Application
 
-- **Frontend**: Open `http://localhost:3000` in your browser
-- **Backend API**: Available at `http://localhost:5000` (used by frontend)
+- **Application**: Open `http://localhost:5000` in your browser
+- **API Endpoints**: Available at `http://localhost:5000/api/*` (JSON responses)
 
 ### Step 6: Create Admin User (Optional)
 
@@ -295,61 +379,115 @@ student-news-system/
 
 ### Authentication
 
-- `POST /api/auth/register` - Register new student
-- `POST /api/auth/login` - Login user
-- `POST /api/auth/logout` - Logout user
-- `GET /api/auth/profile` - Get current user profile
-- `PUT /api/auth/profile` - Update user profile
-- `POST /api/auth/change-password` - Change password
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `POST` | `/api/auth/register` | Register new student | No |
+| `POST` | `/api/auth/login` | Login user | No |
+| `POST` | `/api/auth/logout` | Logout user | Yes |
+| `GET` | `/api/auth/profile` | Get current user profile | Yes |
+| `PUT` | `/api/auth/profile` | Update user profile | Yes |
+| `POST` | `/api/auth/change-password` | Change password | Yes |
 
 ### Posts
 
-- `GET /api/posts` - Get all posts with pagination
-- `GET /api/posts/trending` - Get trending posts
-- `GET /api/posts/<id>` - Get single post
-- `POST /api/posts` - Create post (Admin/Editor only)
-- `PUT /api/posts/<id>` - Edit post (Admin/Editor only)
-- `DELETE /api/posts/<id>` - Delete post (Admin/Editor only)
-- `POST /api/posts/<id>/like` - Like a post
-- `POST /api/posts/<id>/unlike` - Unlike a post
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `GET` | `/api/posts` | Get all posts with pagination | No |
+| `GET` | `/api/posts/trending` | Get trending posts | No |
+| `GET` | `/api/posts/<id>` | Get single post | No |
+| `POST` | `/api/posts` | Create post (Admin/Editor only) | Yes |
+| `PUT` | `/api/posts/<id>` | Edit post (Admin/Editor only) | Yes |
+| `DELETE` | `/api/posts/<id>` | Delete post (Admin/Editor only) | Yes |
+| `POST` | `/api/posts/<id>/like` | Like a post | Yes |
+| `POST` | `/api/posts/<id>/unlike` | Unlike a post | Yes |
 
 ### Comments
 
-- `POST /api/posts/<id>/comments` - Add comment
-- `GET /api/posts/<id>/comments` - Get post comments
-- `DELETE /api/comments/<id>` - Delete comment
-- `POST /api/comments/<id>/replies` - Reply to comment
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `POST` | `/api/posts/<id>/comments` | Add comment | Yes |
+| `GET` | `/api/posts/<id>/comments` | Get post comments | No |
+| `DELETE` | `/api/comments/<id>` | Delete comment | Yes |
+| `POST` | `/api/comments/<id>/replies` | Reply to comment | Yes |
 
 ### Admin
 
-- `GET /api/admin/stats` - Dashboard statistics
-- `GET /api/admin/users` - List all users
-- `PUT /api/admin/users/<id>/block` - Block user
-- `PUT /api/admin/users/<id>/unblock` - Unblock user
-- `GET /api/admin/comments/pending` - Pending comments for moderation
-- `PUT /api/admin/comments/<id>/approve` - Approve comment
-- `PUT /api/admin/comments/<id>/reject` - Reject comment
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `GET` | `/api/admin/stats` | Dashboard statistics | Admin |
+| `GET` | `/api/admin/users` | List all users | Admin |
+| `PUT` | `/api/admin/users/<id>/block` | Block user | Admin |
+| `PUT` | `/api/admin/users/<id>/unblock` | Unblock user | Admin |
+| `GET` | `/api/admin/comments/pending` | Pending comments for moderation | Admin |
+| `PUT` | `/api/admin/comments/<id>/approve` | Approve comment | Admin |
+| `PUT` | `/api/admin/comments/<id>/reject` | Reject comment | Admin |
 
 ### Analytics
 
-- `GET /api/analytics/dashboard` - Analytics dashboard data
-- `GET /api/analytics/posts/trending` - Trending posts analysis
-- `GET /api/analytics/engagement` - User engagement metrics
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `GET` | `/api/analytics/dashboard` | Analytics dashboard data | Admin |
+| `GET` | `/api/analytics/posts/trending` | Trending posts analysis | Admin |
+| `GET` | `/api/analytics/engagement` | User engagement metrics | Admin |
+
+### API Examples
+
+#### Register a new student
+
+```bash
+curl -X POST http://localhost:5000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "full_name": "John Doe",
+    "email": "john@example.com",
+    "password": "securepassword123"
+  }'
+```
+
+#### Login
+
+```bash
+curl -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "john@example.com",
+    "password": "securepassword123"
+  }'
+```
+
+#### Get posts with pagination
+
+```bash
+curl -X GET "http://localhost:5000/api/posts?page=1&per_page=10&category=news"
+```
+
+#### Create a post (Admin/Editor only)
+
+```bash
+curl -X POST http://localhost:5000/api/posts \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "New Campus Event",
+    "content": "Details about the upcoming event...",
+    "category": "events"
+  }'
+```
 
 ## Usage Examples
 
 ### Register as a Student
 
-1. Navigate to `http://localhost:3000` (Next.js frontend)
-2. Click "Register" and fill in Full Name, Email, and Password
+1. Navigate to `http://localhost:5000/register`
+2. Fill in Full Name, Email, and Password
 3. Click "Create Account"
-4. Login with your credentials
+4. Login with your credentials at `http://localhost:5000/login`
 
 ### Login as Admin
 
-1. Navigate to `http://localhost:3000/login`
+1. Navigate to `http://localhost:5000/login`
 2. Use admin credentials (created during setup)
-3. Access admin dashboard through the navigation menu
+3. Access admin dashboard at `http://localhost:5000/admin`
 
 ### Create a Post (Admin Only)
 
@@ -361,7 +499,7 @@ student-news-system/
 
 ### Browse Posts (Student)
 
-1. Login as student at `http://localhost:3000`
+1. Login as student at `http://localhost:5000/student`
 2. View the news feed on the main dashboard
 3. Use search, filters, or categories to find specific posts
 4. Click on a post to view full content
@@ -421,15 +559,82 @@ student-news-system/
 
 - id, user_id, message, type, is_read, created_at
 
+## Development
+
+### Running in Development Mode
+
+```bash
+# Activate virtual environment
+venv\Scripts\activate
+
+# Set environment variables
+export FLASK_ENV=development
+export FLASK_DEBUG=1
+
+# Run the application
+python app.py
+```
+
+### Code Style and Linting
+
+```bash
+# Install development dependencies
+pip install flake8 black isort
+
+# Run linting
+flake8 .
+
+# Format code
+black .
+
+# Sort imports
+isort .
+```
+
+### Testing
+
+#### Running Tests
+
+```bash
+# Install test dependencies
+pip install pytest pytest-cov
+
+# Run all tests
+pytest
+
+# Run tests with coverage
+pytest --cov=. --cov-report=html
+```
+
+#### Writing Tests
+
+Tests are located in the `tests/` directory. Use pytest fixtures for database setup and teardown.
+
 ## Environment Variables
 
-Create a `.env` file with:
+Create a `.env` file in the root directory:
 
 \`\`\`
-JWT_SECRET_KEY=your-jwt-secret-key
-SECRET_KEY=your-flask-secret-key
-SQLALCHEMY_DATABASE_URI=sqlite:///database.db
-UPLOAD_FOLDER=static/uploads
+# Flask Configuration
+FLASK_ENV=development
+FLASK_DEBUG=1
+SECRET_KEY=your-flask-secret-key-here
+
+# Database Configuration
+SQLALCHEMY_DATABASE_URI=sqlite:///instance/database.db
+SQLALCHEMY_TRACK_MODIFICATIONS=False
+
+# JWT Configuration
+JWT_SECRET_KEY=your-jwt-secret-key-here
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# Upload Configuration
+UPLOAD_FOLDER=uploads
+MAX_CONTENT_LENGTH=16777216
+
+# Session Configuration
+SESSION_TYPE=filesystem
+SESSION_PERMANENT=False
 \`\`\`
 
 ## Troubleshooting
@@ -507,6 +712,77 @@ UPLOAD_FOLDER=static/uploads
 - Implement database connection pooling for better concurrency
 - Monitor API endpoints with rate limiting and logging
 
+## Deployment
+
+### Production Deployment
+
+#### Using Gunicorn (Recommended)
+
+```bash
+# Install Gunicorn
+pip install gunicorn
+
+# Run with Gunicorn
+gunicorn --bind 0.0.0.0:8000 --workers 4 app:app
+```
+
+#### Using Docker
+
+```dockerfile
+# Dockerfile
+FROM python:3.9-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
+```
+
+```bash
+# Build and run
+docker build -t student-news-system .
+docker run -p 5000:5000 student-news-system
+```
+
+#### Environment Setup for Production
+
+```bash
+# Set production environment variables
+export FLASK_ENV=production
+export SECRET_KEY=your-production-secret-key
+export JWT_SECRET_KEY=your-production-jwt-key
+export SQLALCHEMY_DATABASE_URI=postgresql://user:password@localhost/dbname
+```
+
+### Nginx Configuration
+
+```nginx
+server {
+    listen 80;
+    server_name your-domain.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /static {
+        alias /path/to/your/app/static;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+}
+```
+
 ## Future Enhancements
 
 - Email notifications for important posts
@@ -515,19 +791,46 @@ UPLOAD_FOLDER=static/uploads
 - Advanced analytics and reporting
 - Mobile app integration
 - Real-time notifications with WebSockets
+- Social media integration
+- Advanced user permissions and roles
+- Content moderation with AI
+- Multi-language support
 
 ## Contributing
 
-Feel free to submit issues and enhancement requests!
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Follow PEP 8 style guidelines for Python code
+- Write tests for new features
+- Update documentation for API changes
+- Ensure all tests pass before submitting PR
 
 ## License
 
-This project is open source and available under the MIT License.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Flask framework and its amazing community
+- SQLAlchemy for the powerful ORM
+- All contributors and users of this project
 
 ## Support
 
-For issues, questions, or suggestions, please create an issue in the repository.
+- 📧 **Email**: For support inquiries
+- 🐛 **Issues**: [GitHub Issues](https://github.com/your-repo/issues)
+- 📖 **Documentation**: This README and inline code documentation
 
 ---
 
 **Happy News Sharing!** 📰
+
+*Built with ❤️ for the student community*

@@ -20,7 +20,7 @@ class User(db.Model):
     posts = db.relationship('Post', backref='author', lazy=True, foreign_keys='Post.author_id')
     likes = db.relationship('Like', backref='user', lazy=True, cascade='all, delete-orphan')
     comments = db.relationship('Comment', backref='user', lazy=True, cascade='all, delete-orphan')
-    notifications = db.relationship('Notification', backref='user', lazy=True, cascade='all, delete-orphan')
+    notifications = db.relationship('Notification', backref='user', lazy=True, cascade='all, delete-orphan', foreign_keys='Notification.user_id')
     followers = db.relationship('Follow', foreign_keys='Follow.follower_id', backref='follower_user', lazy=True, cascade='all, delete-orphan')
     following = db.relationship('Follow', foreign_keys='Follow.following_id', backref='following_user', lazy=True, cascade='all, delete-orphan')
     activity_logs = db.relationship('ActivityLog', backref='user', lazy=True, cascade='all, delete-orphan')
@@ -112,6 +112,9 @@ class Notification(db.Model):
     notification_type = db.Column(db.String(50), default='general', nullable=False)  # like, comment, follow, mention, system
     related_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), default=None)  # user who triggered the notification
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relationships
+    related_user = db.relationship('User', foreign_keys=[related_user_id], backref='sent_notifications', lazy=True)
 
     def __repr__(self):
         return f'<Notification user={self.user_id} type={self.notification_type} status={self.status}>'

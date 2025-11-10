@@ -19,7 +19,10 @@ def register():
     
     if data['role'] not in ['admin', 'student']:
         return jsonify({'error': 'Invalid role. Must be admin or student'}), 400
-    
+
+    if data['role'] == 'admin' and db.session.query(User).filter_by(role='admin').count() > 0:
+        return jsonify({'error': 'Only one admin account is allowed'}), 403
+
     if db.session.query(User).filter_by(email=data['email']).first():
         return jsonify({'error': 'Email already registered'}), 409
 
