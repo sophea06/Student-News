@@ -144,6 +144,12 @@ def create_app():
             url_for('admin_page' if session.get('role') == 'admin' else 'student_page')
         )
 
+    @app.route('/notifications')
+    @login_required_template
+    def notifications_page():
+        """Notifications Page"""
+        return render_template('notifications.html')
+
     # ---------------------------
     # Logout Routes
     # ---------------------------

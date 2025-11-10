@@ -230,6 +230,197 @@
       position: relative;
     }
 
+    /* Enhanced Navbar Search Styles */
+    .search-container {
+      position: relative;
+    }
+
+    .search-wrapper {
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+    }
+
+    .search-input {
+      width: 0;
+      opacity: 0;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: white;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+      margin-right: 8px;
+    }
+
+    .search-input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+    }
+
+    .search-input.expanded {
+      width: 250px;
+      opacity: 1;
+    }
+
+    .search-toggle-btn {
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .search-close-btn {
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: scale(0.8);
+    }
+
+    .search-close-btn.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .search-close-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .search-suggestions {
+      border: 1px solid rgba(102, 126, 234, 0.2);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      animation: suggestionsSlideIn 0.3s ease-out;
+    }
+
+    @keyframes suggestionsSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .navbar-suggestion-btn {
+      transition: all 0.2s ease;
+      border-radius: 8px;
+      margin-bottom: 4px;
+    }
+
+    .navbar-suggestion-btn:hover {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white !important;
+      transform: translateX(5px);
+    }
+
+    .navbar-suggestion-btn.active {
+      background: rgba(102, 126, 234, 0.1);
+      border-color: #667eea;
+    }
+
+    /* Dark mode search styles */
+    body.dark-mode .search-input {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #e2e8f0;
+    }
+
+    body.dark-mode .search-input::placeholder {
+      color: rgba(226, 232, 240, 0.6);
+    }
+
+    body.dark-mode .search-input:focus {
+      background: rgba(30, 41, 59, 0.95);
+      border-color: rgba(102, 126, 234, 0.4);
+    }
+
+    body.dark-mode .search-suggestions {
+      background: rgba(30, 41, 59, 0.95);
+      border-color: rgba(102, 126, 234, 0.3);
+      color: #e2e8f0;
+    }
+
+    body.dark-mode .navbar-suggestion-btn {
+      color: #e2e8f0;
+    }
+
+    body.dark-mode .navbar-suggestion-btn:hover {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    /* Mobile responsive search */
+    @media (max-width: 991.98px) {
+      .search-input.expanded {
+        width: 200px;
+      }
+
+      .navbar-nav .nav-item {
+        margin: 5px 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .search-input.expanded {
+        width: 180px;
+      }
+
+      .search-container {
+        margin: 10px 15px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .search-input.expanded {
+        width: 150px;
+      }
+
+      .search-toggle-btn,
+      .search-close-btn {
+        width: 35px;
+        height: 35px;
+      }
+    }
+
     /* Dark mode styles */
     body.dark-mode {
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
@@ -1067,10 +1258,23 @@
             <a class="nav-link" href="/contact"><i class="bi bi-envelope me-1"></i>Contact</a>
           </li>
           <li class="nav-item">
-            <button class="btn btn-outline-light btn-sm me-3" type="button" data-bs-toggle="modal"
-              data-bs-target="#searchModal" aria-label="Search">
-              <i class="bi bi-search"></i>
-            </button>
+            <div class="search-container position-relative me-3">
+              <div class="search-wrapper d-flex align-items-center">
+                <input type="search" class="form-control search-input" id="navbarSearchInput"
+                  placeholder="Search posts..." autocomplete="off" style="display: none;">
+                <button class="btn btn-outline-light search-toggle-btn" id="searchToggleBtn"
+                  type="button" aria-label="Toggle search">
+                  <i class="bi bi-search"></i>
+                </button>
+                <button class="btn btn-outline-light search-close-btn ms-2" id="searchCloseBtn"
+                  type="button" aria-label="Close search" style="display: none;">
+                  <i class="bi bi-x"></i>
+                </button>
+              </div>
+              <div id="navbarSearchSuggestions" class="search-suggestions position-absolute bg-white border rounded shadow-sm" style="display: none; top: 100%; left: 0; right: 0; z-index: 1050; max-height: 300px; overflow-y: auto;">
+                <div id="navbarSuggestionsList" class="p-2"></div>
+              </div>
+            </div>
           </li>
           <li class="nav-item">
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
@@ -1137,6 +1341,7 @@
       </div>
     </div>
   </div>
+
 
   <!-- ✅ Recent Posts Section -->
   <div class="container my-5 top-header">
@@ -1259,7 +1464,7 @@
             </div>
           </form>
 
-          <!-- Quick filters -->
+          <!-- Advanced Search Filters -->
           <div class="mb-3">
             <small class="text-muted fw-bold">Quick Filters:</small>
             <div class="d-flex flex-wrap gap-2 mt-2">
@@ -1268,6 +1473,79 @@
               <button class="btn btn-sm btn-outline-info filter-btn" data-filter="news">News</button>
               <button class="btn btn-sm btn-outline-warning filter-btn" data-filter="academic">Academic</button>
             </div>
+          </div>
+
+          <!-- Advanced Filters Toggle -->
+          <div class="mb-3">
+            <button class="btn btn-sm btn-link p-0 text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#advancedFilters" aria-expanded="false" aria-controls="advancedFilters">
+              <small class="text-muted fw-bold"><i class="bi bi-chevron-down me-1"></i>Advanced Filters</small>
+            </button>
+          </div>
+
+          <!-- Advanced Filters Collapse -->
+          <div class="collapse mb-3" id="advancedFilters">
+            <div class="card card-body bg-light border-0 p-3" style="background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(10px);">
+              <div class="row g-3">
+                <!-- Category Filter -->
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold text-muted">Category</label>
+                  <select class="form-select form-select-sm" id="categoryFilter" style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(102, 126, 234, 0.2);">
+                    <option value="">All Categories</option>
+                    <option value="announcement">Announcements</option>
+                    <option value="event">Events</option>
+                    <option value="news">News</option>
+                    <option value="academic">Academic</option>
+                    <option value="sports">Sports</option>
+                    <option value="club">Club Activities</option>
+                  </select>
+                </div>
+
+                <!-- Date Range Filter -->
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold text-muted">Date Range</label>
+                  <select class="form-select form-select-sm" id="dateFilter" style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(102, 126, 234, 0.2);">
+                    <option value="">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                    <option value="year">This Year</option>
+                  </select>
+                </div>
+
+                <!-- Author Filter -->
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold text-muted">Author</label>
+                  <input type="text" class="form-control form-control-sm" id="authorFilter" placeholder="Filter by author" style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(102, 126, 234, 0.2);">
+                </div>
+
+                <!-- Sort Options -->
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold text-muted">Sort By</label>
+                  <select class="form-select form-select-sm" id="sortFilter" style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(102, 126, 234, 0.2);">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="popular">Most Popular</option>
+                    <option value="relevant">Most Relevant</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Filter Actions -->
+              <div class="d-flex gap-2 mt-3">
+                <button class="btn btn-sm btn-primary" id="applyFilters">
+                  <i class="bi bi-funnel"></i> Apply Filters
+                </button>
+                <button class="btn btn-sm btn-outline-secondary" id="clearFilters">
+                  <i class="bi bi-x-circle"></i> Clear All
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search Suggestions -->
+          <div id="searchSuggestions" class="d-none">
+            <small class="text-muted fw-bold">Suggestions:</small>
+            <div id="suggestionsList" class="mt-2"></div>
           </div>
 
           <!-- Recent searches -->
@@ -1379,17 +1657,24 @@
       loadRecentPosts();
       initializeThemeToggle();
       initializeSearchEnhancements();
+      initializeMainSearch();
+      initializeNavbarSearch();
       initializeScrollEffects();
       initializePerformanceOptimizations();
     });
 
     // Load public posts
-    async function loadRecentPosts() {
+    async function loadRecentPosts(searchQuery = '') {
       const postsContainer = document.getElementById("recentPosts");
       const loadingSpinner = document.getElementById("loadingSpinner");
 
       try {
-        const response = await fetch("/api/posts/public?per_page=6");
+        let url = "/api/posts/public?per_page=6";
+        if (searchQuery) {
+          url += `&search=${encodeURIComponent(searchQuery)}`;
+        }
+
+        const response = await fetch(url);
         const data = await response.json();
 
         loadingSpinner.style.display = "none";
@@ -1436,8 +1721,8 @@
           postsContainer.innerHTML = `
             <div class="col-12 text-center py-5">
               <i class="bi bi-newspaper" style="font-size: 3rem; color: #6c757d;"></i>
-              <h4 class="mt-3 text-muted">No posts available yet</h4>
-              <p class="text-muted">Check back later for the latest news and announcements.</p>
+              <h4 class="mt-3 text-muted">${searchQuery ? 'No posts found matching your search' : 'No posts available yet'}</h4>
+              <p class="text-muted">${searchQuery ? 'Try different keywords or browse all posts.' : 'Check back later for the latest news and announcements.'}</p>
             </div>`;
         }
       } catch (error) {
@@ -1463,8 +1748,12 @@
     // Load navbar profile info
     async function loadNavbarProfile() {
       const token = localStorage.getItem("token");
+      const profileDropdown = document.getElementById('profileDropdown');
+      const navUserName = document.getElementById('nav-user-name');
+      const navProfilePicture = document.getElementById('nav-profile-picture');
+
       if (!token) {
-        document.getElementById('profileDropdown').style.display = 'none';
+        if (profileDropdown) profileDropdown.style.display = 'none';
         return;
       }
 
@@ -1473,25 +1762,25 @@
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) {
-          document.getElementById('profileDropdown').style.display = 'none';
+          if (profileDropdown) profileDropdown.style.display = 'none';
           return;
         }
         const user = await response.json();
 
         // Don't show admin profile on home page
         if (user.role === 'admin' || user.role === 'super_admin') {
-          document.getElementById('profileDropdown').style.display = 'none';
+          if (profileDropdown) profileDropdown.style.display = 'none';
           return;
         }
 
-        document.getElementById('nav-user-name').textContent = user.name;
-        if (user.profile_picture) {
-          document.getElementById('nav-profile-picture').src = user.profile_picture;
+        if (navUserName) navUserName.textContent = user.name;
+        if (user.profile_picture && navProfilePicture) {
+          navProfilePicture.src = user.profile_picture;
         }
-        document.getElementById('profileDropdown').style.display = 'block';
+        if (profileDropdown) profileDropdown.style.display = 'block';
       } catch (err) {
         console.error('Error loading navbar profile:', err);
-        document.getElementById('profileDropdown').style.display = 'none';
+        if (profileDropdown) profileDropdown.style.display = 'none';
       }
     }
 
@@ -1547,9 +1836,13 @@
       const filterBtns = document.querySelectorAll('.filter-btn');
       const recentSearchList = document.getElementById('recentSearchList');
       const recentSearches = document.getElementById('recentSearches');
+      const searchResults = document.getElementById('searchResults');
+      const searchStatus = document.getElementById('searchStatus');
 
       // Load recent searches from localStorage
       let recentSearchesArray = JSON.parse(localStorage.getItem('recentSearches')) || [];
+      let searchTimeout;
+      let currentSuggestions = [];
 
       function updateRecentSearches() {
         if (recentSearchesArray.length > 0) {
@@ -1562,8 +1855,187 @@
 
       updateRecentSearches();
 
+      // Debounced search function
+      function debouncedSearch(query) {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          window.performSearch(query);
+        }, 300); // 300ms delay
+      }
+
+      // Perform search with real-time updates
+      window.performSearch = async function(query) {
+        const postsContainer = document.getElementById("recentPosts");
+        const loadingSpinner = document.getElementById("loadingSpinner");
+
+        if (!query.trim()) {
+          // Show all posts when search is cleared
+          loadRecentPosts();
+          if (searchStatus) searchStatus.style.display = 'none';
+          return;
+        }
+
+        try {
+          if (searchStatus) {
+            searchStatus.style.display = 'block';
+            searchStatus.innerHTML = '<small class="text-muted"><i class="bi bi-search"></i> Searching...</small>';
+          }
+
+          let url = "/api/posts/public?per_page=6";
+          if (query) {
+            url += `&search=${encodeURIComponent(query)}`;
+          }
+
+          const response = await fetch(url);
+          const data = await response.json();
+
+          loadingSpinner.style.display = "none";
+
+          if (searchStatus) {
+            searchStatus.innerHTML = `<small class="text-muted"><i class="bi bi-check-circle"></i> Found ${data.posts ? data.posts.length : 0} results</small>`;
+            setTimeout(() => searchStatus.style.display = 'none', 2000);
+          }
+
+          if (data.posts && data.posts.length > 0) {
+            postsContainer.innerHTML = data.posts
+              .map(
+                (post) => `
+              <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm" onclick="redirectToLogin()">
+                  ${post.image_url
+                    ? `<img src="${post.image_url}" class="card-img-top" alt="Post image" style="height: 200px; object-fit: cover;">`
+                    : ""
+                  }
+                  <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                      <span class="badge bg-primary">${post.category}</span>
+                      ${post.is_pinned
+                    ? '<i class="bi bi-pin-angle-fill text-warning" title="Pinned"></i>'
+                    : ""
+                  }
+                    </div>
+                    <h5 class="card-title">${highlightSearchTerms(post.title, query)}</h5>
+                    <p class="card-text flex-grow-1">${highlightSearchTerms(post.content.substring(0, 150) + (post.content.length > 150 ? '...' : ''), query)}</p>
+                    <div class="mt-auto">
+                      <div class="d-flex justify-content-between align-items-center text-muted small mb-2">
+                        <span><i class="bi bi-person"></i> ${highlightSearchTerms(post.author, query)}</span>
+                        <span><i class="bi bi-calendar"></i> ${new Date(
+                    post.created_at
+                  ).toLocaleDateString()}</span>
+                      </div>
+                      <div class="d-flex justify-content-between align-items-center text-muted small">
+                        <span onclick="redirectToLogin(event)"><i class="bi bi-heart"></i> ${post.likes_count}</span>
+                        <span onclick="redirectToLogin(event)"><i class="bi bi-chat"></i> ${post.comments_count}</span>
+                        <span onclick="redirectToLogin(event)"><i class="bi bi-share"></i> Share</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>`
+              )
+              .join("");
+          } else {
+            postsContainer.innerHTML = `
+              <div class="col-12 text-center py-5">
+                <i class="bi bi-search" style="font-size: 3rem; color: #6c757d;"></i>
+                <h4 class="mt-3 text-muted">No posts found for "${query}"</h4>
+                <p class="text-muted">Try different keywords or browse all posts.</p>
+                <button class="btn btn-outline-primary mt-3" onclick="clearSearch()">
+                  <i class="bi bi-arrow-counterclockwise"></i> Clear Search
+                </button>
+              </div>`;
+          }
+        } catch (error) {
+          console.error("Error searching posts:", error);
+          loadingSpinner.style.display = "none";
+          if (searchStatus) {
+            searchStatus.innerHTML = '<small class="text-danger"><i class="bi bi-exclamation-triangle"></i> Search failed</small>';
+            setTimeout(() => searchStatus.style.display = 'none', 3000);
+          }
+          postsContainer.innerHTML = `
+            <div class="col-12 text-center py-5">
+              <i class="bi bi-exclamation-triangle" style="font-size: 3rem; color: #dc3545;"></i>
+              <h4 class="mt-3 text-danger">Search failed</h4>
+              <p class="text-muted">Please try again later.</p>
+            </div>`;
+        }
+      }
+
+      // Highlight search terms in text
+      function highlightSearchTerms(text, query) {
+        if (!query || !text) return text;
+        const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+        return text.replace(regex, '<mark class="bg-warning">$1</mark>');
+      }
+
+      // Real-time search input handler with suggestions
+      searchInput.addEventListener('input', function() {
+        const query = this.value.trim();
+        debouncedSearch(query);
+        if (query.length > 1) {
+          showSuggestions(query);
+        } else {
+          hideSuggestions();
+        }
+      });
+
+      // Show search suggestions
+      function showSuggestions(query) {
+        const suggestionsDiv = document.getElementById('searchSuggestions');
+        const suggestionsList = document.getElementById('suggestionsList');
+
+        // Generate suggestions based on common search terms and recent searches
+        const commonTerms = ['announcement', 'event', 'news', 'academic', 'sports', 'club', 'exam', 'deadline', 'registration', 'scholarship'];
+        const matchingTerms = commonTerms.filter(term =>
+          term.toLowerCase().includes(query.toLowerCase()) && term.toLowerCase() !== query.toLowerCase()
+        );
+
+        // Add recent searches that match
+        const matchingRecent = recentSearchesArray.filter(search =>
+          search.toLowerCase().includes(query.toLowerCase()) && search.toLowerCase() !== query.toLowerCase()
+        );
+
+        currentSuggestions = [...new Set([...matchingTerms, ...matchingRecent])].slice(0, 5);
+
+        if (currentSuggestions.length > 0) {
+          suggestionsList.innerHTML = currentSuggestions.map(suggestion => `
+            <button class="btn btn-sm btn-outline-secondary suggestion-btn w-100 text-start mb-1" data-suggestion="${suggestion}">
+              <i class="bi bi-search me-2"></i>${suggestion}
+            </button>
+          `).join('');
+          suggestionsDiv.classList.remove('d-none');
+        } else {
+          hideSuggestions();
+        }
+      }
+
+      // Hide suggestions
+      function hideSuggestions() {
+        const suggestionsDiv = document.getElementById('searchSuggestions');
+        suggestionsDiv.classList.add('d-none');
+      }
+
+      // Handle suggestion clicks
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('suggestion-btn')) {
+          searchInput.value = e.target.dataset.suggestion;
+          hideSuggestions();
+          performSearch(e.target.dataset.suggestion);
+        }
+      });
+
+      // Hide suggestions when clicking outside
+      document.addEventListener('click', function(e) {
+        const searchModal = document.getElementById('searchModal');
+        const suggestionsDiv = document.getElementById('searchSuggestions');
+        if (!searchModal.contains(e.target)) {
+          hideSuggestions();
+        }
+      });
+
       // Handle search submission
       searchForm.addEventListener('submit', function(e) {
+        e.preventDefault();
         const query = searchInput.value.trim();
         if (query) {
           // Add to recent searches
@@ -1573,6 +2045,9 @@
             localStorage.setItem('recentSearches', JSON.stringify(recentSearchesArray));
             updateRecentSearches();
           }
+
+          // Perform immediate search
+          performSearch(query);
         }
       });
 
@@ -1581,15 +2056,191 @@
         btn.addEventListener('click', function() {
           const filter = this.dataset.filter;
           searchInput.value = filter;
-          searchForm.dispatchEvent(new Event('submit'));
+          performSearch(filter);
         });
       });
+
+      // Advanced filters functionality
+      const categoryFilter = document.getElementById('categoryFilter');
+      const dateFilter = document.getElementById('dateFilter');
+      const authorFilter = document.getElementById('authorFilter');
+      const sortFilter = document.getElementById('sortFilter');
+      const applyFiltersBtn = document.getElementById('applyFilters');
+      const clearFiltersBtn = document.getElementById('clearFilters');
+
+      // Apply filters
+      applyFiltersBtn.addEventListener('click', function() {
+        const filters = {
+          category: categoryFilter.value,
+          dateRange: dateFilter.value,
+          author: authorFilter.value.trim(),
+          sort: sortFilter.value,
+          search: searchInput.value.trim()
+        };
+        performAdvancedSearch(filters);
+      });
+
+      // Clear filters
+      clearFiltersBtn.addEventListener('click', function() {
+        categoryFilter.value = '';
+        dateFilter.value = '';
+        authorFilter.value = '';
+        sortFilter.value = 'newest';
+        searchInput.value = '';
+        loadRecentPosts();
+        if (searchStatus) searchStatus.style.display = 'none';
+      });
+
+      // Real-time filter updates
+      [categoryFilter, dateFilter, authorFilter, sortFilter].forEach(filter => {
+        filter.addEventListener('change', function() {
+          if (searchInput.value.trim() || categoryFilter.value || dateFilter.value || authorFilter.value.trim()) {
+            const filters = {
+              category: categoryFilter.value,
+              dateRange: dateFilter.value,
+              author: authorFilter.value.trim(),
+              sort: sortFilter.value,
+              search: searchInput.value.trim()
+            };
+            performAdvancedSearch(filters);
+          }
+        });
+      });
+
+      // Advanced search function
+      async function performAdvancedSearch(filters) {
+        const postsContainer = document.getElementById("recentPosts");
+        const loadingSpinner = document.getElementById("loadingSpinner");
+
+        try {
+          if (searchStatus) {
+            searchStatus.style.display = 'block';
+            searchStatus.innerHTML = '<small class="text-muted"><i class="bi bi-search"></i> Filtering...</small>';
+          }
+
+          let url = "/api/posts/public?per_page=12";
+
+          // Build query parameters
+          const params = new URLSearchParams();
+
+          if (filters.search) params.append('search', filters.search);
+          if (filters.category) params.append('category', filters.category);
+          if (filters.dateRange) params.append('date_range', filters.dateRange);
+          if (filters.author) params.append('author', filters.author);
+          if (filters.sort) params.append('sort', filters.sort);
+
+          if (params.toString()) {
+            url += '&' + params.toString();
+          }
+
+          const response = await fetch(url);
+          const data = await response.json();
+
+          loadingSpinner.style.display = "none";
+
+          if (searchStatus) {
+            searchStatus.innerHTML = `<small class="text-muted"><i class="bi bi-check-circle"></i> Found ${data.posts ? data.posts.length : 0} results</small>`;
+            setTimeout(() => searchStatus.style.display = 'none', 2000);
+          }
+
+          if (data.posts && data.posts.length > 0) {
+            postsContainer.innerHTML = data.posts
+              .map(
+                (post) => `
+              <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm" onclick="redirectToLogin()">
+                  ${post.image_url
+                    ? `<img src="${post.image_url}" class="card-img-top" alt="Post image" style="height: 200px; object-fit: cover;">`
+                    : ""
+                  }
+                  <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                      <span class="badge bg-primary">${post.category}</span>
+                      ${post.is_pinned
+                    ? '<i class="bi bi-pin-angle-fill text-warning" title="Pinned"></i>'
+                    : ""
+                  }
+                    </div>
+                    <h5 class="card-title">${filters.search ? highlightSearchTerms(post.title, filters.search) : post.title}</h5>
+                    <p class="card-text flex-grow-1">${filters.search ? highlightSearchTerms(post.content.substring(0, 150) + (post.content.length > 150 ? '...' : ''), filters.search) : post.content.substring(0, 150) + (post.content.length > 150 ? '...' : '')}</p>
+                    <div class="mt-auto">
+                      <div class="d-flex justify-content-between align-items-center text-muted small mb-2">
+                        <span><i class="bi bi-person"></i> ${filters.author && post.author.toLowerCase().includes(filters.author.toLowerCase()) ? highlightSearchTerms(post.author, filters.author) : post.author}</span>
+                        <span><i class="bi bi-calendar"></i> ${new Date(
+                    post.created_at
+                  ).toLocaleDateString()}</span>
+                      </div>
+                      <div class="d-flex justify-content-between align-items-center text-muted small">
+                        <span onclick="redirectToLogin(event)"><i class="bi bi-heart"></i> ${post.likes_count}</span>
+                        <span onclick="redirectToLogin(event)"><i class="bi bi-chat"></i> ${post.comments_count}</span>
+                        <span onclick="redirectToLogin(event)"><i class="bi bi-share"></i> Share</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>`
+              )
+              .join("");
+          } else {
+            const filterDesc = [];
+            if (filters.category) filterDesc.push(`category: ${filters.category}`);
+            if (filters.dateRange) filterDesc.push(`date: ${filters.dateRange}`);
+            if (filters.author) filterDesc.push(`author: ${filters.author}`);
+            const filterText = filterDesc.length > 0 ? ` with filters (${filterDesc.join(', ')})` : '';
+
+            postsContainer.innerHTML = `
+              <div class="col-12 text-center py-5">
+                <i class="bi bi-funnel" style="font-size: 3rem; color: #6c757d;"></i>
+                <h4 class="mt-3 text-muted">No posts found${filterText}</h4>
+                <p class="text-muted">Try adjusting your filters or search terms.</p>
+                <button class="btn btn-outline-primary mt-3" onclick="document.getElementById('clearFilters').click()">
+                  <i class="bi bi-arrow-counterclockwise"></i> Clear Filters
+                </button>
+              </div>`;
+          }
+        } catch (error) {
+          console.error("Error filtering posts:", error);
+          loadingSpinner.style.display = "none";
+          if (searchStatus) {
+            searchStatus.innerHTML = '<small class="text-danger"><i class="bi bi-exclamation-triangle"></i> Filter failed</small>';
+            setTimeout(() => searchStatus.style.display = 'none', 3000);
+          }
+          postsContainer.innerHTML = `
+            <div class="col-12 text-center py-5">
+              <i class="bi bi-exclamation-triangle" style="font-size: 3rem; color: #dc3545;"></i>
+              <h4 class="mt-3 text-danger">Filter failed</h4>
+              <p class="text-muted">Please try again later.</p>
+            </div>`;
+        }
+      }
+
+      // Clear search functionality
+      function clearSearch() {
+        searchInput.value = '';
+        loadRecentPosts();
+        if (searchStatus) searchStatus.style.display = 'none';
+      }
+
+      // Add clear search button to modal
+      const searchModalBody = document.querySelector('#searchModal .modal-body');
+      const clearBtn = document.createElement('button');
+      clearBtn.className = 'btn btn-sm btn-outline-secondary mt-2 me-2';
+      clearBtn.innerHTML = '<i class="bi bi-x"></i> Clear';
+      clearBtn.onclick = clearSearch;
+      searchModalBody.appendChild(clearBtn);
+
+      // Add search status indicator
+      const statusDiv = document.createElement('div');
+      statusDiv.id = 'searchStatus';
+      statusDiv.className = 'mt-2';
+      statusDiv.style.display = 'none';
+      searchModalBody.appendChild(statusDiv);
 
       // Handle recent search buttons
       document.addEventListener('click', function(e) {
         if (e.target.classList.contains('recent-search-btn')) {
           searchInput.value = e.target.dataset.search;
-          searchForm.dispatchEvent(new Event('submit'));
+          performSearch(e.target.dataset.search);
         }
       });
 
@@ -1600,6 +2251,52 @@
 
       searchInput.addEventListener('blur', function() {
         this.parentElement.style.boxShadow = '';
+      });
+
+      // Keyboard navigation for suggestions
+      let selectedSuggestionIndex = -1;
+
+      searchInput.addEventListener('keydown', function(e) {
+        const suggestionsDiv = document.getElementById('searchSuggestions');
+        const suggestionBtns = suggestionsDiv.querySelectorAll('.suggestion-btn');
+
+        if (e.key === 'Escape') {
+          hideSuggestions();
+          selectedSuggestionIndex = -1;
+        } else if (e.key === 'ArrowDown' && currentSuggestions.length > 0) {
+          e.preventDefault();
+          selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, currentSuggestions.length - 1);
+          updateSuggestionSelection();
+        } else if (e.key === 'ArrowUp' && currentSuggestions.length > 0) {
+          e.preventDefault();
+          selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, -1);
+          updateSuggestionSelection();
+        } else if (e.key === 'Enter' && selectedSuggestionIndex >= 0) {
+          e.preventDefault();
+          const selectedSuggestion = currentSuggestions[selectedSuggestionIndex];
+          searchInput.value = selectedSuggestion;
+          hideSuggestions();
+          performSearch(selectedSuggestion);
+          selectedSuggestionIndex = -1;
+        }
+      });
+
+      function updateSuggestionSelection() {
+        const suggestionBtns = document.querySelectorAll('.suggestion-btn');
+        suggestionBtns.forEach((btn, index) => {
+          if (index === selectedSuggestionIndex) {
+            btn.classList.add('active');
+            btn.style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
+          } else {
+            btn.classList.remove('active');
+            btn.style.backgroundColor = '';
+          }
+        });
+      }
+
+      // Reset selection when input changes
+      searchInput.addEventListener('input', function() {
+        selectedSuggestionIndex = -1;
       });
     }
 
@@ -1669,7 +2366,7 @@
         img.src = src;
       });
 
-      // Optimize card loading
+      // Optimize card loading with caching
       const cardObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -1684,6 +2381,104 @@
         card.classList.add('loading');
         cardObserver.observe(card);
       });
+
+      // Search result caching
+      const searchCache = new Map();
+      const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+      // Override performSearch to use caching
+      const originalPerformSearch = performSearch;
+      performSearch = async function(query) {
+        const cacheKey = query.toLowerCase().trim();
+        const cached = searchCache.get(cacheKey);
+
+        if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+          // Use cached result
+          const postsContainer = document.getElementById("recentPosts");
+          const loadingSpinner = document.getElementById("loadingSpinner");
+          const searchStatus = document.getElementById('searchStatus');
+
+          loadingSpinner.style.display = "none";
+
+          if (searchStatus) {
+            searchStatus.innerHTML = `<small class="text-muted"><i class="bi bi-check-circle"></i> Found ${cached.data.posts ? cached.data.posts.length : 0} results (cached)</small>`;
+            setTimeout(() => searchStatus.style.display = 'none', 2000);
+          }
+
+          if (cached.data.posts && cached.data.posts.length > 0) {
+            postsContainer.innerHTML = cached.data.posts
+              .map(post => `
+              <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm" onclick="redirectToLogin()">
+                  ${post.image_url
+                    ? `<img src="${post.image_url}" class="card-img-top" alt="Post image" style="height: 200px; object-fit: cover;">`
+                    : ""
+                  }
+                  <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                      <span class="badge bg-primary">${post.category}</span>
+                      ${post.is_pinned
+                    ? '<i class="bi bi-pin-angle-fill text-warning" title="Pinned"></i>'
+                    : ""
+                  }
+                    </div>
+                    <h5 class="card-title">${highlightSearchTerms(post.title, query)}</h5>
+                    <p class="card-text flex-grow-1">${highlightSearchTerms(post.content.substring(0, 150) + (post.content.length > 150 ? '...' : ''), query)}</p>
+                    <div class="mt-auto">
+                      <div class="d-flex justify-content-between align-items-center text-muted small mb-2">
+                        <span><i class="bi bi-person"></i> ${highlightSearchTerms(post.author, query)}</span>
+                        <span><i class="bi bi-calendar"></i> ${new Date(
+                    post.created_at
+                  ).toLocaleDateString()}</span>
+                      </div>
+                      <div class="d-flex justify-content-between align-items-center text-muted small">
+                        <span onclick="redirectToLogin(event)"><i class="bi bi-heart"></i> ${post.likes_count}</span>
+                        <span onclick="redirectToLogin(event)"><i class="bi bi-chat"></i> ${post.comments_count}</span>
+                        <span onclick="redirectToLogin(event)"><i class="bi bi-share"></i> Share</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>`
+              )
+              .join("");
+          } else {
+            postsContainer.innerHTML = `
+              <div class="col-12 text-center py-5">
+                <i class="bi bi-search" style="font-size: 3rem; color: #6c757d;"></i>
+                <h4 class="mt-3 text-muted">No posts found for "${query}"</h4>
+                <p class="text-muted">Try different keywords or browse all posts.</p>
+                <button class="btn btn-outline-primary mt-3" onclick="clearSearch()">
+                  <i class="bi bi-arrow-counterclockwise"></i> Clear Search
+                </button>
+              </div>`;
+          }
+          return;
+        }
+
+        // Perform actual search
+        const result = await originalPerformSearch(query);
+
+        // Cache the result
+        if (result !== undefined) {
+          searchCache.set(cacheKey, {
+            data: result,
+            timestamp: Date.now()
+          });
+        }
+
+        return result;
+      };
+
+      // Clear old cache entries periodically
+      setInterval(() => {
+        const now = Date.now();
+        for (const [key, value] of searchCache.entries()) {
+          if (now - value.timestamp > CACHE_DURATION) {
+            searchCache.delete(key);
+          }
+        }
+      }, 60000); // Clean every minute
 
       // Live footer stats simulation
       function updateFooterStats() {
@@ -1718,6 +2513,456 @@
         }
       });
 
+      // Enhanced Main search functionality
+      function initializeMainSearch() {
+        const mainSearchInput = document.getElementById('mainSearchInput');
+        const mainSearchBtn = document.getElementById('mainSearchBtn');
+        const mainSearchIcon = document.getElementById('mainSearchIcon');
+        const mainSearchSpinner = document.getElementById('mainSearchSpinner');
+        const mainSearchStatus = document.getElementById('mainSearchStatus');
+        const mainSearchStatusText = document.getElementById('mainSearchStatusText');
+        const mainSearchSuggestions = document.getElementById('mainSearchSuggestions');
+        const mainSuggestionsList = document.getElementById('mainSuggestionsList');
+        const quickFilters = document.querySelectorAll('.quick-filter');
+
+        let mainSearchTimeout;
+        let mainCurrentSuggestions = [];
+        let selectedMainSuggestionIndex = -1;
+
+        // Show loading state
+        function showMainSearchLoading() {
+          mainSearchIcon.classList.add('d-none');
+          mainSearchSpinner.classList.remove('d-none');
+          mainSearchBtn.disabled = true;
+        }
+
+        // Hide loading state
+        function hideMainSearchLoading() {
+          mainSearchIcon.classList.remove('d-none');
+          mainSearchSpinner.classList.add('d-none');
+          mainSearchBtn.disabled = false;
+        }
+
+        // Show search status
+        function showMainSearchStatus(message, type = 'muted') {
+          mainSearchStatusText.textContent = message;
+          mainSearchStatusText.className = `text-${type}`;
+          mainSearchStatus.classList.remove('d-none');
+          setTimeout(() => mainSearchStatus.classList.add('d-none'), 3000);
+        }
+
+        // Perform main search with loading state
+        async function performMainSearch(query) {
+          if (!query.trim()) {
+            loadRecentPosts();
+            return;
+          }
+
+          showMainSearchLoading();
+          try {
+            await performSearch(query);
+            showMainSearchStatus(`Found results for "${query}"`, 'success');
+          } catch (error) {
+            console.error('Main search error:', error);
+            showMainSearchStatus('Search failed', 'danger');
+          } finally {
+            hideMainSearchLoading();
+          }
+        }
+
+        // Generate suggestions for main search
+        function generateMainSuggestions(query) {
+          const commonTerms = ['announcement', 'event', 'news', 'academic', 'sports', 'club', 'exam', 'deadline', 'registration', 'scholarship', 'admission', 'timetable', 'results', 'fees', 'library'];
+          const matchingTerms = commonTerms.filter(term =>
+            term.toLowerCase().includes(query.toLowerCase()) && term.toLowerCase() !== query.toLowerCase()
+          );
+
+          // Add recent searches
+          const recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+          const matchingRecent = recentSearches.filter(search =>
+            search.toLowerCase().includes(query.toLowerCase()) && search.toLowerCase() !== query.toLowerCase()
+          );
+
+          return [...new Set([...matchingTerms, ...matchingRecent])].slice(0, 8);
+        }
+
+        // Show main search suggestions
+        function showMainSuggestions(query) {
+          mainCurrentSuggestions = generateMainSuggestions(query);
+
+          if (mainCurrentSuggestions.length > 0) {
+            mainSuggestionsList.innerHTML = mainCurrentSuggestions.map(suggestion => `
+              <button class="btn btn-sm btn-outline-secondary main-suggestion-btn w-100 text-start mb-1" data-suggestion="${suggestion}" style="border-radius: 8px; transition: all 0.2s ease;">
+                <i class="bi bi-search me-2"></i>${suggestion}
+              </button>
+            `).join('');
+            mainSearchSuggestions.classList.remove('d-none');
+          } else {
+            hideMainSuggestions();
+          }
+        }
+
+        // Hide main search suggestions
+        function hideMainSuggestions() {
+          mainSearchSuggestions.classList.add('d-none');
+          selectedMainSuggestionIndex = -1;
+        }
+
+        // Update suggestion selection
+        function updateMainSuggestionSelection() {
+          const suggestionBtns = mainSuggestionsList.querySelectorAll('.main-suggestion-btn');
+          suggestionBtns.forEach((btn, index) => {
+            if (index === selectedMainSuggestionIndex) {
+              btn.classList.add('active');
+              btn.style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
+              btn.style.borderColor = '#667eea';
+            } else {
+              btn.classList.remove('active');
+              btn.style.backgroundColor = '';
+              btn.style.borderColor = '';
+            }
+          });
+        }
+
+        // Handle main search button click
+        mainSearchBtn.addEventListener('click', function() {
+          const query = mainSearchInput.value.trim();
+          if (query) {
+            performMainSearch(query);
+            hideMainSuggestions();
+          }
+        });
+
+        // Handle Enter key in main search input
+        mainSearchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            if (selectedMainSuggestionIndex >= 0) {
+              const selectedSuggestion = mainCurrentSuggestions[selectedMainSuggestionIndex];
+              mainSearchInput.value = selectedSuggestion;
+              hideMainSuggestions();
+              performMainSearch(selectedSuggestion);
+              selectedMainSuggestionIndex = -1;
+            } else {
+              const query = this.value.trim();
+              if (query) {
+                performMainSearch(query);
+                hideMainSuggestions();
+              }
+            }
+          }
+        });
+
+        // Real-time suggestions for main search
+        mainSearchInput.addEventListener('input', function() {
+          const query = this.value.trim();
+          clearTimeout(mainSearchTimeout);
+
+          if (query.length > 1) {
+            mainSearchTimeout = setTimeout(() => {
+              showMainSuggestions(query);
+            }, 200);
+          } else {
+            hideMainSuggestions();
+          }
+
+          selectedMainSuggestionIndex = -1;
+        });
+
+        // Keyboard navigation for main suggestions
+        mainSearchInput.addEventListener('keydown', function(e) {
+          if (mainCurrentSuggestions.length === 0) return;
+
+          if (e.key === 'Escape') {
+            hideMainSuggestions();
+            selectedMainSuggestionIndex = -1;
+          } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            selectedMainSuggestionIndex = Math.min(selectedMainSuggestionIndex + 1, mainCurrentSuggestions.length - 1);
+            updateMainSuggestionSelection();
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            selectedMainSuggestionIndex = Math.max(selectedMainSuggestionIndex - 1, -1);
+            updateMainSuggestionSelection();
+          }
+        });
+
+        // Handle main suggestion clicks
+        document.addEventListener('click', function(e) {
+          if (e.target.classList.contains('main-suggestion-btn')) {
+            const suggestion = e.target.dataset.suggestion;
+            mainSearchInput.value = suggestion;
+            hideMainSuggestions();
+            performMainSearch(suggestion);
+          }
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+          const searchContainer = document.querySelector('.search-container');
+          if (!searchContainer.contains(e.target)) {
+            hideMainSuggestions();
+          }
+        });
+
+        // Enhanced quick filter buttons with feedback
+        quickFilters.forEach(btn => {
+          btn.addEventListener('click', function() {
+            // Remove active class from all buttons
+            quickFilters.forEach(b => b.classList.remove('active-filter'));
+            // Add active class to clicked button
+            this.classList.add('active-filter');
+
+            const filter = this.dataset.filter;
+            mainSearchInput.value = filter;
+            performMainSearch(filter);
+
+            // Add click animation
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+              this.style.transform = '';
+            }, 150);
+          });
+        });
+
+        // Add focus effects
+        mainSearchInput.addEventListener('focus', function() {
+          this.parentElement.parentElement.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+        });
+
+        mainSearchInput.addEventListener('blur', function() {
+          this.parentElement.parentElement.style.boxShadow = '';
+        });
+
+        // Initialize filter counts (simulate)
+        function updateFilterCounts() {
+          const counts = {
+            announcement: Math.floor(Math.random() * 20) + 5,
+            event: Math.floor(Math.random() * 15) + 3,
+            news: Math.floor(Math.random() * 25) + 10,
+            academic: Math.floor(Math.random() * 18) + 7
+          };
+
+          quickFilters.forEach(btn => {
+            const filter = btn.dataset.filter;
+            const countSpan = btn.querySelector('.filter-count');
+            if (countSpan && counts[filter]) {
+              countSpan.textContent = counts[filter];
+              countSpan.classList.remove('d-none');
+            }
+          });
+        }
+
+        // Update counts periodically
+        updateFilterCounts();
+        setInterval(updateFilterCounts, 30000);
+      }
+
+      // Enhanced navbar search functionality
+      function initializeNavbarSearch() {
+        const searchToggleBtn = document.getElementById('searchToggleBtn');
+        const searchCloseBtn = document.getElementById('searchCloseBtn');
+        const navbarSearchInput = document.getElementById('navbarSearchInput');
+        const navbarSearchSuggestions = document.getElementById('navbarSearchSuggestions');
+        const navbarSuggestionsList = document.getElementById('navbarSuggestionsList');
+
+        let navbarSearchTimeout;
+        let navbarCurrentSuggestions = [];
+        let selectedNavbarSuggestionIndex = -1;
+
+        // Toggle search input
+        function toggleSearch() {
+          const isExpanded = navbarSearchInput.classList.contains('expanded');
+
+          if (isExpanded) {
+            collapseSearch();
+          } else {
+            expandSearch();
+          }
+        }
+
+        // Expand search input
+        function expandSearch() {
+          navbarSearchInput.style.display = 'block';
+          setTimeout(() => {
+            navbarSearchInput.classList.add('expanded');
+            navbarSearchInput.focus();
+            searchCloseBtn.style.display = 'flex';
+            setTimeout(() => searchCloseBtn.classList.add('show'), 100);
+          }, 10);
+        }
+
+        // Collapse search input
+        function collapseSearch() {
+          navbarSearchInput.classList.remove('expanded');
+          searchCloseBtn.classList.remove('show');
+          hideNavbarSuggestions();
+
+          setTimeout(() => {
+            navbarSearchInput.style.display = 'none';
+            searchCloseBtn.style.display = 'none';
+            navbarSearchInput.value = '';
+            selectedNavbarSuggestionIndex = -1;
+          }, 400);
+        }
+
+        // Generate suggestions for navbar search
+        function generateNavbarSuggestions(query) {
+          const commonTerms = ['announcement', 'event', 'news', 'academic', 'sports', 'club', 'exam', 'deadline', 'registration', 'scholarship', 'admission', 'timetable', 'results', 'fees', 'library'];
+          const matchingTerms = commonTerms.filter(term =>
+            term.toLowerCase().includes(query.toLowerCase()) && term.toLowerCase() !== query.toLowerCase()
+          );
+
+          // Add recent searches
+          const recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+          const matchingRecent = recentSearches.filter(search =>
+            search.toLowerCase().includes(query.toLowerCase()) && search.toLowerCase() !== query.toLowerCase()
+          );
+
+          return [...new Set([...matchingTerms, ...matchingRecent])].slice(0, 6);
+        }
+
+        // Show navbar search suggestions
+        function showNavbarSuggestions(query) {
+          navbarCurrentSuggestions = generateNavbarSuggestions(query);
+
+          if (navbarCurrentSuggestions.length > 0) {
+            navbarSuggestionsList.innerHTML = navbarCurrentSuggestions.map(suggestion => `
+              <button class="btn btn-sm btn-outline-secondary navbar-suggestion-btn w-100 text-start" data-suggestion="${suggestion}">
+                <i class="bi bi-search me-2"></i>${suggestion}
+              </button>
+            `).join('');
+            navbarSearchSuggestions.style.display = 'block';
+          } else {
+            hideNavbarSuggestions();
+          }
+        }
+
+        // Hide navbar search suggestions
+        function hideNavbarSuggestions() {
+          navbarSearchSuggestions.style.display = 'none';
+          selectedNavbarSuggestionIndex = -1;
+        }
+
+        // Update suggestion selection
+        function updateNavbarSuggestionSelection() {
+          const suggestionBtns = navbarSuggestionsList.querySelectorAll('.navbar-suggestion-btn');
+          suggestionBtns.forEach((btn, index) => {
+            if (index === selectedNavbarSuggestionIndex) {
+              btn.classList.add('active');
+              btn.style.backgroundColor = 'rgba(102, 126, 234, 0.1)';
+              btn.style.borderColor = '#667eea';
+            } else {
+              btn.classList.remove('active');
+              btn.style.backgroundColor = '';
+              btn.style.borderColor = '';
+            }
+          });
+        }
+
+        // Perform navbar search
+        function performNavbarSearch(query) {
+          if (query.trim()) {
+            // Add to recent searches
+            let recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+            if (!recentSearches.includes(query)) {
+              recentSearches.unshift(query);
+              recentSearches = recentSearches.slice(0, 10);
+              localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+            }
+
+            // Use existing search function
+            window.performSearch(query);
+            collapseSearch();
+          }
+        }
+
+        // Event listeners
+        searchToggleBtn.addEventListener('click', toggleSearch);
+        searchCloseBtn.addEventListener('click', collapseSearch);
+
+        // Real-time suggestions
+        navbarSearchInput.addEventListener('input', function() {
+          const query = this.value.trim();
+          clearTimeout(navbarSearchTimeout);
+
+          if (query.length > 1) {
+            navbarSearchTimeout = setTimeout(() => {
+              showNavbarSuggestions(query);
+            }, 200);
+          } else {
+            hideNavbarSuggestions();
+          }
+
+          selectedNavbarSuggestionIndex = -1;
+        });
+
+        // Handle Enter key
+        navbarSearchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            if (selectedNavbarSuggestionIndex >= 0) {
+              const selectedSuggestion = navbarCurrentSuggestions[selectedNavbarSuggestionIndex];
+              navbarSearchInput.value = selectedSuggestion;
+              hideNavbarSuggestions();
+              performNavbarSearch(selectedSuggestion);
+              selectedNavbarSuggestionIndex = -1;
+            } else {
+              const query = this.value.trim();
+              if (query) {
+                performNavbarSearch(query);
+                hideNavbarSuggestions();
+              }
+            }
+          }
+        });
+
+        // Keyboard navigation
+        navbarSearchInput.addEventListener('keydown', function(e) {
+          if (navbarCurrentSuggestions.length === 0) return;
+
+          if (e.key === 'Escape') {
+            hideNavbarSuggestions();
+            selectedNavbarSuggestionIndex = -1;
+          } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            selectedNavbarSuggestionIndex = Math.min(selectedNavbarSuggestionIndex + 1, navbarCurrentSuggestions.length - 1);
+            updateNavbarSuggestionSelection();
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            selectedNavbarSuggestionIndex = Math.max(selectedNavbarSuggestionIndex - 1, -1);
+            updateNavbarSuggestionSelection();
+          }
+        });
+
+        // Handle suggestion clicks
+        document.addEventListener('click', function(e) {
+          if (e.target.classList.contains('navbar-suggestion-btn')) {
+            const suggestion = e.target.dataset.suggestion;
+            navbarSearchInput.value = suggestion;
+            hideNavbarSuggestions();
+            performNavbarSearch(suggestion);
+          }
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+          const searchContainer = document.querySelector('.search-container');
+          if (!searchContainer.contains(e.target)) {
+            hideNavbarSuggestions();
+          }
+        });
+
+        // Close search when clicking outside
+        document.addEventListener('click', function(e) {
+          const searchContainer = document.querySelector('.search-container');
+          const navbar = document.querySelector('.navbar');
+          if (!searchContainer.contains(e.target) && !navbar.contains(e.target)) {
+            collapseSearch();
+          }
+        });
+      }
+
       // Enhanced accessibility
       document.addEventListener('keydown', function(e) {
         // Theme toggle with keyboard shortcut (Ctrl/Cmd + Shift + T)
@@ -1732,6 +2977,19 @@
           const searchModal = new bootstrap.Modal(document.getElementById('searchModal'));
           searchModal.show();
           document.getElementById('searchInput').focus();
+        }
+
+        // Main search with keyboard shortcut (Ctrl/Cmd + F)
+        if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+          e.preventDefault();
+          document.getElementById('mainSearchInput').focus();
+        }
+
+        // Navbar search with keyboard shortcut (Ctrl/Cmd + /)
+        if ((e.ctrlKey || e.metaKey) && e.key === '/') {
+          e.preventDefault();
+          const searchToggleBtn = document.getElementById('searchToggleBtn');
+          searchToggleBtn.click();
         }
       });
 

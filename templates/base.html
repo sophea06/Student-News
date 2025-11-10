@@ -1052,6 +1052,9 @@
         }
 
         function getNotificationIcon(message) {
+            if (!message || typeof message !== 'string') {
+                return 'bi-bell text-primary';
+            }
             const lowerMessage = message.toLowerCase();
             if (lowerMessage.includes('like') || lowerMessage.includes('liked')) {
                 return 'bi-heart-fill text-danger';

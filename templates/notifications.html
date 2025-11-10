@@ -1,0 +1,538 @@
+ {% extends "base.html" %}
+
+{% block title %}Notifications - Student News System{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student-style.css') }}">
+<style>
+    .notification-item {
+        padding: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background-color 0.2s ease;
+        cursor: pointer;
+        border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
+        background: white;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .notification-item:hover {
+        background-color: #f8f9fa;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .notification-item.unread {
+        background-color: #e3f2fd;
+        border-left: 4px solid #2196f3;
+    }
+
+    .notification-item.unread:hover {
+        background-color: #bbdefb;
+    }
+
+    .notification-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+
+    .notification-content {
+        flex: 1;
+    }
+
+    .notification-message {
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+        color: #333;
+    }
+
+    .notification-time {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+    .mark-read-btn {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        background: none;
+        border: none;
+        color: #6c757d;
+        font-size: 0.8rem;
+        padding: 0.3rem;
+        border-radius: 0.3rem;
+        flex-shrink: 0;
+    }
+
+    .notification-item:hover .mark-read-btn {
+        opacity: 1;
+    }
+
+    .mark-read-btn:hover {
+        background-color: #e9ecef;
+        color: #495057;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #6c757d;
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .filter-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+
+    .notification-stats {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .stat-card {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        flex: 1;
+        min-width: 150px;
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #2196f3;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+    }
+
+    .loading-state {
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .pagination-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .page-info {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">
+                    <i class="bi bi-bell me-2"></i>Notifications
+                </h2>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary" onclick="markAllAsRead()" id="markAllBtn">
+                        <i class="bi bi-check2-all"></i> Mark All Read
+                    </button>
+                    <button class="btn btn-outline-secondary" onclick="refreshNotifications()">
+                        <i class="bi bi-arrow-clockwise"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Notification Stats -->
+            <div class="notification-stats" id="notificationStats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalNotifications">0</div>
+                    <div class="stat-label">Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="unreadNotifications">0</div>
+                    <div class="stat-label">Unread</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="todayNotifications">0</div>
+                    <div class="stat-label">Today</div>
+                </div>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <select id="statusFilter" class="form-select">
+                            <option value="all">All Notifications</option>
+                            <option value="unread">Unread Only</option>
+                            <option value="read">Read Only</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select id="typeFilter" class="form-select">
+                            <option value="all">All Types</option>
+                            <option value="like">Likes</option>
+                            <option value="comment">Comments</option>
+                            <option value="follow">Follows</option>
+                            <option value="system">System</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select id="sortOrder" class="form-select">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary w-100" onclick="applyFilters()">
+                            <i class="bi bi-funnel"></i> Apply Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Container -->
+            <div id="notificationsContainer">
+                <div class="loading-state">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div class="mt-2">Loading notifications...</div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-controls" id="paginationControls" style="display: none;">
+                <button class="btn btn-outline-primary" onclick="loadPage(currentPage - 1)" id="prevBtn" disabled>
+                    <i class="bi bi-chevron-left"></i> Previous
+                </button>
+                <div class="page-info" id="pageInfo">Page 1 of 1</div>
+                <button class="btn btn-outline-primary" onclick="loadPage(currentPage + 1)" id="nextBtn" disabled>
+                    Next <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const token = localStorage.getItem("token");
+    let currentPage = 1;
+    let totalPages = 1;
+    let currentFilters = {
+        status: 'all',
+        type: 'all',
+        sort: 'newest'
+    };
+
+    // Check if token exists and redirect if not
+    if (!token) {
+        window.location.href = "/login";
+    }
+
+    // Load notifications on page load
+    loadNotifications();
+
+    // Add event listeners
+    document.getElementById('statusFilter').addEventListener('change', () => applyFilters());
+    document.getElementById('typeFilter').addEventListener('change', () => applyFilters());
+    document.getElementById('sortOrder').addEventListener('change', () => applyFilters());
+
+    async function loadNotifications(page = 1) {
+        currentPage = page;
+        const container = document.getElementById('notificationsContainer');
+
+        try {
+            let url = `/api/users/notifications?page=${page}&per_page=20`;
+
+            // Apply filters
+            if (currentFilters.status !== 'all') {
+                url += `&status=${currentFilters.status}`;
+            }
+            if (currentFilters.type !== 'all') {
+                url += `&type=${currentFilters.type}`;
+            }
+
+            const response = await fetch(url, {
+                headers: { Authorization: `Bearer ${token}` },
+                credentials: 'same-origin'
+            });
+
+            if (response.status === 401) {
+                window.location.href = "/login";
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error('Failed to load notifications');
+            }
+
+            const data = await response.json();
+            const notifications = data.notifications || [];
+            totalPages = data.pages || 1;
+
+            // Update stats
+            updateStats(data.total, notifications.filter(n => n.status === 'unread').length);
+
+            // Render notifications
+            renderNotifications(notifications);
+
+            // Update pagination
+            updatePagination();
+
+        } catch (error) {
+            console.error('Error loading notifications:', error);
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <h4>Unable to load notifications</h4>
+                    <p>Please try refreshing the page.</p>
+                    <button class="btn btn-primary" onclick="loadNotifications()">Retry</button>
+                </div>
+            `;
+        }
+    }
+
+    function renderNotifications(notifications) {
+        const container = document.getElementById('notificationsContainer');
+
+        if (notifications.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="bi bi-bell-slash"></i>
+                    <h4>No notifications found</h4>
+                    <p>You don't have any notifications matching your filters.</p>
+                </div>
+            `;
+            return;
+        }
+
+        const notificationHtml = notifications.map(notification => {
+            const isUnread = notification.status === 'unread';
+            const timeAgo = getTimeAgo(new Date(notification.created_at));
+            const iconClass = getNotificationIcon(notification);
+            const bgClass = getNotificationBgClass(notification);
+
+            return `
+                <div class="notification-item d-flex align-items-start ${isUnread ? 'unread' : ''}"
+                     onclick="handleNotificationClick(${notification.id}, ${notification.post_id || 'null'})">
+                    <div class="notification-icon ${bgClass}">
+                        <i class="bi ${iconClass}"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-message">${notification.message}</div>
+                        <div class="notification-time">${timeAgo}</div>
+                    </div>
+                    ${isUnread ? `<button class="mark-read-btn btn btn-sm" onclick="event.stopPropagation(); markAsRead(${notification.id})" title="Mark as read">
+                        <i class="bi bi-check2"></i>
+                    </button>` : ''}
+                </div>
+            `;
+        }).join('');
+
+        container.innerHTML = notificationHtml;
+    }
+
+    function getNotificationIcon(notification) {
+        if (!notification || !notification.message || typeof notification.message !== 'string') {
+            return 'bi-bell-fill text-primary';
+        }
+        const message = notification.message.toLowerCase();
+        const type = notification.notification_type;
+
+        if (type === 'like' || message.includes('like') || message.includes('liked')) {
+            return 'bi-heart-fill text-danger';
+        } else if (type === 'comment' || message.includes('comment') || message.includes('replied')) {
+            return 'bi-chat-dots-fill text-info';
+        } else if (type === 'follow' || message.includes('follow') || message.includes('followed')) {
+            return 'bi-person-plus-fill text-success';
+        } else if (message.includes('mention') || message.includes('mentioned')) {
+            return 'bi-at text-warning';
+        } else {
+            return 'bi-bell-fill text-primary';
+        }
+    }
+
+    function getNotificationBgClass(notification) {
+        const message = notification.message.toLowerCase();
+        const type = notification.notification_type;
+
+        if (type === 'like' || message.includes('like') || message.includes('liked')) {
+            return 'bg-danger bg-opacity-10 text-danger';
+        } else if (type === 'comment' || message.includes('comment') || message.includes('replied')) {
+            return 'bg-info bg-opacity-10 text-info';
+        } else if (type === 'follow' || message.includes('follow') || message.includes('followed')) {
+            return 'bg-success bg-opacity-10 text-success';
+        } else if (message.includes('mention') || message.includes('mentioned')) {
+            return 'bg-warning bg-opacity-10 text-warning';
+        } else {
+            return 'bg-primary bg-opacity-10 text-primary';
+        }
+    }
+
+    function getTimeAgo(date) {
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+
+        if (diffInSeconds < 60) return 'Just now';
+        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+        if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+        if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 604800)} weeks ago`;
+
+        return date.toLocaleDateString();
+    }
+
+    function updateStats(total, unread) {
+        document.getElementById('totalNotifications').textContent = total;
+        document.getElementById('unreadNotifications').textContent = unread;
+
+        // Calculate today's notifications (simplified - would need server-side logic for accuracy)
+        const today = new Date().toDateString();
+        // For now, just show a placeholder
+        document.getElementById('todayNotifications').textContent = '0';
+    }
+
+    function updatePagination() {
+        const controls = document.getElementById('paginationControls');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const pageInfo = document.getElementById('pageInfo');
+
+        if (totalPages > 1) {
+            controls.style.display = 'flex';
+            prevBtn.disabled = currentPage <= 1;
+            nextBtn.disabled = currentPage >= totalPages;
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+        } else {
+            controls.style.display = 'none';
+        }
+    }
+
+    async function handleNotificationClick(notificationId, postId) {
+        // Mark as read
+        await markAsRead(notificationId);
+
+        // Navigate to post if available
+        if (postId && postId !== 'null') {
+            window.location.href = `/post/${postId}`;
+        }
+    }
+
+    async function markAsRead(notificationId) {
+        try {
+            const response = await fetch(`/api/users/notifications/${notificationId}/read`, {
+                method: 'PUT',
+                headers: { Authorization: `Bearer ${token}` },
+                credentials: 'same-origin'
+            });
+
+            if (response.ok) {
+                // Refresh current page
+                loadNotifications(currentPage);
+            }
+        } catch (error) {
+            console.error('Error marking notification as read:', error);
+        }
+    }
+
+    async function markAllAsRead() {
+        const btn = document.getElementById('markAllBtn');
+        const originalText = btn.innerHTML;
+
+        btn.innerHTML = '<i class="bi bi-hourglass"></i> Marking...';
+        btn.disabled = true;
+
+        try {
+            // Get all unread notifications
+            const response = await fetch('/api/users/notifications?page=1&per_page=100&status=unread', {
+                headers: { Authorization: `Bearer ${token}` },
+                credentials: 'same-origin'
+            });
+
+            if (!response.ok) return;
+
+            const data = await response.json();
+            const unreadNotifications = data.notifications || [];
+
+            // Mark each as read
+            const markPromises = unreadNotifications.map(notification =>
+                fetch(`/api/users/notifications/${notification.id}/read`, {
+                    method: 'PUT',
+                    headers: { Authorization: `Bearer ${token}` },
+                    credentials: 'same-origin'
+                })
+            );
+
+            await Promise.all(markPromises);
+
+            // Refresh notifications
+            loadNotifications(currentPage);
+
+            Swal.fire({
+                title: 'Success!',
+                text: `Marked ${unreadNotifications.length} notifications as read`,
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            });
+
+        } catch (error) {
+            console.error('Error marking all as read:', error);
+            Swal.fire('Error', 'Failed to mark notifications as read', 'error');
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    }
+
+    function applyFilters() {
+        currentFilters.status = document.getElementById('statusFilter').value;
+        currentFilters.type = document.getElementById('typeFilter').value;
+        currentFilters.sort = document.getElementById('sortOrder').value;
+
+        loadNotifications(1); // Reset to first page
+    }
+
+    function refreshNotifications() {
+        loadNotifications(currentPage);
+    }
+
+    function loadPage(page) {
+        if (page >= 1 && page <= totalPages) {
+            loadNotifications(page);
+        }
+    }
+
+    // Auto-refresh every 30 seconds
+    setInterval(() => {
+        loadNotifications(currentPage);
+    }, 30000);
+</script>
+{% endblock %}

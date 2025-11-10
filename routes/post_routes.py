@@ -22,6 +22,7 @@ def get_public_posts():
         page = request.args.get('page', 1, type=int)
         per_page = request.args.get('per_page', 5, type=int)  # Show fewer on home page
         category = request.args.get('category', None)
+        search = request.args.get('search', None)
 
         # Base query - only public, published posts, not deleted
         query = db.session.query(Post).filter_by(
@@ -33,6 +34,15 @@ def get_public_posts():
         # Filter by category if specified
         if category and category != 'all':
             query = query.filter_by(category=category)
+
+        # Search by title or content
+        if search:
+            query = query.filter(
+                or_(
+                    func.lower(Post.title).like(func.lower(f'%{search}%')),
+                    func.lower(Post.content).like(func.lower(f'%{search}%'))
+                )
+            )
 
         # Sort by pinned first, then newest
         query = query.order_by(desc(Post.is_pinned), desc(Post.created_at))
@@ -60,7 +70,8 @@ def get_public_posts():
             'total': pagination.total,
             'pages': pagination.pages,
             'current_page': page,
-            'per_page': per_page
+            'per_page': per_page,
+            'search': search
         }), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
